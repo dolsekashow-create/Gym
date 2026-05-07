@@ -10,63 +10,213 @@
 <title>IRON FORGE — Premium Gym</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0a0a;
-  --bg-2:#111111;
-  --bg-3:#1a1a1a;
-  --surface:#161616;
-  --surface-2:#1f1f1f;
-  --line:rgba(255,255,255,0.08);
-  --line-2:rgba(255,255,255,0.04);
-  --text:#f5f5f5;
-  --text-dim:#a8a8a8;
-  --text-muted:#6b6b6b;
-  --gold:#d4af37;
-  --gold-2:#f4cf60;
-  --gold-dim:#8a7325;
-  --danger:#ef4444;
-  --success:#22c55e;
+  --bg:#0a0a0a; --bg-2:#111; --bg-3:#1a1a1a;
+  --surface:#161616; --surface-2:#1f1f1f;
+  --line:rgba(255,255,255,0.08); --line-2:rgba(255,255,255,0.04);
+  --text:#f5f5f5; --text-dim:#a8a8a8; --text-muted:#6b6b6b;
+  --gold:#d4af37; --gold-2:#f4cf60; --gold-dim:#8a7325;
+  --danger:#ef4444; --success:#22c55e; --warning:#f59e0b;
   --safe-top:env(safe-area-inset-top, 0px);
   --safe-bottom:env(safe-area-inset-bottom, 0px);
-  --nav-h:72px;
-  --header-h:64px;
+  --nav-h:72px; --header-h:64px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
 body{
   font-family:'Tajawal','Inter',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  font-size:15px;
-  line-height:1.5;
+  background:var(--bg); color:var(--text);
+  font-size:15px; line-height:1.5;
   -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
   overscroll-behavior:none;
-  user-select:none;
-  -webkit-user-select:none;
+  user-select:none; -webkit-user-select:none;
 }
 [data-lang="en"] body{font-family:'Inter','Tajawal',sans-serif;}
 .display{font-family:'Bebas Neue',sans-serif;letter-spacing:0.02em;}
 [data-lang="ar"] .display{font-family:'Cairo',sans-serif;font-weight:900;letter-spacing:-0.01em;}
-.serif{font-family:'Cormorant Garamond',serif;}
-[data-lang="ar"] .serif{font-family:'Cairo',serif;}
+input,button,textarea,select{font-family:inherit;}
 
 /* ===== APP SHELL ===== */
 .app{
-  position:relative;
-  width:100%;
-  height:100vh;
-  height:100dvh;
-  max-width:480px;
-  margin:0 auto;
+  position:relative; width:100%;
+  height:100vh; height:100dvh;
+  max-width:480px; margin:0 auto;
   background:var(--bg);
   overflow:hidden;
   box-shadow:0 0 60px rgba(0,0,0,0.5);
 }
 
-/* ===== TOP HEADER ===== */
+/* ===== LOGIN SCREEN ===== */
+.login{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  padding:calc(var(--safe-top) + 40px) 28px calc(var(--safe-bottom) + 28px);
+  z-index:300;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(212,175,55,0.18) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(212,175,55,0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+  overflow-y:auto;
+  transition:opacity 0.4s, transform 0.4s;
+}
+.login.hidden{opacity:0;pointer-events:none;transform:scale(1.05);}
+.login::before{
+  content:''; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(212,175,55,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,175,55,0.04) 1px,transparent 1px);
+  background-size:32px 32px;
+  mask-image:radial-gradient(ellipse at center, black 30%, transparent 70%);
+  pointer-events:none;
+}
+.login-brand{
+  display:flex; flex-direction:column; align-items:center;
+  margin-bottom:50px; position:relative;
+}
+.login-mark{
+  width:80px; height:80px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-2),var(--gold-dim));
+  border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  margin-bottom:18px;
+  box-shadow:0 8px 32px rgba(212,175,55,0.4);
+}
+.login-mark::after{content:'';position:absolute;inset:3px;border-radius:17px;background:var(--bg);}
+.login-mark svg{position:relative;z-index:1;}
+.login-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:38px;
+  letter-spacing:0.2em;
+  color:var(--text);
+  text-align:center;
+  line-height:1;
+}
+[data-lang="ar"] .login-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:32px;letter-spacing:0;}
+.login-tag{
+  font-size:11px;
+  color:var(--gold);
+  letter-spacing:0.4em;
+  margin-top:8px;
+  text-transform:uppercase;
+}
+[data-lang="ar"] .login-tag{letter-spacing:0.1em;}
+
+.login-card{
+  position:relative;
+  background:linear-gradient(135deg, rgba(26,26,26,0.9), rgba(13,13,13,0.9));
+  backdrop-filter:blur(10px);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:28px 24px;
+  margin-bottom:20px;
+}
+.login-heading{font-size:18px;font-weight:700;margin-bottom:6px;}
+.login-sub{font-size:13px;color:var(--text-dim);margin-bottom:22px;}
+
+.field{margin-bottom:16px;}
+.field label{
+  display:block;
+  font-size:11px;
+  color:var(--text-muted);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.input-wrap{position:relative;}
+.input-wrap svg{
+  position:absolute;
+  top:50%; transform:translateY(-50%);
+  right:14px;
+  color:var(--text-muted);
+  pointer-events:none;
+}
+[dir="ltr"] .input-wrap svg{right:auto;left:14px;}
+.field input{
+  width:100%;
+  padding:14px 44px 14px 16px;
+  background:rgba(0,0,0,0.4);
+  border:1px solid var(--line);
+  border-radius:12px;
+  color:var(--text);
+  font-size:15px;
+  outline:none;
+  transition:all 0.2s;
+}
+[dir="ltr"] .field input{padding:14px 16px 14px 44px;}
+.field input:focus{border-color:var(--gold);background:rgba(212,175,55,0.05);}
+.field input::placeholder{color:var(--text-muted);}
+
+.login-btn{
+  display:block; width:100%;
+  padding:16px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-2),var(--gold-dim));
+  color:var(--bg);
+  border:none;
+  border-radius:14px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;
+  letter-spacing:0.25em;
+  cursor:pointer;
+  font-weight:700;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(212,175,55,0.3);
+  transition:transform 0.15s;
+}
+[data-lang="ar"] .login-btn{font-family:'Cairo',sans-serif;font-weight:900;font-size:16px;letter-spacing:0.05em;}
+.login-btn:active{transform:scale(0.98);}
+.login-btn::after{
+  content:'';position:absolute;
+  top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+  animation:shimmer 3s infinite;
+}
+@keyframes shimmer{to{left:200%;}}
+.login-btn:disabled{opacity:0.6;cursor:not-allowed;}
+.login-btn:disabled::after{display:none;}
+
+.login-error{
+  display:none;
+  padding:10px 14px;
+  background:rgba(239,68,68,0.1);
+  border:1px solid rgba(239,68,68,0.3);
+  border-radius:10px;
+  color:var(--danger);
+  font-size:13px;
+  margin-bottom:14px;
+  text-align:center;
+}
+.login-error.show{display:block;}
+
+.login-foot{
+  text-align:center;
+  font-size:12px;
+  color:var(--text-muted);
+  margin-top:auto;
+  padding-top:30px;
+}
+.login-foot strong{color:var(--gold);}
+.lang-switch{
+  display:flex; justify-content:center; gap:8px;
+  margin-bottom:20px;
+}
+.lang-btn{
+  padding:6px 16px;
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:100px;
+  color:var(--text-dim);
+  font-size:11px;
+  letter-spacing:0.1em;
+  cursor:pointer;
+  font-family:'Bebas Neue',sans-serif;
+}
+.lang-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700;}
+
+/* ===== HEADER ===== */
 .app-header{
   position:absolute;
   top:0;left:0;right:0;
@@ -81,17 +231,12 @@ body{
 .brand{display:flex;align-items:center;gap:10px;}
 .brand-mark{
   width:34px;height:34px;
-  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-2) 50%,var(--gold-dim) 100%);
+  background:linear-gradient(135deg,var(--gold),var(--gold-2),var(--gold-dim));
   display:flex;align-items:center;justify-content:center;
-  border-radius:8px;
-  position:relative;
+  border-radius:8px;position:relative;
   box-shadow:0 4px 12px rgba(212,175,55,0.25);
 }
-.brand-mark::after{
-  content:'';position:absolute;inset:2px;
-  border-radius:6px;
-  background:var(--bg);
-}
+.brand-mark::after{content:'';position:absolute;inset:2px;border-radius:6px;background:var(--bg);}
 .brand-mark svg{position:relative;z-index:1;}
 .brand-text{display:flex;flex-direction:column;line-height:1;}
 .brand-text .name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.15em;color:var(--text);}
@@ -114,24 +259,20 @@ body{
 .icon-btn:active{transform:scale(0.94);background:rgba(212,175,55,0.1);color:var(--gold);}
 .icon-btn .badge{
   position:absolute;top:-2px;right:-2px;
-  width:8px;height:8px;
+  min-width:8px;height:8px;
   background:var(--gold);
   border-radius:50%;
   border:2px solid var(--bg);
 }
 .lang-toggle{
   font-family:'Bebas Neue',sans-serif;
-  font-size:12px;
-  letter-spacing:0.1em;
-  padding:0 10px;
-  width:auto;
-  min-width:38px;
+  font-size:12px;letter-spacing:0.1em;
+  padding:0 10px;width:auto;min-width:38px;
 }
 
-/* ===== MAIN VIEWPORT ===== */
+/* ===== VIEWPORT ===== */
 .viewport{
-  position:absolute;
-  top:0;left:0;right:0;bottom:0;
+  position:absolute;top:0;left:0;right:0;bottom:0;
   padding-top:calc(var(--header-h) + var(--safe-top));
   padding-bottom:calc(var(--nav-h) + var(--safe-bottom));
   overflow:hidden;
@@ -143,16 +284,15 @@ body{
   overflow-y:auto;
   overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
-  opacity:0;
-  pointer-events:none;
+  opacity:0;pointer-events:none;
   transform:translateY(8px);
-  transition:opacity 0.3s ease,transform 0.3s ease;
+  transition:opacity 0.3s, transform 0.3s;
   scrollbar-width:none;
 }
 .screen::-webkit-scrollbar{display:none;}
 .screen.active{opacity:1;pointer-events:auto;transform:translateY(0);}
 
-/* ===== HOME SCREEN ===== */
+/* ===== HOME HERO ===== */
 .hero{
   position:relative;
   margin:16px 16px 0;
@@ -182,46 +322,27 @@ body{
   mask-image:radial-gradient(ellipse at top right,black 30%,transparent 70%);
   pointer-events:none;
 }
-.greeting{
-  position:relative;
-  font-size:13px;
-  color:var(--text-dim);
-  margin-bottom:6px;
-  letter-spacing:0.05em;
-}
-.user-name{
-  position:relative;
-  font-size:26px;
-  font-weight:900;
-  color:var(--text);
-  margin-bottom:4px;
-}
+.greeting{position:relative;font-size:13px;color:var(--text-dim);margin-bottom:6px;letter-spacing:0.05em;}
+.user-name{position:relative;font-size:26px;font-weight:900;color:var(--text);margin-bottom:4px;}
 .user-status{
   position:relative;
   display:inline-flex;align-items:center;gap:6px;
-  font-size:11px;
-  color:var(--gold);
-  letter-spacing:0.15em;
-  text-transform:uppercase;
+  font-size:11px;color:var(--gold);
+  letter-spacing:0.15em;text-transform:uppercase;
   margin-top:6px;
 }
 .user-status::before{
   content:'';width:6px;height:6px;
-  background:var(--gold);
-  border-radius:50%;
+  background:var(--gold);border-radius:50%;
   box-shadow:0 0 10px var(--gold);
   animation:pulse 2s infinite;
 }
-@keyframes pulse{
-  0%,100%{opacity:1;transform:scale(1);}
-  50%{opacity:0.5;transform:scale(1.3);}
-}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.3);}}
 
 .membership-card{
   position:relative;
-  margin-top:24px;
-  padding:18px;
-  background:linear-gradient(135deg,rgba(212,175,55,0.12) 0%,rgba(212,175,55,0.04) 100%);
+  margin-top:24px;padding:18px;
+  background:linear-gradient(135deg,rgba(212,175,55,0.12),rgba(212,175,55,0.04));
   border:1px solid rgba(212,175,55,0.2);
   border-radius:16px;
   display:flex;justify-content:space-between;align-items:center;
@@ -231,50 +352,39 @@ body{
 [data-lang="ar"] .membership-info .plan{font-family:'Cairo',sans-serif;font-weight:900;font-size:18px;letter-spacing:0;}
 .membership-info .expires{font-size:11px;color:var(--text-dim);margin-top:4px;}
 .days-left{
-  text-align:center;
-  padding:0 14px;
+  text-align:center;padding:0 14px;
   border-right:1px solid rgba(212,175,55,0.2);
 }
 [dir="rtl"] .days-left{border-right:none;border-left:1px solid rgba(212,175,55,0.2);}
 .days-left .num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--text);line-height:1;}
 .days-left .lbl{font-size:9px;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:4px;}
 
-/* ===== STATS GRID ===== */
+/* ===== SECTIONS ===== */
 .section{padding:24px 16px 0;}
 .section-head{
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;
-  padding:0 4px;
+  margin-bottom:14px;padding:0 4px;
 }
 .section-title{
   font-family:'Bebas Neue',sans-serif;
-  font-size:18px;
-  letter-spacing:0.15em;
-  color:var(--text);
+  font-size:18px;letter-spacing:0.15em;color:var(--text);
 }
 [data-lang="ar"] .section-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:16px;letter-spacing:0;}
 .section-title .accent{color:var(--gold);}
-.section-link{font-size:12px;color:var(--gold);letter-spacing:0.05em;cursor:pointer;}
+.section-link{font-size:12px;color:var(--gold);letter-spacing:0.05em;cursor:pointer;background:none;border:none;}
 
-.stats-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .stat-card{
-  position:relative;
-  padding:16px;
+  position:relative;padding:16px;
   background:var(--surface);
   border:1px solid var(--line);
-  border-radius:16px;
-  overflow:hidden;
+  border-radius:16px;overflow:hidden;
 }
 .stat-card .icon{
   width:32px;height:32px;
   display:flex;align-items:center;justify-content:center;
   background:rgba(212,175,55,0.1);
-  border-radius:8px;
-  color:var(--gold);
+  border-radius:8px;color:var(--gold);
   margin-bottom:10px;
 }
 .stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--text);line-height:1;}
@@ -282,40 +392,32 @@ body{
 .stat-card .label{font-size:11px;color:var(--text-dim);margin-top:6px;letter-spacing:0.05em;}
 .stat-card .trend{
   position:absolute;top:14px;left:14px;
-  font-size:10px;
-  color:var(--success);
-  display:flex;align-items:center;gap:2px;
+  font-size:10px;color:var(--success);
 }
 [dir="rtl"] .stat-card .trend{left:auto;right:14px;}
 
 /* ===== CLASSES SCROLL ===== */
 .classes-scroll{
   display:flex;gap:12px;
-  overflow-x:auto;
-  padding:0 16px 4px;
+  overflow-x:auto;padding:0 16px 4px;
   scrollbar-width:none;
   scroll-snap-type:x mandatory;
 }
 .classes-scroll::-webkit-scrollbar{display:none;}
 .class-card{
-  flex:0 0 240px;
-  scroll-snap-align:start;
-  position:relative;
-  height:160px;
-  padding:16px;
-  border-radius:18px;
-  overflow:hidden;
+  flex:0 0 240px;scroll-snap-align:start;
+  position:relative;height:160px;padding:16px;
+  border-radius:18px;overflow:hidden;
   background:var(--surface);
   border:1px solid var(--line);
   display:flex;flex-direction:column;justify-content:space-between;
-  cursor:pointer;
-  transition:transform 0.2s;
+  cursor:pointer;transition:transform 0.2s;
 }
 .class-card:active{transform:scale(0.97);}
 .class-card.featured{
   background:
-    linear-gradient(135deg,rgba(212,175,55,0.2) 0%,transparent 60%),
-    linear-gradient(225deg,rgba(212,175,55,0.05) 0%,#1a1a1a 100%);
+    linear-gradient(135deg,rgba(212,175,55,0.2),transparent 60%),
+    linear-gradient(225deg,rgba(212,175,55,0.05),#1a1a1a);
   border-color:rgba(212,175,55,0.3);
 }
 .class-time{
@@ -324,8 +426,7 @@ body{
   background:rgba(0,0,0,0.5);
   border:1px solid var(--line);
   border-radius:100px;
-  font-size:11px;
-  width:fit-content;
+  font-size:11px;width:fit-content;
   letter-spacing:0.05em;
 }
 .class-time .dot{width:5px;height:5px;background:var(--gold);border-radius:50%;}
@@ -333,26 +434,18 @@ body{
 [data-lang="ar"] .class-name{font-family:'Cairo',sans-serif;font-weight:900;font-size:18px;}
 .class-meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
 .class-coach{font-size:11px;color:var(--text-dim);}
-.class-spots{
-  font-size:10px;
-  color:var(--gold);
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-}
+.class-spots{font-size:10px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;}
 
 /* ===== WORKOUT TODAY ===== */
 .workout-today{
-  margin:0 16px;
-  padding:20px;
-  background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%);
+  margin:0 16px;padding:20px;
+  background:linear-gradient(135deg,#1a1a1a,#0f0f0f);
   border:1px solid var(--line);
   border-radius:18px;
-  position:relative;
-  overflow:hidden;
+  position:relative;overflow:hidden;
 }
 .workout-today::before{
-  content:'';position:absolute;
-  top:0;right:0;
+  content:'';position:absolute;top:0;right:0;
   width:120px;height:120px;
   background:radial-gradient(circle,rgba(212,175,55,0.15),transparent 70%);
   pointer-events:none;
@@ -361,14 +454,11 @@ body{
 .workout-day{font-size:11px;color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;}
 .workout-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.05em;color:var(--text);margin-top:4px;}
 [data-lang="ar"] .workout-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:20px;}
-.workout-progress{
-  width:48px;height:48px;
-  position:relative;
-}
+.workout-progress{width:48px;height:48px;position:relative;}
 .workout-progress svg{transform:rotate(-90deg);}
 .workout-progress circle{fill:none;stroke-width:4;}
 .workout-progress .bg{stroke:var(--line);}
-.workout-progress .fg{stroke:var(--gold);stroke-linecap:round;stroke-dasharray:138.2;stroke-dashoffset:55.3;transition:stroke-dashoffset 0.6s;}
+.workout-progress .fg{stroke:var(--gold);stroke-linecap:round;stroke-dasharray:138.2;transition:stroke-dashoffset 0.6s;}
 .workout-progress .pct{
   position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
@@ -383,16 +473,16 @@ body{
   background:rgba(255,255,255,0.02);
   border:1px solid var(--line-2);
   border-radius:12px;
+  cursor:pointer;
+  transition:all 0.2s;
 }
 .exercise.done{opacity:0.5;}
 .exercise.done .ex-name{text-decoration:line-through;}
 .ex-check{
   width:22px;height:22px;
   border:2px solid var(--line);
-  border-radius:6px;
-  flex-shrink:0;
+  border-radius:6px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
   transition:all 0.2s;
 }
 .ex-check.checked{background:var(--gold);border-color:var(--gold);}
@@ -401,25 +491,13 @@ body{
 .ex-info{flex:1;min-width:0;}
 .ex-name{font-size:14px;font-weight:600;color:var(--text);}
 .ex-meta{font-size:11px;color:var(--text-dim);margin-top:2px;}
-.ex-weight{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:14px;
-  color:var(--gold);
-  letter-spacing:0.05em;
-  text-align:center;
-}
+.ex-weight{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--gold);letter-spacing:0.05em;text-align:center;}
 [data-lang="ar"] .ex-weight{font-family:'Cairo',sans-serif;font-weight:700;}
 
-/* ===== TRAINERS SECTION ===== */
-.trainers-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  padding:0 16px;
-}
+/* ===== TRAINERS ===== */
+.trainers-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px;}
 .trainer-card{
-  position:relative;
-  padding:16px 14px;
+  position:relative;padding:16px 14px;
   background:var(--surface);
   border:1px solid var(--line);
   border-radius:16px;
@@ -435,8 +513,7 @@ body{
   background:linear-gradient(135deg,var(--gold-dim),var(--gold));
   display:flex;align-items:center;justify-content:center;
   font-family:'Bebas Neue',sans-serif;
-  font-size:22px;
-  color:var(--bg);
+  font-size:22px;color:var(--bg);
   position:relative;
 }
 .trainer-avatar::after{
@@ -453,32 +530,28 @@ body{
 
 /* ===== BOTTOM NAV ===== */
 .bottom-nav{
-  position:absolute;
-  bottom:0;left:0;right:0;
+  position:absolute;bottom:0;left:0;right:0;
   height:calc(var(--nav-h) + var(--safe-bottom));
   padding-bottom:var(--safe-bottom);
   background:rgba(10,10,10,0.95);
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--line);
-  display:flex;
-  z-index:50;
+  display:flex;z-index:50;
 }
 .nav-item{
   flex:1;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:4px;
   background:none;border:none;
-  color:var(--text-muted);
-  cursor:pointer;
-  position:relative;
-  padding-top:6px;
+  color:var(--text-muted);cursor:pointer;
+  position:relative;padding-top:6px;
   transition:color 0.2s;
 }
 .nav-item.center{transform:translateY(-12px);}
 .nav-item.center .nav-icon-wrap{
   width:54px;height:54px;
-  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-2) 100%);
+  background:linear-gradient(135deg,var(--gold),var(--gold-2));
   border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   color:var(--bg);
@@ -492,37 +565,28 @@ body{
 }
 .nav-label{font-size:10px;letter-spacing:0.05em;font-weight:500;}
 
-/* ===== CLASSES SCREEN ===== */
+/* ===== PAGES ===== */
 .page-head{padding:8px 20px 20px;}
 .page-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:0.05em;color:var(--text);}
 [data-lang="ar"] .page-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:26px;}
 .page-sub{font-size:13px;color:var(--text-dim);margin-top:4px;}
 
-.filter-chips{
-  display:flex;gap:8px;
-  padding:0 20px 16px;
-  overflow-x:auto;
-  scrollbar-width:none;
-}
+.filter-chips{display:flex;gap:8px;padding:0 20px 16px;overflow-x:auto;scrollbar-width:none;}
 .filter-chips::-webkit-scrollbar{display:none;}
 .chip{
-  flex-shrink:0;
-  padding:8px 16px;
+  flex-shrink:0;padding:8px 16px;
   background:var(--surface);
   border:1px solid var(--line);
   border-radius:100px;
-  font-size:12px;
-  color:var(--text-dim);
-  cursor:pointer;
-  transition:all 0.2s;
+  font-size:12px;color:var(--text-dim);
+  cursor:pointer;transition:all 0.2s;
   letter-spacing:0.03em;
 }
 .chip.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700;}
 
 .class-list{padding:0 20px;display:flex;flex-direction:column;gap:14px;}
 .class-row{
-  display:flex;gap:14px;
-  padding:14px;
+  display:flex;gap:14px;padding:14px;
   background:var(--surface);
   border:1px solid var(--line);
   border-radius:16px;
@@ -531,11 +595,8 @@ body{
 }
 .class-row:active{transform:scale(0.98);}
 .class-time-block{
-  flex-shrink:0;
-  width:56px;
-  text-align:center;
-  padding-right:14px;
-  border-right:1px solid var(--line);
+  flex-shrink:0;width:56px;text-align:center;
+  padding-right:14px;border-right:1px solid var(--line);
 }
 [dir="rtl"] .class-time-block{padding-right:0;padding-left:14px;border-right:none;border-left:1px solid var(--line);}
 .class-time-block .hour{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);line-height:1;}
@@ -546,40 +607,27 @@ body{
 .class-row-info .desc{font-size:12px;color:var(--text-dim);margin-bottom:8px;}
 .class-row-info .footer{display:flex;align-items:center;gap:10px;}
 .class-tag{
-  font-size:10px;
-  padding:3px 8px;
+  font-size:10px;padding:3px 8px;
   background:rgba(212,175,55,0.1);
   color:var(--gold);
   border-radius:6px;
-  letter-spacing:0.05em;
-  text-transform:uppercase;
+  letter-spacing:0.05em;text-transform:uppercase;
 }
-.class-row-action{
-  flex-shrink:0;
-  display:flex;align-items:center;
-}
+.class-row-action{flex-shrink:0;display:flex;align-items:center;}
 .book-btn{
   padding:8px 14px;
   background:var(--gold);
   color:var(--bg);
-  border:none;
-  border-radius:10px;
-  font-weight:700;
-  font-size:12px;
-  cursor:pointer;
-  letter-spacing:0.05em;
-  text-transform:uppercase;
+  border:none;border-radius:10px;
+  font-weight:700;font-size:12px;
+  cursor:pointer;letter-spacing:0.05em;text-transform:uppercase;
 }
 .book-btn.booked{background:var(--surface-2);color:var(--success);border:1px solid var(--success);}
 .book-btn.full{background:var(--surface-2);color:var(--text-muted);}
 
-/* ===== WORKOUT SCREEN (CENTER) ===== */
+/* ===== WORKOUT SCREEN ===== */
 .workout-screen{padding:8px 20px;}
-.muscle-tabs{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  margin-bottom:20px;
-}
+.muscle-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
 .muscle-tab{
   padding:14px 8px;
   background:var(--surface);
@@ -595,40 +643,33 @@ body{
 .muscle-tab.active .lbl{color:var(--gold);}
 
 .start-workout{
-  display:block;width:100%;
-  padding:18px;
-  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-2) 50%,var(--gold-dim) 100%);
+  display:block;width:100%;padding:18px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-2),var(--gold-dim));
   color:var(--bg);
-  border:none;
-  border-radius:16px;
+  border:none;border-radius:16px;
   font-family:'Bebas Neue',sans-serif;
-  font-size:18px;
-  letter-spacing:0.2em;
+  font-size:18px;letter-spacing:0.2em;
   cursor:pointer;
   margin-bottom:20px;
-  position:relative;
-  overflow:hidden;
+  position:relative;overflow:hidden;
   box-shadow:0 8px 24px rgba(212,175,55,0.3);
 }
 [data-lang="ar"] .start-workout{font-family:'Cairo',sans-serif;font-weight:900;font-size:16px;letter-spacing:0;}
 .start-workout::after{
-  content:'';position:absolute;
-  top:0;left:-100%;width:100%;height:100%;
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
   animation:shimmer 3s infinite;
 }
-@keyframes shimmer{to{left:200%;}}
 
 .exercise-card{
-  margin-bottom:12px;
-  padding:16px;
+  margin-bottom:12px;padding:16px;
   background:var(--surface);
   border:1px solid var(--line);
   border-radius:14px;
 }
 .exercise-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
 .ex-card-name{font-size:15px;font-weight:700;}
-.ex-card-target{font-size:11px;color:var(--gold);letter-spacing:0.05em;text-transform:uppercase;}
+.ex-card-target{font-size:11px;color:var(--gold);letter-spacing:0.05em;text-transform:uppercase;margin-top:2px;}
 .sets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .set-box{
   padding:10px 8px;
@@ -641,12 +682,9 @@ body{
 .set-val{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);margin-top:2px;}
 [data-lang="ar"] .set-val{font-family:'Cairo',sans-serif;font-weight:700;}
 
-/* ===== PROGRESS SCREEN ===== */
+/* ===== PROGRESS ===== */
 .progress-screen{padding:8px 20px;}
-.progress-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
-  margin-bottom:24px;
-}
+.progress-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
 .progress-stat{
   padding:16px 10px;
   background:var(--surface);
@@ -671,60 +709,51 @@ body{
 .chart{height:140px;display:flex;align-items:flex-end;gap:6px;}
 .bar{
   flex:1;
-  background:linear-gradient(180deg,var(--gold) 0%,var(--gold-dim) 100%);
+  background:linear-gradient(180deg,var(--gold),var(--gold-dim));
   border-radius:4px 4px 0 0;
-  position:relative;
-  min-height:4px;
+  position:relative;min-height:4px;
   transition:height 0.6s;
 }
 .bar::after{
   content:attr(data-day);
   position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
-  font-size:9px;color:var(--text-muted);
-  letter-spacing:0.1em;
+  font-size:9px;color:var(--text-muted);letter-spacing:0.1em;
 }
 .bar.weak{background:linear-gradient(180deg,var(--line),var(--line-2));}
 
 .achievements{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
 .achievement{
-  aspect-ratio:1;
-  padding:10px;
+  aspect-ratio:1;padding:10px;
   background:var(--surface);
   border:1px solid var(--line);
   border-radius:14px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;
-  position:relative;
+  text-align:center;position:relative;
 }
 .achievement.unlocked{background:linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05));border-color:rgba(212,175,55,0.3);}
 .achievement.locked{opacity:0.4;}
 .ach-icon{font-size:24px;margin-bottom:4px;}
 .ach-name{font-size:9px;color:var(--text-dim);letter-spacing:0.05em;line-height:1.2;}
 
-/* ===== PROFILE SCREEN ===== */
+/* ===== PROFILE ===== */
 .profile-screen{padding:0 20px;}
 .profile-head{
   display:flex;flex-direction:column;align-items:center;
-  padding:20px 0;
-  text-align:center;
+  padding:20px 0;text-align:center;
 }
 .profile-avatar{
-  width:90px;height:90px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--gold-dim),var(--gold) 50%,var(--gold-2));
+  width:90px;height:90px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold-dim),var(--gold),var(--gold-2));
   display:flex;align-items:center;justify-content:center;
   font-family:'Bebas Neue',sans-serif;
-  font-size:36px;
-  color:var(--bg);
-  margin-bottom:14px;
-  position:relative;
+  font-size:36px;color:var(--bg);
+  margin-bottom:14px;position:relative;
   box-shadow:0 8px 24px rgba(212,175,55,0.3);
 }
 .profile-avatar::after{
   content:'';position:absolute;inset:-3px;
   border:2px solid var(--gold);
-  border-radius:50%;
-  opacity:0.3;
+  border-radius:50%;opacity:0.3;
 }
 .profile-name{font-size:22px;font-weight:900;}
 .profile-id{font-size:11px;color:var(--text-muted);letter-spacing:0.2em;margin-top:4px;}
@@ -732,8 +761,7 @@ body{
 
 .profile-stats{
   display:grid;grid-template-columns:repeat(3,1fr);
-  margin:20px 0;
-  padding:18px;
+  margin:20px 0;padding:18px;
   background:var(--surface);
   border:1px solid var(--line);
   border-radius:16px;
@@ -765,8 +793,7 @@ body{
   background:rgba(212,175,55,0.1);
   border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  color:var(--gold);
-  flex-shrink:0;
+  color:var(--gold);flex-shrink:0;
 }
 .menu-text{flex:1;}
 .menu-text .t{font-size:14px;font-weight:600;}
@@ -775,17 +802,14 @@ body{
 [dir="rtl"] .menu-arrow{transform:rotate(180deg);}
 
 .logout-btn{
-  display:block;width:100%;
-  padding:14px;
+  display:block;width:100%;padding:14px;
   background:transparent;
   border:1px solid var(--danger);
   border-radius:12px;
   color:var(--danger);
   font-size:13px;font-weight:700;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  cursor:pointer;
-  margin-bottom:20px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  cursor:pointer;margin-bottom:20px;
 }
 
 /* ===== TOAST ===== */
@@ -794,27 +818,25 @@ body{
   bottom:calc(var(--nav-h) + var(--safe-bottom) + 16px);
   left:50%;transform:translateX(-50%) translateY(80px);
   padding:12px 20px;
-  background:var(--gold);
-  color:var(--bg);
+  background:var(--gold);color:var(--bg);
   border-radius:100px;
-  font-weight:700;
-  font-size:13px;
-  z-index:100;
-  opacity:0;
+  font-weight:700;font-size:13px;
+  z-index:400;opacity:0;
   transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
   box-shadow:0 8px 24px rgba(212,175,55,0.4);
-  pointer-events:none;
-  white-space:nowrap;
+  pointer-events:none;white-space:nowrap;
+  max-width:90%;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.error{background:var(--danger);color:#fff;}
+.toast.success{background:var(--success);color:#fff;}
 
 /* ===== MODAL ===== */
 .modal-overlay{
   position:absolute;inset:0;
   background:rgba(0,0,0,0.7);
   backdrop-filter:blur(8px);
-  z-index:200;
-  opacity:0;pointer-events:none;
+  z-index:200;opacity:0;pointer-events:none;
   transition:opacity 0.25s;
   display:flex;align-items:flex-end;
 }
@@ -828,14 +850,11 @@ body{
   border-top:1px solid var(--line);
   transform:translateY(100%);
   transition:transform 0.3s cubic-bezier(0.34,1.36,0.64,1);
+  max-height:85vh;
+  overflow-y:auto;
 }
 .modal-overlay.show .modal{transform:translateY(0);}
-.modal-handle{
-  width:40px;height:4px;
-  background:var(--line);
-  border-radius:2px;
-  margin:0 auto 16px;
-}
+.modal-handle{width:40px;height:4px;background:var(--line);border-radius:2px;margin:0 auto 16px;}
 .modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;margin-bottom:6px;}
 [data-lang="ar"] .modal-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:20px;}
 .modal-sub{font-size:13px;color:var(--text-dim);margin-bottom:20px;}
@@ -846,18 +865,34 @@ body{
 .detail-row .v{font-size:13px;font-weight:600;color:var(--text);}
 .detail-row .v.gold{color:var(--gold);}
 .modal-action{
-  display:block;width:100%;
-  padding:14px;
-  background:var(--gold);
-  color:var(--bg);
-  border:none;
-  border-radius:12px;
-  font-weight:700;
-  font-size:13px;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
+  display:block;width:100%;padding:14px;
+  background:var(--gold);color:var(--bg);
+  border:none;border-radius:12px;
+  font-weight:700;font-size:13px;
+  letter-spacing:0.1em;text-transform:uppercase;
   cursor:pointer;
 }
+.modal-action:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* ===== LOADER ===== */
+.loader-overlay{
+  position:absolute;inset:0;
+  background:rgba(10,10,10,0.85);
+  backdrop-filter:blur(4px);
+  z-index:500;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.2s;
+}
+.loader-overlay.show{opacity:1;pointer-events:auto;}
+.spinner{
+  width:44px;height:44px;
+  border:3px solid var(--line);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
 
 /* ===== UTILITIES ===== */
 [data-lang="en"] .ar-only{display:none;}
@@ -868,7 +903,86 @@ body{
 <body>
 <div class="app">
 
-  <!-- HEADER -->
+  <!-- ========== LOGIN SCREEN ========== -->
+  <div class="login" id="loginScreen">
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang-set="ar" onclick="setLang('ar')">عربي</button>
+      <button class="lang-btn" data-lang-set="en" onclick="setLang('en')">EN</button>
+    </div>
+
+    <div class="login-brand">
+      <div class="login-mark">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12h2M19 12h2M7 8v8M17 8v8M7 12h10" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="login-title">
+        <span class="ar-only">آيرون فورج</span>
+        <span class="en-only">IRON FORGE</span>
+      </div>
+      <div class="login-tag">
+        <span class="ar-only">جيم بريميوم</span>
+        <span class="en-only">PREMIUM GYM</span>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <div class="login-heading">
+        <span class="ar-only">تسجيل الدخول</span>
+        <span class="en-only">Sign In</span>
+      </div>
+      <div class="login-sub">
+        <span class="ar-only">أدخل بيانات العضوية اللي اتعطت لك من إدارة الجيم</span>
+        <span class="en-only">Enter the credentials given to you by gym administration</span>
+      </div>
+
+      <div class="login-error" id="loginError"></div>
+
+      <div class="field">
+        <label>
+          <span class="ar-only">رقم العضوية</span>
+          <span class="en-only">Member ID</span>
+        </label>
+        <div class="input-wrap">
+          <input type="text" id="memberIdInput" placeholder="IF-2024-0892" autocomplete="off" autocapitalize="characters" />
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>
+          <span class="ar-only">كلمة المرور</span>
+          <span class="en-only">Password</span>
+        </label>
+        <div class="input-wrap">
+          <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="off" />
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+        </div>
+      </div>
+
+      <button class="login-btn" id="loginBtn" onclick="handleLogin()">
+        <span class="ar-only">دخول</span>
+        <span class="en-only">SIGN IN</span>
+      </button>
+    </div>
+
+    <div class="login-foot">
+      <div>
+        <span class="ar-only">هذا التطبيق مخصص لأعضاء <strong>IRON FORGE</strong> فقط</span>
+        <span class="en-only">This app is exclusive to <strong>IRON FORGE</strong> members</span>
+      </div>
+      <div style="margin-top:8px;">
+        <span class="ar-only">للحصول على بياناتك تواصل مع الإدارة</span>
+        <span class="en-only">Contact admin for your credentials</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== HEADER ========== -->
   <header class="app-header">
     <div class="brand">
       <div class="brand-mark">
@@ -888,389 +1002,159 @@ body{
         <span class="ar-only">EN</span>
         <span class="en-only">AR</span>
       </button>
-      <button class="icon-btn" onclick="showToast(L().notif)">
+      <button class="icon-btn" onclick="showNotifications()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-          <path d="M13.73 21a2 2 0 01-3.46 0"/>
+          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
         </svg>
-        <span class="badge"></span>
+        <span class="badge" id="notifBadge"></span>
       </button>
     </div>
   </header>
 
-  <!-- VIEWPORT -->
+  <!-- ========== VIEWPORT ========== -->
   <div class="viewport">
 
-    <!-- HOME SCREEN -->
+    <!-- HOME -->
     <div class="screen active" data-screen="home">
       <div class="hero">
         <div class="hero-grid"></div>
-        <div class="greeting" data-i18n="greeting">صباح القوة،</div>
-        <div class="user-name" data-i18n="user">أحمد فاروق</div>
-        <div class="user-status" data-i18n="status">عضو نشط</div>
+        <div class="greeting" id="greetingText">صباح القوة،</div>
+        <div class="user-name" id="userName">—</div>
+        <div class="user-status" id="userStatus">عضو نشط</div>
 
         <div class="membership-card">
           <div class="membership-info">
-            <div class="label" data-i18n="plan">الباقة الحالية</div>
-            <div class="plan" data-i18n="planName">VIP غير محدود</div>
-            <div class="expires" data-i18n="exp">تنتهي 15 يونيو 2026</div>
+            <div class="label" id="planLabel">الباقة الحالية</div>
+            <div class="plan" id="userPlan">—</div>
+            <div class="expires" id="userExpires">—</div>
           </div>
           <div class="days-left">
-            <div class="num">38</div>
-            <div class="lbl" data-i18n="days">يوم متبقي</div>
+            <div class="num" id="daysLeft">0</div>
+            <div class="lbl" id="daysLabel">يوم متبقي</div>
           </div>
         </div>
       </div>
 
       <div class="section">
         <div class="section-head">
-          <div class="section-title" data-i18n="thisWeek">إحصائيات <span class="accent">الأسبوع</span></div>
+          <div class="section-title"><span id="weekLbl">إحصائيات</span> <span class="accent" id="weekAcc">الأسبوع</span></div>
         </div>
         <div class="stats-grid">
           <div class="stat-card">
             <div class="trend">↑ 12%</div>
-            <div class="icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            </div>
-            <div class="value">5</div>
-            <div class="label" data-i18n="visits">زيارة هذا الأسبوع</div>
+            <div class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+            <div class="value" id="visitsVal">5</div>
+            <div class="label" id="visitsLbl">زيارة هذا الأسبوع</div>
           </div>
           <div class="stat-card">
             <div class="trend">↑ 8%</div>
-            <div class="icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            </div>
-            <div class="value">7.2h</div>
-            <div class="label" data-i18n="time">إجمالي الوقت</div>
+            <div class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+            <div class="value" id="hoursVal">7.2h</div>
+            <div class="label" id="hoursLbl">إجمالي الوقت</div>
           </div>
           <div class="stat-card">
-            <div class="icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
-            <div class="value">2,840</div>
-            <div class="label" data-i18n="cal">سعرة محروقة</div>
+            <div class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+            <div class="value" id="calVal">2,840</div>
+            <div class="label" id="calLbl">سعرة محروقة</div>
           </div>
           <div class="stat-card">
             <div class="trend">↑ 15kg</div>
-            <div class="icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5h11M6.5 17.5h11M3 9.5l3-3 3 3M21 9.5l-3-3-3 3M3 14.5l3 3 3-3M21 14.5l-3 3-3-3"/></svg>
-            </div>
-            <div class="value">18.5K</div>
-            <div class="label" data-i18n="vol">حجم الرفع (كجم)</div>
+            <div class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5h11M6.5 17.5h11M3 9.5l3-3 3 3M21 9.5l-3-3-3 3M3 14.5l3 3 3-3M21 14.5l-3 3-3-3"/></svg></div>
+            <div class="value" id="volVal">18.5K</div>
+            <div class="label" id="volLbl">حجم الرفع (كجم)</div>
           </div>
         </div>
       </div>
 
       <div class="section">
         <div class="section-head">
-          <div class="section-title" data-i18n="todayClasses">كلاسات <span class="accent">اليوم</span></div>
-          <div class="section-link" data-i18n="seeAll" onclick="navigate('classes')">عرض الكل ←</div>
+          <div class="section-title"><span id="todayClsLbl">كلاسات</span> <span class="accent" id="todayClsAcc">اليوم</span></div>
+          <button class="section-link" onclick="navigate('classes')">
+            <span id="seeAllText">عرض الكل ←</span>
+          </button>
         </div>
       </div>
-      <div class="classes-scroll">
-        <div class="class-card featured" onclick="openClass('crossfit')">
-          <div class="class-time"><span class="dot"></span><span data-i18n="now">جاري الآن</span></div>
-          <div>
-            <div class="class-name" data-i18n="cf">CROSSFIT شدة عالية</div>
-            <div class="class-meta">
-              <span class="class-coach">كابتن محمود</span>
-              <span class="class-spots">3/12</span>
-            </div>
-          </div>
-        </div>
-        <div class="class-card" onclick="openClass('boxing')">
-          <div class="class-time"><span class="dot"></span><span>5:30 PM</span></div>
-          <div>
-            <div class="class-name" data-i18n="boxing">BOXING ملاكمة</div>
-            <div class="class-meta">
-              <span class="class-coach">كابتن سامي</span>
-              <span class="class-spots">7/15</span>
-            </div>
-          </div>
-        </div>
-        <div class="class-card" onclick="openClass('yoga')">
-          <div class="class-time"><span class="dot"></span><span>7:00 PM</span></div>
-          <div>
-            <div class="class-name" data-i18n="yoga">YOGA يوجا</div>
-            <div class="class-meta">
-              <span class="class-coach">كابتن نور</span>
-              <span class="class-spots">10/20</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="classes-scroll" id="todayClassesScroll"></div>
 
       <div class="section">
         <div class="section-head">
-          <div class="section-title" data-i18n="todayWorkout">تمرين <span class="accent">اليوم</span></div>
+          <div class="section-title"><span id="todayWoLbl">تمرين</span> <span class="accent" id="todayWoAcc">اليوم</span></div>
         </div>
       </div>
       <div class="workout-today">
         <div class="workout-head">
           <div>
-            <div class="workout-day" data-i18n="day">الأربعاء — يوم الصدر</div>
-            <div class="workout-title" data-i18n="chest">CHEST DAY</div>
+            <div class="workout-day" id="workoutDay">الأربعاء — يوم الصدر</div>
+            <div class="workout-title" id="workoutTitleHome">CHEST DAY</div>
           </div>
           <div class="workout-progress">
-            <svg width="48" height="48"><circle class="bg" cx="24" cy="24" r="22"/><circle class="fg" cx="24" cy="24" r="22"/></svg>
-            <div class="pct">60%</div>
+            <svg width="48" height="48"><circle class="bg" cx="24" cy="24" r="22"/><circle class="fg" id="progressCircle" cx="24" cy="24" r="22" stroke-dashoffset="55.3"/></svg>
+            <div class="pct" id="progressPct">60%</div>
           </div>
         </div>
-        <div class="exercise-list">
-          <div class="exercise done">
-            <div class="ex-check checked"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <div class="ex-info">
-              <div class="ex-name" data-i18n="bench">بنش برس</div>
-              <div class="ex-meta">4 × 10</div>
-            </div>
-            <div class="ex-weight">80 kg</div>
-          </div>
-          <div class="exercise done">
-            <div class="ex-check checked"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <div class="ex-info">
-              <div class="ex-name" data-i18n="incline">إنكلاين دامبل</div>
-              <div class="ex-meta">3 × 12</div>
-            </div>
-            <div class="ex-weight">25 kg</div>
-          </div>
-          <div class="exercise" onclick="this.classList.toggle('done');this.querySelector('.ex-check').classList.toggle('checked')">
-            <div class="ex-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <div class="ex-info">
-              <div class="ex-name" data-i18n="fly">كابل فلاي</div>
-              <div class="ex-meta">3 × 15</div>
-            </div>
-            <div class="ex-weight">15 kg</div>
-          </div>
-          <div class="exercise" onclick="this.classList.toggle('done');this.querySelector('.ex-check').classList.toggle('checked')">
-            <div class="ex-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
-            <div class="ex-info">
-              <div class="ex-name" data-i18n="dips">ديبس متوازي</div>
-              <div class="ex-meta">3 × 10</div>
-            </div>
-            <div class="ex-weight">BW</div>
-          </div>
-        </div>
+        <div class="exercise-list" id="homeExercises"></div>
       </div>
 
       <div class="section">
         <div class="section-head">
-          <div class="section-title" data-i18n="trainers">المدربين <span class="accent">المتاحين</span></div>
-          <div class="section-link" data-i18n="seeAll">عرض الكل ←</div>
+          <div class="section-title"><span id="trainersLbl">المدربين</span> <span class="accent" id="trainersAcc">المتاحين</span></div>
+          <button class="section-link" onclick="navigate('classes')">
+            <span id="seeAll2">عرض الكل ←</span>
+          </button>
         </div>
       </div>
-      <div class="trainers-grid">
-        <div class="trainer-card" onclick="bookTrainer('محمود')">
-          <div class="trainer-avatar">م.ع</div>
-          <div class="trainer-name" data-i18n="t1">محمود علي</div>
-          <div class="trainer-spec" data-i18n="s1">كروسفت • قوة</div>
-          <div class="trainer-rating">★ 4.9 (124)</div>
-        </div>
-        <div class="trainer-card" onclick="bookTrainer('سامي')">
-          <div class="trainer-avatar">س.ح</div>
-          <div class="trainer-name" data-i18n="t2">سامي حسن</div>
-          <div class="trainer-spec" data-i18n="s2">ملاكمة • كارديو</div>
-          <div class="trainer-rating">★ 4.8 (89)</div>
-        </div>
-      </div>
+      <div class="trainers-grid" id="trainersGridHome"></div>
     </div>
 
-    <!-- CLASSES SCREEN -->
+    <!-- CLASSES -->
     <div class="screen" data-screen="classes">
       <div class="page-head">
-        <div class="page-title" data-i18n="classesTitle">الكلاسات</div>
-        <div class="page-sub" data-i18n="classesSub">احجز مكانك في أي كلاس متاح</div>
+        <div class="page-title" id="classesPageTitle">الكلاسات</div>
+        <div class="page-sub" id="classesPageSub">احجز مكانك في أي كلاس متاح</div>
       </div>
-      <div class="filter-chips">
-        <div class="chip active" data-i18n="all">الكل</div>
-        <div class="chip" data-i18n="cardio">كارديو</div>
-        <div class="chip" data-i18n="strength">قوة</div>
-        <div class="chip" data-i18n="cf2">كروسفت</div>
-        <div class="chip" data-i18n="boxing2">ملاكمة</div>
-        <div class="chip" data-i18n="yoga2">يوجا</div>
-      </div>
-      <div class="class-list">
-        <div class="class-row" onclick="openClass('cf')">
-          <div class="class-time-block">
-            <div class="hour">04</div>
-            <div class="period">PM</div>
-            <div class="dur">60 min</div>
-          </div>
-          <div class="class-row-info">
-            <div class="name" data-i18n="cfFull">CrossFit شدة عالية</div>
-            <div class="desc" data-i18n="cfDesc">كابتن محمود علي</div>
-            <div class="footer">
-              <span class="class-tag">HIIT</span>
-              <span class="class-tag" data-i18n="advanced">متقدم</span>
-            </div>
-          </div>
-          <div class="class-row-action"><button class="book-btn" data-i18n="book">احجز</button></div>
-        </div>
-        <div class="class-row">
-          <div class="class-time-block">
-            <div class="hour">05</div>
-            <div class="period">PM</div>
-            <div class="dur">45 min</div>
-          </div>
-          <div class="class-row-info">
-            <div class="name" data-i18n="boxingFull">Boxing ملاكمة</div>
-            <div class="desc" data-i18n="boxingDesc">كابتن سامي حسن</div>
-            <div class="footer">
-              <span class="class-tag">CARDIO</span>
-              <span class="class-tag" data-i18n="medium">متوسط</span>
-            </div>
-          </div>
-          <div class="class-row-action"><button class="book-btn booked" data-i18n="booked">✓ محجوز</button></div>
-        </div>
-        <div class="class-row">
-          <div class="class-time-block">
-            <div class="hour">06</div>
-            <div class="period">PM</div>
-            <div class="dur">50 min</div>
-          </div>
-          <div class="class-row-info">
-            <div class="name" data-i18n="powerFull">Power Lifting</div>
-            <div class="desc" data-i18n="powerDesc">كابتن أحمد رضا</div>
-            <div class="footer">
-              <span class="class-tag">STRENGTH</span>
-              <span class="class-tag" data-i18n="advanced2">متقدم</span>
-            </div>
-          </div>
-          <div class="class-row-action"><button class="book-btn" data-i18n="book2">احجز</button></div>
-        </div>
-        <div class="class-row">
-          <div class="class-time-block">
-            <div class="hour">07</div>
-            <div class="period">PM</div>
-            <div class="dur">60 min</div>
-          </div>
-          <div class="class-row-info">
-            <div class="name" data-i18n="yogaFull">Yoga & Stretch</div>
-            <div class="desc" data-i18n="yogaDesc">كابتن نور إبراهيم</div>
-            <div class="footer">
-              <span class="class-tag">FLEXIBILITY</span>
-              <span class="class-tag" data-i18n="all_lvl">جميع المستويات</span>
-            </div>
-          </div>
-          <div class="class-row-action"><button class="book-btn full" data-i18n="full">ممتلئ</button></div>
-        </div>
-        <div class="class-row">
-          <div class="class-time-block">
-            <div class="hour">08</div>
-            <div class="period">PM</div>
-            <div class="dur">45 min</div>
-          </div>
-          <div class="class-row-info">
-            <div class="name" data-i18n="hiitFull">HIIT حرق دهون</div>
-            <div class="desc" data-i18n="hiitDesc">كابتن لينا سامي</div>
-            <div class="footer">
-              <span class="class-tag">CARDIO</span>
-              <span class="class-tag" data-i18n="medium2">متوسط</span>
-            </div>
-          </div>
-          <div class="class-row-action"><button class="book-btn" data-i18n="book3">احجز</button></div>
-        </div>
-      </div>
+      <div class="filter-chips" id="filterChips"></div>
+      <div class="class-list" id="classListFull"></div>
     </div>
 
-    <!-- WORKOUT SCREEN -->
+    <!-- WORKOUT -->
     <div class="screen" data-screen="workout">
       <div class="page-head">
-        <div class="page-title" data-i18n="workoutTitle">برنامج التمرين</div>
-        <div class="page-sub" data-i18n="workoutSub">برنامجك الأسبوعي المخصص</div>
+        <div class="page-title" id="workoutTitle">برنامج التمرين</div>
+        <div class="page-sub" id="workoutSub">برنامجك الأسبوعي المخصص</div>
       </div>
       <div class="workout-screen">
-        <div class="muscle-tabs">
-          <div class="muscle-tab active">
-            <div class="muscle-icon">💪</div>
-            <div class="lbl" data-i18n="chest2">صدر</div>
-          </div>
-          <div class="muscle-tab">
-            <div class="muscle-icon">🏋️</div>
-            <div class="lbl" data-i18n="back">ظهر</div>
-          </div>
-          <div class="muscle-tab">
-            <div class="muscle-icon">🦵</div>
-            <div class="lbl" data-i18n="legs">رجل</div>
-          </div>
-          <div class="muscle-tab">
-            <div class="muscle-icon">💥</div>
-            <div class="lbl" data-i18n="arms">ذراع</div>
-          </div>
-        </div>
-
-        <button class="start-workout" data-i18n="startNow">ابدأ التمرين الآن</button>
-
-        <div class="exercise-card">
-          <div class="exercise-card-head">
-            <div>
-              <div class="ex-card-name" data-i18n="benchE">بنش برس مسطح</div>
-              <div class="ex-card-target" data-i18n="chestTar">صدر • علوي</div>
-            </div>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
-          </div>
-          <div class="sets-grid">
-            <div class="set-box"><div class="set-num">SET 1</div><div class="set-val">80×10</div></div>
-            <div class="set-box"><div class="set-num">SET 2</div><div class="set-val">85×8</div></div>
-            <div class="set-box"><div class="set-num">SET 3</div><div class="set-val">90×6</div></div>
-          </div>
-        </div>
-
-        <div class="exercise-card">
-          <div class="exercise-card-head">
-            <div>
-              <div class="ex-card-name" data-i18n="inclineE">إنكلاين دامبل</div>
-              <div class="ex-card-target" data-i18n="chestUp">صدر • علوي</div>
-            </div>
-          </div>
-          <div class="sets-grid">
-            <div class="set-box"><div class="set-num">SET 1</div><div class="set-val">25×12</div></div>
-            <div class="set-box"><div class="set-num">SET 2</div><div class="set-val">27×10</div></div>
-            <div class="set-box"><div class="set-num">SET 3</div><div class="set-val">30×8</div></div>
-          </div>
-        </div>
-
-        <div class="exercise-card">
-          <div class="exercise-card-head">
-            <div>
-              <div class="ex-card-name" data-i18n="flyE">كابل فلاي</div>
-              <div class="ex-card-target" data-i18n="chestMid">صدر • وسطي</div>
-            </div>
-          </div>
-          <div class="sets-grid">
-            <div class="set-box"><div class="set-num">SET 1</div><div class="set-val">15×15</div></div>
-            <div class="set-box"><div class="set-num">SET 2</div><div class="set-val">17×12</div></div>
-            <div class="set-box"><div class="set-num">SET 3</div><div class="set-val">20×10</div></div>
-          </div>
-        </div>
+        <div class="muscle-tabs" id="muscleTabs"></div>
+        <button class="start-workout" onclick="startWorkout()" id="startWoBtn">ابدأ التمرين الآن</button>
+        <div id="exercisesContainer"></div>
       </div>
     </div>
 
-    <!-- PROGRESS SCREEN -->
+    <!-- PROGRESS -->
     <div class="screen" data-screen="progress">
       <div class="page-head">
-        <div class="page-title" data-i18n="progressTitle">تقدمك</div>
-        <div class="page-sub" data-i18n="progressSub">تتبع رحلتك نحو الأفضل</div>
+        <div class="page-title" id="progressTitle">تقدمك</div>
+        <div class="page-sub" id="progressSub">تتبع رحلتك نحو الأفضل</div>
       </div>
       <div class="progress-screen">
         <div class="progress-stats">
           <div class="progress-stat">
             <div class="v">82</div>
-            <div class="l" data-i18n="weight">الوزن (كجم)</div>
+            <div class="l" id="weightLbl">الوزن (كجم)</div>
           </div>
           <div class="progress-stat">
             <div class="v">14%</div>
-            <div class="l" data-i18n="bodyfat">دهون الجسم</div>
+            <div class="l" id="bodyfatLbl">دهون الجسم</div>
           </div>
           <div class="progress-stat">
             <div class="v">68</div>
-            <div class="l" data-i18n="muscle">الكتلة العضلية</div>
+            <div class="l" id="muscleLbl">الكتلة العضلية</div>
           </div>
         </div>
 
         <div class="chart-card">
           <div class="chart-head">
-            <div class="chart-title" data-i18n="weeklyAct">النشاط الأسبوعي</div>
-            <div class="chart-period" data-i18n="thisW">هذا الأسبوع</div>
+            <div class="chart-title" id="weeklyActLbl">النشاط الأسبوعي</div>
+            <div class="chart-period" id="thisWeekLbl">هذا الأسبوع</div>
           </div>
           <div class="chart">
             <div class="bar" style="height:40%" data-day="S"></div>
@@ -1285,8 +1169,8 @@ body{
 
         <div class="chart-card">
           <div class="chart-head">
-            <div class="chart-title" data-i18n="strProg">تقدم القوة</div>
-            <div class="chart-period" data-i18n="threeM">3 شهور</div>
+            <div class="chart-title" id="strProgLbl">تقدم القوة</div>
+            <div class="chart-period" id="threeMLbl">3 شهور</div>
           </div>
           <div class="chart">
             <div class="bar" style="height:30%" data-day="N"></div>
@@ -1299,152 +1183,66 @@ body{
         </div>
 
         <div class="section-head" style="margin:20px 0 12px;padding:0 4px;">
-          <div class="section-title" data-i18n="achs">الإنجازات</div>
+          <div class="section-title" id="achsLbl">الإنجازات</div>
         </div>
-        <div class="achievements">
-          <div class="achievement unlocked">
-            <div class="ach-icon">🔥</div>
-            <div class="ach-name" data-i18n="ach1">7 أيام متواصلة</div>
-          </div>
-          <div class="achievement unlocked">
-            <div class="ach-icon">💪</div>
-            <div class="ach-name" data-i18n="ach2">100 تمرين</div>
-          </div>
-          <div class="achievement unlocked">
-            <div class="ach-icon">⚡</div>
-            <div class="ach-name" data-i18n="ach3">قوة جديدة</div>
-          </div>
-          <div class="achievement locked">
-            <div class="ach-icon">🏆</div>
-            <div class="ach-name" data-i18n="ach4">30 يوم</div>
-          </div>
-          <div class="achievement locked">
-            <div class="ach-icon">🥇</div>
-            <div class="ach-name" data-i18n="ach5">200 تمرين</div>
-          </div>
-          <div class="achievement locked">
-            <div class="ach-icon">👑</div>
-            <div class="ach-name" data-i18n="ach6">المحترف</div>
-          </div>
-        </div>
+        <div class="achievements" id="achievementsGrid"></div>
       </div>
     </div>
 
-    <!-- PROFILE SCREEN -->
+    <!-- PROFILE -->
     <div class="screen" data-screen="profile">
       <div class="profile-screen">
         <div class="profile-head">
-          <div class="profile-avatar">A.F</div>
-          <div class="profile-name" data-i18n="pName">أحمد فاروق</div>
-          <div class="profile-id">ID: #IF-2024-0892</div>
-          <div class="profile-since" data-i18n="since">عضو منذ يناير 2024</div>
+          <div class="profile-avatar" id="profileAvatar">A.F</div>
+          <div class="profile-name" id="profileName">—</div>
+          <div class="profile-id" id="profileId">—</div>
+          <div class="profile-since" id="profileSince">—</div>
         </div>
 
         <div class="profile-stats">
           <div class="profile-stat">
-            <div class="v">142</div>
-            <div class="l" data-i18n="totalV">زيارة</div>
+            <div class="v" id="totalVisits">142</div>
+            <div class="l" id="totalVisitsLbl">زيارة</div>
           </div>
           <div class="profile-stat">
-            <div class="v">28</div>
-            <div class="l" data-i18n="totalC">كلاس</div>
+            <div class="v" id="totalClasses">28</div>
+            <div class="l" id="totalClassesLbl">كلاس</div>
           </div>
           <div class="profile-stat">
-            <div class="v">12</div>
-            <div class="l" data-i18n="totalA">إنجاز</div>
+            <div class="v" id="totalAch">12</div>
+            <div class="l" id="totalAchLbl">إنجاز</div>
           </div>
         </div>
 
-        <div class="menu-list">
-          <div class="menu-item">
-            <div class="menu-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-            </div>
-            <div class="menu-text">
-              <div class="t" data-i18n="m1">الاشتراك والباقات</div>
-              <div class="s" data-i18n="m1s">VIP — 38 يوم متبقي</div>
-            </div>
-            <div class="menu-arrow">›</div>
-          </div>
-          <div class="menu-item">
-            <div class="menu-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-            </div>
-            <div class="menu-text">
-              <div class="t" data-i18n="m2">المدفوعات والفواتير</div>
-              <div class="s" data-i18n="m2s">3 معاملات</div>
-            </div>
-            <div class="menu-arrow">›</div>
-          </div>
-          <div class="menu-item">
-            <div class="menu-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-            </div>
-            <div class="menu-text">
-              <div class="t" data-i18n="m3">الأهداف الصحية</div>
-              <div class="s" data-i18n="m3s">3 أهداف نشطة</div>
-            </div>
-            <div class="menu-arrow">›</div>
-          </div>
-          <div class="menu-item">
-            <div class="menu-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 008 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H2a2 2 0 010-4h.09A1.65 1.65 0 004.6 8a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V2a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H22a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-            </div>
-            <div class="menu-text">
-              <div class="t" data-i18n="m4">الإعدادات</div>
-              <div class="s" data-i18n="m4s">إشعارات • خصوصية • لغة</div>
-            </div>
-            <div class="menu-arrow">›</div>
-          </div>
-          <div class="menu-item">
-            <div class="menu-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-            </div>
-            <div class="menu-text">
-              <div class="t" data-i18n="m5">المساعدة والدعم</div>
-              <div class="s" data-i18n="m5s">تواصل معنا</div>
-            </div>
-            <div class="menu-arrow">›</div>
-          </div>
-        </div>
+        <div class="menu-list" id="menuList"></div>
 
-        <button class="logout-btn" data-i18n="logout">تسجيل الخروج</button>
+        <button class="logout-btn" onclick="handleLogout()" id="logoutBtn">تسجيل الخروج</button>
       </div>
     </div>
 
   </div>
 
-  <!-- BOTTOM NAV -->
+  <!-- ========== NAV ========== -->
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="navigate('home')">
-      <div class="nav-icon-wrap">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
-      </div>
-      <span class="nav-label" data-i18n="nHome">الرئيسية</span>
+    <button class="nav-item active" data-nav="home" onclick="navigate('home')">
+      <div class="nav-icon-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
+      <span class="nav-label" id="navHome">الرئيسية</span>
     </button>
-    <button class="nav-item" onclick="navigate('classes')">
-      <div class="nav-icon-wrap">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-      </div>
-      <span class="nav-label" data-i18n="nClasses">الكلاسات</span>
+    <button class="nav-item" data-nav="classes" onclick="navigate('classes')">
+      <div class="nav-icon-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+      <span class="nav-label" id="navClasses">الكلاسات</span>
     </button>
-    <button class="nav-item center" onclick="navigate('workout')">
-      <div class="nav-icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6.5 6.5h11M6.5 17.5h11M3 9.5l3-3 3 3M21 9.5l-3-3-3 3M3 14.5l3 3 3-3M21 14.5l-3 3-3-3"/></svg>
-      </div>
-      <span class="nav-label" data-i18n="nWorkout">تمرين</span>
+    <button class="nav-item center" data-nav="workout" onclick="navigate('workout')">
+      <div class="nav-icon-wrap"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6.5 6.5h11M6.5 17.5h11M3 9.5l3-3 3 3M21 9.5l-3-3-3 3M3 14.5l3 3 3-3M21 14.5l-3 3-3-3"/></svg></div>
+      <span class="nav-label" id="navWorkout">تمرين</span>
     </button>
-    <button class="nav-item" onclick="navigate('progress')">
-      <div class="nav-icon-wrap">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
-      </div>
-      <span class="nav-label" data-i18n="nProgress">التقدم</span>
+    <button class="nav-item" data-nav="progress" onclick="navigate('progress')">
+      <div class="nav-icon-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg></div>
+      <span class="nav-label" id="navProgress">التقدم</span>
     </button>
-    <button class="nav-item" onclick="navigate('profile')">
-      <div class="nav-icon-wrap">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      </div>
-      <span class="nav-label" data-i18n="nProfile">حسابي</span>
+    <button class="nav-item" data-nav="profile" onclick="navigate('profile')">
+      <div class="nav-icon-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <span class="nav-label" id="navProfile">حسابي</span>
     </button>
   </nav>
 
@@ -1453,217 +1251,837 @@ body{
 
   <!-- MODAL -->
   <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
-    <div class="modal">
+    <div class="modal" id="modalContent">
       <div class="modal-handle"></div>
-      <div class="modal-title" id="modalTitle">CrossFit شدة عالية</div>
-      <div class="modal-sub" id="modalSub">كابتن محمود علي • 60 دقيقة</div>
-      <div class="modal-body" id="modalBody">
-        <div class="detail-row"><span class="k" data-i18n="dTime">الوقت</span><span class="v">04:00 PM — 05:00 PM</span></div>
-        <div class="detail-row"><span class="k" data-i18n="dLevel">المستوى</span><span class="v">متقدم</span></div>
-        <div class="detail-row"><span class="k" data-i18n="dSpots">المقاعد المتاحة</span><span class="v gold">9 من 12</span></div>
-        <div class="detail-row"><span class="k" data-i18n="dPrice">السعر</span><span class="v gold" data-i18n="free">مجاني (VIP)</span></div>
-      </div>
-      <button class="modal-action" onclick="confirmBooking()" data-i18n="confirm">تأكيد الحجز</button>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-sub" id="modalSub"></div>
+      <div class="modal-body" id="modalBody"></div>
+      <button class="modal-action" id="modalAction" onclick="confirmModalAction()"></button>
     </div>
+  </div>
+
+  <!-- LOADER -->
+  <div class="loader-overlay" id="loader">
+    <div class="spinner"></div>
   </div>
 
 </div>
 
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ===== TRANSLATIONS =====
-const i18n = {
+// =================================================================
+// SUPABASE CONFIG
+// =================================================================
+const SUPABASE_URL = 'https://xfdphshinrlsoguvxbje.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_nYY4LEiiF2k-fChvczOz6g_KwBvAv9K';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// =================================================================
+// STATE
+// =================================================================
+let currentLang = 'ar';
+let currentMember = null;
+let currentMuscle = 'chest';
+let modalContext = null;
+
+// =================================================================
+// I18N
+// =================================================================
+const T = {
   ar: {
-    greeting:'صباح القوة،', user:'أحمد فاروق', status:'عضو نشط',
-    plan:'الباقة الحالية', planName:'VIP غير محدود', exp:'تنتهي 15 يونيو 2026', days:'يوم متبقي',
-    thisWeek:['إحصائيات ','الأسبوع'], visits:'زيارة هذا الأسبوع', time:'إجمالي الوقت', cal:'سعرة محروقة', vol:'حجم الرفع (كجم)',
-    todayClasses:['كلاسات ','اليوم'], seeAll:'عرض الكل ←',
-    now:'جاري الآن', cf:'CROSSFIT شدة عالية', boxing:'BOXING ملاكمة', yoga:'YOGA يوجا',
-    todayWorkout:['تمرين ','اليوم'], day:'الأربعاء — يوم الصدر', chest:'يوم الصدر',
-    bench:'بنش برس', incline:'إنكلاين دامبل', fly:'كابل فلاي', dips:'ديبس متوازي',
-    trainers:['المدربين ','المتاحين'],
-    t1:'محمود علي', s1:'كروسفت • قوة', t2:'سامي حسن', s2:'ملاكمة • كارديو',
-    classesTitle:'الكلاسات', classesSub:'احجز مكانك في أي كلاس متاح',
-    all:'الكل', cardio:'كارديو', strength:'قوة', cf2:'كروسفت', boxing2:'ملاكمة', yoga2:'يوجا',
-    cfFull:'CrossFit شدة عالية', cfDesc:'كابتن محمود علي', advanced:'متقدم', book:'احجز',
-    boxingFull:'Boxing ملاكمة', boxingDesc:'كابتن سامي حسن', medium:'متوسط', booked:'✓ محجوز',
-    powerFull:'Power Lifting', powerDesc:'كابتن أحمد رضا', advanced2:'متقدم', book2:'احجز',
-    yogaFull:'Yoga & Stretch', yogaDesc:'كابتن نور إبراهيم', all_lvl:'جميع المستويات', full:'ممتلئ',
-    hiitFull:'HIIT حرق دهون', hiitDesc:'كابتن لينا سامي', medium2:'متوسط', book3:'احجز',
+    greeting:'صباح القوة،', activeMember:'عضو نشط',
+    planLabel:'الباقة الحالية', daysLabel:'يوم متبقي',
+    weekLbl:'إحصائيات', weekAcc:'الأسبوع',
+    visitsLbl:'زيارة هذا الأسبوع', hoursLbl:'إجمالي الوقت',
+    calLbl:'سعرة محروقة', volLbl:'حجم الرفع (كجم)',
+    todayClsLbl:'كلاسات', todayClsAcc:'اليوم', seeAll:'عرض الكل ←',
+    todayWoLbl:'تمرين', todayWoAcc:'اليوم',
+    trainersLbl:'المدربين', trainersAcc:'المتاحين',
+    classesPageTitle:'الكلاسات', classesPageSub:'احجز مكانك في أي كلاس متاح',
     workoutTitle:'برنامج التمرين', workoutSub:'برنامجك الأسبوعي المخصص',
-    chest2:'صدر', back:'ظهر', legs:'رجل', arms:'ذراع', startNow:'ابدأ التمرين الآن',
-    benchE:'بنش برس مسطح', chestTar:'صدر • علوي', inclineE:'إنكلاين دامبل', chestUp:'صدر • علوي',
-    flyE:'كابل فلاي', chestMid:'صدر • وسطي',
     progressTitle:'تقدمك', progressSub:'تتبع رحلتك نحو الأفضل',
-    weight:'الوزن (كجم)', bodyfat:'دهون الجسم', muscle:'الكتلة العضلية',
-    weeklyAct:'النشاط الأسبوعي', thisW:'هذا الأسبوع', strProg:'تقدم القوة', threeM:'3 شهور',
-    achs:'الإنجازات', ach1:'7 أيام متواصلة', ach2:'100 تمرين', ach3:'قوة جديدة',
-    ach4:'30 يوم', ach5:'200 تمرين', ach6:'المحترف',
-    pName:'أحمد فاروق', since:'عضو منذ يناير 2024',
-    totalV:'زيارة', totalC:'كلاس', totalA:'إنجاز',
-    m1:'الاشتراك والباقات', m1s:'VIP — 38 يوم متبقي',
-    m2:'المدفوعات والفواتير', m2s:'3 معاملات',
-    m3:'الأهداف الصحية', m3s:'3 أهداف نشطة',
-    m4:'الإعدادات', m4s:'إشعارات • خصوصية • لغة',
-    m5:'المساعدة والدعم', m5s:'تواصل معنا',
-    logout:'تسجيل الخروج',
-    nHome:'الرئيسية', nClasses:'الكلاسات', nWorkout:'تمرين', nProgress:'التقدم', nProfile:'حسابي',
-    dTime:'الوقت', dLevel:'المستوى', dSpots:'المقاعد المتاحة', dPrice:'السعر', free:'مجاني (VIP)',
-    confirm:'تأكيد الحجز',
-    notif:'لا يوجد إشعارات جديدة',
+    weightLbl:'الوزن (كجم)', bodyfatLbl:'دهون الجسم', muscleLbl:'الكتلة العضلية',
+    weeklyActLbl:'النشاط الأسبوعي', thisWeekLbl:'هذا الأسبوع',
+    strProgLbl:'تقدم القوة', threeMLbl:'3 شهور', achsLbl:'الإنجازات',
+    totalVisitsLbl:'زيارة', totalClassesLbl:'كلاس', totalAchLbl:'إنجاز',
+    navHome:'الرئيسية', navClasses:'الكلاسات', navWorkout:'تمرين',
+    navProgress:'التقدم', navProfile:'حسابي',
+    logout:'تسجيل الخروج', startWo:'ابدأ التمرين الآن',
     bookSuccess:'✓ تم تأكيد حجزك بنجاح',
-    trainerBook:'تم إرسال طلب الحجز للمدرب',
+    bookCancel:'تم إلغاء الحجز',
+    notif:'لا يوجد إشعارات جديدة',
+    workoutStarted:'بدأ التمرين، حظ موفق!',
+    achievementMsg:'إنجاز جديد مفتوح!',
+    invalidLogin:'بيانات الدخول غير صحيحة، تأكد من الكود وكلمة المرور',
+    accountInactive:'حسابك غير نشط، تواصل مع الإدارة',
+    expired:'انتهت عضويتك، يرجى تجديدها',
+    loginErr:'حصل خطأ، حاول تاني',
+    logoutMsg:'تم تسجيل الخروج بنجاح',
+    book:'احجز', booked:'✓ محجوز', full:'ممتلئ',
+    confirm:'تأكيد الحجز', cancel:'إلغاء',
+    timeKey:'الوقت', levelKey:'المستوى', spotsKey:'المقاعد المتاحة', priceKey:'السعر',
+    free:'مجاني (VIP)',
+    days:['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],
+    morning:'صباح القوة،', afternoon:'مساء القوة،', evening:'مساء الخير،',
+    chestDay:'يوم الصدر', backDay:'يوم الظهر', legsDay:'يوم الرجل', armsDay:'يوم الذراع',
+    chestEx:[
+      {name:'بنش برس',sets:[{set:'SET 1',val:'80×10'},{set:'SET 2',val:'85×8'},{set:'SET 3',val:'90×6'}],target:'صدر • علوي'},
+      {name:'إنكلاين دامبل',sets:[{set:'SET 1',val:'25×12'},{set:'SET 2',val:'27×10'},{set:'SET 3',val:'30×8'}],target:'صدر • علوي'},
+      {name:'كابل فلاي',sets:[{set:'SET 1',val:'15×15'},{set:'SET 2',val:'17×12'},{set:'SET 3',val:'20×10'}],target:'صدر • وسطي'},
+      {name:'ديبس متوازي',sets:[{set:'SET 1',val:'BW×12'},{set:'SET 2',val:'BW×10'},{set:'SET 3',val:'BW×8'}],target:'صدر • سفلي'}
+    ],
+    backEx:[
+      {name:'ديد ليفت',sets:[{set:'SET 1',val:'120×6'},{set:'SET 2',val:'130×4'},{set:'SET 3',val:'140×3'}],target:'ظهر • شامل'},
+      {name:'سحب علوي',sets:[{set:'SET 1',val:'70×10'},{set:'SET 2',val:'75×8'},{set:'SET 3',val:'80×6'}],target:'ظهر • عريض'},
+      {name:'تجديف بار',sets:[{set:'SET 1',val:'60×12'},{set:'SET 2',val:'65×10'},{set:'SET 3',val:'70×8'}],target:'ظهر • وسط'},
+      {name:'بول أب',sets:[{set:'SET 1',val:'BW×8'},{set:'SET 2',val:'BW×6'},{set:'SET 3',val:'BW×5'}],target:'ظهر • علوي'}
+    ],
+    legsEx:[
+      {name:'سكوات',sets:[{set:'SET 1',val:'100×10'},{set:'SET 2',val:'110×8'},{set:'SET 3',val:'120×6'}],target:'فخذ • أمامي'},
+      {name:'ليج برس',sets:[{set:'SET 1',val:'180×12'},{set:'SET 2',val:'200×10'},{set:'SET 3',val:'220×8'}],target:'فخذ • شامل'},
+      {name:'لانجز دامبل',sets:[{set:'SET 1',val:'20×12'},{set:'SET 2',val:'22×10'},{set:'SET 3',val:'25×8'}],target:'فخذ • أمامي'},
+      {name:'ليج كيرل',sets:[{set:'SET 1',val:'40×15'},{set:'SET 2',val:'45×12'},{set:'SET 3',val:'50×10'}],target:'فخذ • خلفي'},
+      {name:'كاف رايز',sets:[{set:'SET 1',val:'60×20'},{set:'SET 2',val:'70×15'},{set:'SET 3',val:'80×12'}],target:'بطة • سمانة'}
+    ],
+    armsEx:[
+      {name:'باي بارب',sets:[{set:'SET 1',val:'30×12'},{set:'SET 2',val:'35×10'},{set:'SET 3',val:'40×8'}],target:'بايسبس'},
+      {name:'هامر دامبل',sets:[{set:'SET 1',val:'12×15'},{set:'SET 2',val:'15×12'},{set:'SET 3',val:'17×10'}],target:'بايسبس • طولي'},
+      {name:'ترايسبس بوش',sets:[{set:'SET 1',val:'25×15'},{set:'SET 2',val:'30×12'},{set:'SET 3',val:'35×10'}],target:'ترايسبس'},
+      {name:'سكال كرشر',sets:[{set:'SET 1',val:'25×12'},{set:'SET 2',val:'30×10'},{set:'SET 3',val:'35×8'}],target:'ترايسبس • طويل'}
+    ],
+    chips:['الكل','كارديو','قوة','كروسفت','ملاكمة','يوجا'],
+    achList:[
+      {ic:'🔥',name:'7 أيام متواصلة',unlocked:true},
+      {ic:'💪',name:'100 تمرين',unlocked:true},
+      {ic:'⚡',name:'قوة جديدة',unlocked:true},
+      {ic:'🏆',name:'30 يوم',unlocked:false},
+      {ic:'🥇',name:'200 تمرين',unlocked:false},
+      {ic:'👑',name:'المحترف',unlocked:false}
+    ],
+    menuItems:[
+      {ic:'plan',t:'الاشتراك والباقات',s:'تفاصيل عضويتك',action:'subscription'},
+      {ic:'pay',t:'المدفوعات والفواتير',s:'سجل المعاملات',action:'payments'},
+      {ic:'goal',t:'الأهداف الصحية',s:'تتبع أهدافك',action:'goals'},
+      {ic:'set',t:'الإعدادات',s:'إشعارات • خصوصية • لغة',action:'settings'},
+      {ic:'help',t:'المساعدة والدعم',s:'تواصل معنا',action:'support'}
+    ],
+    muscleNames:{chest:'صدر',back:'ظهر',legs:'رجل',arms:'ذراع'}
   },
   en: {
-    greeting:'Morning Champion,', user:'Ahmed Farouk', status:'ACTIVE MEMBER',
-    plan:'Current Plan', planName:'VIP UNLIMITED', exp:'Expires June 15, 2026', days:'DAYS LEFT',
-    thisWeek:['THIS ','WEEK'], visits:'Visits this week', time:'Total time', cal:'Calories burned', vol:'Lift volume (kg)',
-    todayClasses:["TODAY'S ",'CLASSES'], seeAll:'See all →',
-    now:'Live Now', cf:'CROSSFIT INTENSE', boxing:'BOXING', yoga:'YOGA FLOW',
-    todayWorkout:["TODAY'S ",'WORKOUT'], day:'Wednesday — Chest Day', chest:'CHEST DAY',
-    bench:'Bench Press', incline:'Incline Dumbbell', fly:'Cable Fly', dips:'Parallel Dips',
-    trainers:['AVAILABLE ','TRAINERS'],
-    t1:'Mahmoud Ali', s1:'CROSSFIT • STRENGTH', t2:'Samy Hassan', s2:'BOXING • CARDIO',
-    classesTitle:'CLASSES', classesSub:'Book your spot in any available class',
-    all:'All', cardio:'Cardio', strength:'Strength', cf2:'CrossFit', boxing2:'Boxing', yoga2:'Yoga',
-    cfFull:'CrossFit Intense', cfDesc:'Coach Mahmoud Ali', advanced:'Advanced', book:'Book',
-    boxingFull:'Boxing Class', boxingDesc:'Coach Samy Hassan', medium:'Medium', booked:'✓ Booked',
-    powerFull:'Power Lifting', powerDesc:'Coach Ahmed Reda', advanced2:'Advanced', book2:'Book',
-    yogaFull:'Yoga & Stretch', yogaDesc:'Coach Noor Ibrahim', all_lvl:'All levels', full:'Full',
-    hiitFull:'HIIT Fat Burn', hiitDesc:'Coach Lina Samy', medium2:'Medium', book3:'Book',
+    greeting:'Morning Champion,', activeMember:'ACTIVE MEMBER',
+    planLabel:'Current Plan', daysLabel:'DAYS LEFT',
+    weekLbl:'THIS', weekAcc:'WEEK',
+    visitsLbl:'Visits this week', hoursLbl:'Total time',
+    calLbl:'Calories burned', volLbl:'Lift volume (kg)',
+    todayClsLbl:"TODAY'S", todayClsAcc:'CLASSES', seeAll:'See all →',
+    todayWoLbl:"TODAY'S", todayWoAcc:'WORKOUT',
+    trainersLbl:'AVAILABLE', trainersAcc:'TRAINERS',
+    classesPageTitle:'CLASSES', classesPageSub:'Book your spot in any available class',
     workoutTitle:'WORKOUT PLAN', workoutSub:'Your customized weekly program',
-    chest2:'Chest', back:'Back', legs:'Legs', arms:'Arms', startNow:'START WORKOUT NOW',
-    benchE:'Flat Bench Press', chestTar:'CHEST • UPPER', inclineE:'Incline Dumbbell', chestUp:'CHEST • UPPER',
-    flyE:'Cable Fly', chestMid:'CHEST • MIDDLE',
     progressTitle:'YOUR PROGRESS', progressSub:'Track your journey to greatness',
-    weight:'Weight (kg)', bodyfat:'Body Fat', muscle:'Muscle Mass',
-    weeklyAct:'Weekly Activity', thisW:'This Week', strProg:'Strength Progress', threeM:'3 Months',
-    achs:'ACHIEVEMENTS', ach1:'7 Day Streak', ach2:'100 Workouts', ach3:'New PR',
-    ach4:'30 Days', ach5:'200 Workouts', ach6:'Pro Status',
-    pName:'Ahmed Farouk', since:'Member since January 2024',
-    totalV:'VISITS', totalC:'CLASSES', totalA:'AWARDS',
-    m1:'Subscription & Plans', m1s:'VIP — 38 days left',
-    m2:'Payments & Invoices', m2s:'3 transactions',
-    m3:'Health Goals', m3s:'3 active goals',
-    m4:'Settings', m4s:'Notifications • Privacy • Language',
-    m5:'Help & Support', m5s:'Contact us',
-    logout:'LOG OUT',
-    nHome:'Home', nClasses:'Classes', nWorkout:'Workout', nProgress:'Progress', nProfile:'Profile',
-    dTime:'Time', dLevel:'Level', dSpots:'Available spots', dPrice:'Price', free:'FREE (VIP)',
-    confirm:'CONFIRM BOOKING',
+    weightLbl:'Weight (kg)', bodyfatLbl:'Body Fat', muscleLbl:'Muscle Mass',
+    weeklyActLbl:'Weekly Activity', thisWeekLbl:'This Week',
+    strProgLbl:'Strength Progress', threeMLbl:'3 Months', achsLbl:'ACHIEVEMENTS',
+    totalVisitsLbl:'VISITS', totalClassesLbl:'CLASSES', totalAchLbl:'AWARDS',
+    navHome:'Home', navClasses:'Classes', navWorkout:'Workout',
+    navProgress:'Progress', navProfile:'Profile',
+    logout:'LOG OUT', startWo:'START WORKOUT NOW',
+    bookSuccess:'✓ Booking confirmed', bookCancel:'Booking cancelled',
     notif:'No new notifications',
-    bookSuccess:'✓ Booking confirmed successfully',
-    trainerBook:'Booking request sent to trainer',
+    workoutStarted:'Workout started, good luck!',
+    achievementMsg:'New achievement unlocked!',
+    invalidLogin:'Invalid credentials, check your ID and password',
+    accountInactive:'Your account is not active, contact admin',
+    expired:'Your membership has expired',
+    loginErr:'Something went wrong, try again',
+    logoutMsg:'Logged out successfully',
+    book:'Book', booked:'✓ Booked', full:'Full',
+    confirm:'CONFIRM BOOKING', cancel:'Cancel',
+    timeKey:'Time', levelKey:'Level', spotsKey:'Available spots', priceKey:'Price',
+    free:'FREE (VIP)',
+    days:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+    morning:'Morning Champion,', afternoon:'Good Afternoon,', evening:'Good Evening,',
+    chestDay:'Chest Day', backDay:'Back Day', legsDay:'Legs Day', armsDay:'Arms Day',
+    chestEx:[
+      {name:'Bench Press',sets:[{set:'SET 1',val:'80×10'},{set:'SET 2',val:'85×8'},{set:'SET 3',val:'90×6'}],target:'CHEST • UPPER'},
+      {name:'Incline Dumbbell',sets:[{set:'SET 1',val:'25×12'},{set:'SET 2',val:'27×10'},{set:'SET 3',val:'30×8'}],target:'CHEST • UPPER'},
+      {name:'Cable Fly',sets:[{set:'SET 1',val:'15×15'},{set:'SET 2',val:'17×12'},{set:'SET 3',val:'20×10'}],target:'CHEST • MID'},
+      {name:'Parallel Dips',sets:[{set:'SET 1',val:'BW×12'},{set:'SET 2',val:'BW×10'},{set:'SET 3',val:'BW×8'}],target:'CHEST • LOWER'}
+    ],
+    backEx:[
+      {name:'Deadlift',sets:[{set:'SET 1',val:'120×6'},{set:'SET 2',val:'130×4'},{set:'SET 3',val:'140×3'}],target:'BACK • FULL'},
+      {name:'Lat Pulldown',sets:[{set:'SET 1',val:'70×10'},{set:'SET 2',val:'75×8'},{set:'SET 3',val:'80×6'}],target:'BACK • LATS'},
+      {name:'Barbell Row',sets:[{set:'SET 1',val:'60×12'},{set:'SET 2',val:'65×10'},{set:'SET 3',val:'70×8'}],target:'BACK • MID'},
+      {name:'Pull Ups',sets:[{set:'SET 1',val:'BW×8'},{set:'SET 2',val:'BW×6'},{set:'SET 3',val:'BW×5'}],target:'BACK • UPPER'}
+    ],
+    legsEx:[
+      {name:'Squat',sets:[{set:'SET 1',val:'100×10'},{set:'SET 2',val:'110×8'},{set:'SET 3',val:'120×6'}],target:'QUADS'},
+      {name:'Leg Press',sets:[{set:'SET 1',val:'180×12'},{set:'SET 2',val:'200×10'},{set:'SET 3',val:'220×8'}],target:'LEGS • FULL'},
+      {name:'Dumbbell Lunges',sets:[{set:'SET 1',val:'20×12'},{set:'SET 2',val:'22×10'},{set:'SET 3',val:'25×8'}],target:'QUADS'},
+      {name:'Leg Curl',sets:[{set:'SET 1',val:'40×15'},{set:'SET 2',val:'45×12'},{set:'SET 3',val:'50×10'}],target:'HAMSTRINGS'},
+      {name:'Calf Raise',sets:[{set:'SET 1',val:'60×20'},{set:'SET 2',val:'70×15'},{set:'SET 3',val:'80×12'}],target:'CALVES'}
+    ],
+    armsEx:[
+      {name:'Barbell Curl',sets:[{set:'SET 1',val:'30×12'},{set:'SET 2',val:'35×10'},{set:'SET 3',val:'40×8'}],target:'BICEPS'},
+      {name:'Hammer Curl',sets:[{set:'SET 1',val:'12×15'},{set:'SET 2',val:'15×12'},{set:'SET 3',val:'17×10'}],target:'BICEPS • LONG'},
+      {name:'Tricep Pushdown',sets:[{set:'SET 1',val:'25×15'},{set:'SET 2',val:'30×12'},{set:'SET 3',val:'35×10'}],target:'TRICEPS'},
+      {name:'Skull Crusher',sets:[{set:'SET 1',val:'25×12'},{set:'SET 2',val:'30×10'},{set:'SET 3',val:'35×8'}],target:'TRICEPS • LONG'}
+    ],
+    chips:['All','Cardio','Strength','CrossFit','Boxing','Yoga'],
+    achList:[
+      {ic:'🔥',name:'7 Day Streak',unlocked:true},
+      {ic:'💪',name:'100 Workouts',unlocked:true},
+      {ic:'⚡',name:'New PR',unlocked:true},
+      {ic:'🏆',name:'30 Days',unlocked:false},
+      {ic:'🥇',name:'200 Workouts',unlocked:false},
+      {ic:'👑',name:'Pro Status',unlocked:false}
+    ],
+    menuItems:[
+      {ic:'plan',t:'Subscription & Plans',s:'Your membership details',action:'subscription'},
+      {ic:'pay',t:'Payments & Invoices',s:'Transaction history',action:'payments'},
+      {ic:'goal',t:'Health Goals',s:'Track your goals',action:'goals'},
+      {ic:'set',t:'Settings',s:'Notifications • Privacy • Language',action:'settings'},
+      {ic:'help',t:'Help & Support',s:'Contact us',action:'support'}
+    ],
+    muscleNames:{chest:'Chest',back:'Back',legs:'Legs',arms:'Arms'}
   }
 };
 
-let currentLang = 'ar';
-function L(){return i18n[currentLang];}
+const L = () => T[currentLang];
 
-function applyLang(){
+// =================================================================
+// MOCK DATA (for classes & trainers — would normally come from DB)
+// =================================================================
+const CLASSES_DATA = [
+  {id:'cf', nameAr:'CrossFit شدة عالية', nameEn:'CrossFit Intense', coachAr:'كابتن محمود علي', coachEn:'Coach Mahmoud Ali', hour:'04', period:'PM', dur:60, lvlAr:'متقدم', lvlEn:'Advanced', tag:'HIIT', spots:'9/12', cat:'crossfit', featured:true, status:'available'},
+  {id:'box', nameAr:'Boxing ملاكمة', nameEn:'Boxing Class', coachAr:'كابتن سامي حسن', coachEn:'Coach Samy Hassan', hour:'05', period:'PM', dur:45, lvlAr:'متوسط', lvlEn:'Medium', tag:'CARDIO', spots:'7/15', cat:'boxing', status:'available'},
+  {id:'pwr', nameAr:'Power Lifting', nameEn:'Power Lifting', coachAr:'كابتن أحمد رضا', coachEn:'Coach Ahmed Reda', hour:'06', period:'PM', dur:50, lvlAr:'متقدم', lvlEn:'Advanced', tag:'STRENGTH', spots:'5/10', cat:'strength', status:'available'},
+  {id:'yoga', nameAr:'Yoga & Stretch', nameEn:'Yoga & Stretch', coachAr:'كابتن نور إبراهيم', coachEn:'Coach Noor Ibrahim', hour:'07', period:'PM', dur:60, lvlAr:'جميع المستويات', lvlEn:'All Levels', tag:'FLEXIBILITY', spots:'20/20', cat:'yoga', status:'full'},
+  {id:'hiit', nameAr:'HIIT حرق دهون', nameEn:'HIIT Fat Burn', coachAr:'كابتن لينا سامي', coachEn:'Coach Lina Samy', hour:'08', period:'PM', dur:45, lvlAr:'متوسط', lvlEn:'Medium', tag:'CARDIO', spots:'8/15', cat:'cardio', status:'available'}
+];
+
+const TRAINERS_DATA = [
+  {id:'t1', initials:'م.ع', nameAr:'محمود علي', nameEn:'Mahmoud Ali', specAr:'كروسفت • قوة', specEn:'CROSSFIT • STRENGTH', rating:4.9, reviews:124},
+  {id:'t2', initials:'س.ح', nameAr:'سامي حسن', nameEn:'Samy Hassan', specAr:'ملاكمة • كارديو', specEn:'BOXING • CARDIO', rating:4.8, reviews:89}
+];
+
+const HOME_EXERCISES = [
+  {id:'h1',nameAr:'بنش برس',nameEn:'Bench Press',meta:'4 × 10',weight:'80 kg',done:true},
+  {id:'h2',nameAr:'إنكلاين دامبل',nameEn:'Incline Dumbbell',meta:'3 × 12',weight:'25 kg',done:true},
+  {id:'h3',nameAr:'كابل فلاي',nameEn:'Cable Fly',meta:'3 × 15',weight:'15 kg',done:false},
+  {id:'h4',nameAr:'ديبس متوازي',nameEn:'Parallel Dips',meta:'3 × 10',weight:'BW',done:false},
+  {id:'h5',nameAr:'بوش أب',nameEn:'Push Ups',meta:'3 × 20',weight:'BW',done:false}
+];
+
+// =================================================================
+// HELPERS
+// =================================================================
+function showLoader(s){document.getElementById('loader').classList.toggle('show',s);}
+
+let toastTimer;
+function showToast(msg, type=''){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+function getInitials(name){
+  if(!name) return '?';
+  const parts = name.trim().split(/\s+/);
+  if(parts.length === 1) return parts[0].substring(0,2).toUpperCase();
+  return (parts[0][0] + '.' + parts[1][0]).toUpperCase();
+}
+
+function getGreeting(){
+  const h = new Date().getHours();
+  if(h < 12) return L().morning;
+  if(h < 18) return L().afternoon;
+  return L().evening;
+}
+
+function getDayName(){
+  const d = new Date().getDay();
+  return L().days[d];
+}
+
+function daysBetween(date){
+  if(!date) return 0;
+  const end = new Date(date);
+  const now = new Date();
+  return Math.max(0, Math.ceil((end - now) / 86400000));
+}
+
+function formatDate(d){
+  if(!d) return '—';
+  const date = new Date(d);
+  const opts = currentLang === 'ar' ? {year:'numeric',month:'long',day:'numeric'} : {year:'numeric',month:'short',day:'numeric'};
+  return date.toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', opts);
+}
+
+// =================================================================
+// LANGUAGE
+// =================================================================
+function setLang(lang){
+  currentLang = lang;
   const html = document.documentElement;
-  html.setAttribute('lang', currentLang);
-  html.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
-  html.setAttribute('data-lang', currentLang);
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const k = el.getAttribute('data-i18n');
-    const v = L()[k];
-    if(v === undefined) return;
-    if(Array.isArray(v)){
-      // Has accent span
-      const accent = el.querySelector('.accent');
-      if(accent){
-        const accentText = accent.textContent;
-        el.innerHTML = '';
-        el.appendChild(document.createTextNode(v[0]));
-        const newAccent = document.createElement('span');
-        newAccent.className = 'accent';
-        newAccent.textContent = v[1];
-        el.appendChild(newAccent);
-      }
-    } else {
-      el.textContent = v;
-    }
+  html.setAttribute('lang', lang);
+  html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  html.setAttribute('data-lang', lang);
+  document.querySelectorAll('[data-lang-set]').forEach(b=>{
+    b.classList.toggle('active', b.dataset.langSet === lang);
   });
+  applyTexts();
+  localStorage.setItem('if_lang', lang);
 }
 
 function toggleLang(){
-  currentLang = currentLang === 'ar' ? 'en' : 'ar';
-  applyLang();
-  showToast(currentLang === 'ar' ? 'العربية' : 'English');
+  setLang(currentLang === 'ar' ? 'en' : 'ar');
 }
 
-// ===== NAVIGATION =====
+function applyTexts(){
+  const t = L();
+  // Header texts handled by .ar-only/.en-only
+  // Stats
+  setText('userStatus', t.activeMember);
+  setText('planLabel', t.planLabel);
+  setText('daysLabel', t.daysLabel);
+  setText('weekLbl', t.weekLbl); setText('weekAcc', t.weekAcc);
+  setText('visitsLbl', t.visitsLbl); setText('hoursLbl', t.hoursLbl);
+  setText('calLbl', t.calLbl); setText('volLbl', t.volLbl);
+  setText('todayClsLbl', t.todayClsLbl); setText('todayClsAcc', t.todayClsAcc);
+  setText('seeAllText', t.seeAll); setText('seeAll2', t.seeAll);
+  setText('todayWoLbl', t.todayWoLbl); setText('todayWoAcc', t.todayWoAcc);
+  setText('trainersLbl', t.trainersLbl); setText('trainersAcc', t.trainersAcc);
+  setText('classesPageTitle', t.classesPageTitle);
+  setText('classesPageSub', t.classesPageSub);
+  setText('workoutTitle', t.workoutTitle); setText('workoutSub', t.workoutSub);
+  setText('progressTitle', t.progressTitle); setText('progressSub', t.progressSub);
+  setText('weightLbl', t.weightLbl); setText('bodyfatLbl', t.bodyfatLbl); setText('muscleLbl', t.muscleLbl);
+  setText('weeklyActLbl', t.weeklyActLbl); setText('thisWeekLbl', t.thisWeekLbl);
+  setText('strProgLbl', t.strProgLbl); setText('threeMLbl', t.threeMLbl);
+  setText('achsLbl', t.achsLbl);
+  setText('totalVisitsLbl', t.totalVisitsLbl);
+  setText('totalClassesLbl', t.totalClassesLbl);
+  setText('totalAchLbl', t.totalAchLbl);
+  setText('navHome', t.navHome); setText('navClasses', t.navClasses);
+  setText('navWorkout', t.navWorkout); setText('navProgress', t.navProgress);
+  setText('navProfile', t.navProfile);
+  setText('logoutBtn', t.logout);
+  setText('startWoBtn', t.startWo);
+
+  // Greeting & user info if logged in
+  if(currentMember){
+    setText('greetingText', getGreeting());
+    setText('userName', currentLang === 'ar' ? (currentMember.full_name_ar || currentMember.full_name) : (currentMember.full_name || currentMember.full_name_ar));
+    setText('userPlan', getPlanName(currentMember.plan));
+    setText('userExpires', (currentLang === 'ar' ? 'تنتهي ' : 'Expires ') + formatDate(currentMember.expires_at));
+    setText('daysLeft', daysBetween(currentMember.expires_at));
+    setText('profileName', currentLang === 'ar' ? (currentMember.full_name_ar || currentMember.full_name) : (currentMember.full_name || currentMember.full_name_ar));
+    setText('profileId', 'ID: ' + currentMember.member_code);
+    const since = formatDate(currentMember.joined_at);
+    setText('profileSince', currentLang === 'ar' ? 'عضو منذ ' + since : 'Member since ' + since);
+  }
+
+  // Re-render dynamic content
+  renderTodayWorkout();
+  renderTodayClassesScroll();
+  renderTrainersGridHome();
+  renderClassesFull();
+  renderWorkoutScreen();
+  renderAchievements();
+  renderMenu();
+}
+
+function setText(id, val){
+  const el = document.getElementById(id);
+  if(el) el.textContent = val;
+}
+
+function getPlanName(plan){
+  const names = {
+    vip:{ar:'VIP غير محدود', en:'VIP UNLIMITED'},
+    gold:{ar:'الذهبية', en:'GOLD'},
+    silver:{ar:'الفضية', en:'SILVER'},
+    bronze:{ar:'البرونزية', en:'BRONZE'}
+  };
+  return names[plan] ? names[plan][currentLang] : (plan || '—');
+}
+
+// =================================================================
+// AUTH / LOGIN
+// =================================================================
+async function handleLogin(){
+  const code = document.getElementById('memberIdInput').value.trim().toUpperCase();
+  const pw = document.getElementById('passwordInput').value.trim();
+  const err = document.getElementById('loginError');
+  err.classList.remove('show');
+
+  if(!code || !pw){
+    err.textContent = currentLang === 'ar' ? 'برجاء إدخال رقم العضوية وكلمة المرور' : 'Please enter member ID and password';
+    err.classList.add('show');
+    return;
+  }
+
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span>';
+
+  try {
+    // Query Supabase for member
+    const { data, error } = await sb
+      .from('members')
+      .select('*')
+      .eq('member_code', code)
+      .eq('password', pw)
+      .maybeSingle();
+
+    if(error) throw error;
+
+    if(!data){
+      err.textContent = L().invalidLogin;
+      err.classList.add('show');
+      btn.disabled = false;
+      btn.innerHTML = currentLang === 'ar' ? '<span>دخول</span>' : '<span>SIGN IN</span>';
+      return;
+    }
+
+    if(data.status !== 'active'){
+      err.textContent = data.status === 'expired' ? L().expired : L().accountInactive;
+      err.classList.add('show');
+      btn.disabled = false;
+      btn.innerHTML = currentLang === 'ar' ? '<span>دخول</span>' : '<span>SIGN IN</span>';
+      return;
+    }
+
+    currentMember = data;
+    localStorage.setItem('if_member', JSON.stringify(data));
+
+    // Log check-in
+    sb.from('attendance').insert({ member_id: data.id, action: 'login_app' }).then(()=>{});
+
+    initApp();
+
+  } catch(e) {
+    console.error(e);
+    err.textContent = L().loginErr + ' (' + (e.message || 'Network') + ')';
+    err.classList.add('show');
+    btn.disabled = false;
+    btn.innerHTML = currentLang === 'ar' ? '<span>دخول</span>' : '<span>SIGN IN</span>';
+  }
+}
+
+function handleLogout(){
+  if(!confirm(currentLang === 'ar' ? 'تأكيد تسجيل الخروج؟' : 'Confirm logout?')) return;
+  localStorage.removeItem('if_member');
+  currentMember = null;
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('memberIdInput').value = '';
+  document.getElementById('passwordInput').value = '';
+  document.getElementById('loginBtn').disabled = false;
+  document.getElementById('loginBtn').innerHTML = currentLang === 'ar' ? '<span>دخول</span>' : '<span>SIGN IN</span>';
+  showToast(L().logoutMsg, 'success');
+}
+
+function initApp(){
+  document.getElementById('loginScreen').classList.add('hidden');
+  // Set avatar
+  const initials = getInitials(currentMember.full_name_ar || currentMember.full_name);
+  document.getElementById('profileAvatar').textContent = initials;
+
+  // Stats from DB
+  setText('totalVisits', currentMember.total_visits || 0);
+  setText('totalClasses', currentMember.total_classes || 0);
+  setText('totalAch', currentMember.total_achievements || 0);
+
+  // Workout day text
+  setText('workoutDay', getDayName() + ' — ' + L().chestDay);
+  setText('workoutTitleHome', currentLang === 'ar' ? 'يوم الصدر' : 'CHEST DAY');
+
+  applyTexts();
+  updateProgress();
+}
+
+// =================================================================
+// NAVIGATION
+// =================================================================
 function navigate(screen){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelector(`[data-screen="${screen}"]`).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const navMap = {home:0, classes:1, workout:2, progress:3, profile:4};
-  document.querySelectorAll('.nav-item')[navMap[screen]].classList.add('active');
-  // scroll to top
+  document.querySelector(`[data-nav="${screen}"]`).classList.add('active');
   document.querySelector(`[data-screen="${screen}"]`).scrollTop = 0;
 }
 
-// ===== TOAST =====
-let toastTimeout;
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(()=>t.classList.remove('show'), 2200);
+// =================================================================
+// RENDER: TODAY CLASSES SCROLL
+// =================================================================
+function renderTodayClassesScroll(){
+  const el = document.getElementById('todayClassesScroll');
+  if(!el) return;
+  el.innerHTML = CLASSES_DATA.slice(0,3).map((c,i)=>`
+    <div class="class-card ${i===0?'featured':''}" onclick="openClassModal('${c.id}')">
+      <div class="class-time">
+        <span class="dot"></span>
+        <span>${i===0 ? (currentLang==='ar'?'جاري الآن':'Live Now') : c.hour+':00 '+c.period}</span>
+      </div>
+      <div>
+        <div class="class-name">${currentLang==='ar'?c.nameAr:c.nameEn}</div>
+        <div class="class-meta">
+          <span class="class-coach">${currentLang==='ar'?c.coachAr:c.coachEn}</span>
+          <span class="class-spots">${c.spots}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
-// ===== MODAL =====
-function openClass(name){
+// =================================================================
+// RENDER: TRAINERS HOME
+// =================================================================
+function renderTrainersGridHome(){
+  const el = document.getElementById('trainersGridHome');
+  if(!el) return;
+  el.innerHTML = TRAINERS_DATA.map(t=>`
+    <div class="trainer-card" onclick="bookTrainer('${t.id}')">
+      <div class="trainer-avatar">${t.initials}</div>
+      <div class="trainer-name">${currentLang==='ar'?t.nameAr:t.nameEn}</div>
+      <div class="trainer-spec">${currentLang==='ar'?t.specAr:t.specEn}</div>
+      <div class="trainer-rating">★ ${t.rating} (${t.reviews})</div>
+    </div>
+  `).join('');
+}
+
+// =================================================================
+// RENDER: TODAY WORKOUT (HOME)
+// =================================================================
+function renderTodayWorkout(){
+  const el = document.getElementById('homeExercises');
+  if(!el) return;
+  el.innerHTML = HOME_EXERCISES.map(ex=>`
+    <div class="exercise ${ex.done?'done':''}" data-exid="${ex.id}" onclick="toggleHomeExercise('${ex.id}')">
+      <div class="ex-check ${ex.done?'checked':''}">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <div class="ex-info">
+        <div class="ex-name">${currentLang==='ar'?ex.nameAr:ex.nameEn}</div>
+        <div class="ex-meta">${ex.meta}</div>
+      </div>
+      <div class="ex-weight">${ex.weight}</div>
+    </div>
+  `).join('');
+}
+
+function toggleHomeExercise(id){
+  const ex = HOME_EXERCISES.find(e=>e.id===id);
+  if(!ex) return;
+  ex.done = !ex.done;
+  renderTodayWorkout();
+  updateProgress();
+}
+
+function updateProgress(){
+  const done = HOME_EXERCISES.filter(e=>e.done).length;
+  const pct = Math.round((done / HOME_EXERCISES.length) * 100);
+  setText('progressPct', pct + '%');
+  const circle = document.getElementById('progressCircle');
+  if(circle){
+    const offset = 138.2 - (138.2 * pct / 100);
+    circle.style.strokeDashoffset = offset;
+  }
+}
+
+// =================================================================
+// RENDER: CLASSES FULL
+// =================================================================
+let activeFilter = 'all';
+function renderClassesFull(){
+  const chips = document.getElementById('filterChips');
+  const t = L();
+  chips.innerHTML = t.chips.map((c,i)=>{
+    const key = ['all','cardio','strength','crossfit','boxing','yoga'][i];
+    return `<div class="chip ${activeFilter===key?'active':''}" onclick="setFilter('${key}')">${c}</div>`;
+  }).join('');
+
+  const list = document.getElementById('classListFull');
+  let filtered = CLASSES_DATA;
+  if(activeFilter !== 'all'){
+    filtered = CLASSES_DATA.filter(c => c.cat === activeFilter);
+  }
+  if(filtered.length === 0){
+    list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);">${currentLang==='ar'?'لا توجد كلاسات في هذه الفئة':'No classes in this category'}</div>`;
+    return;
+  }
+  list.innerHTML = filtered.map(c=>{
+    const status = window._bookings && window._bookings[c.id] ? 'booked' : c.status;
+    const btnClass = status === 'booked' ? 'booked' : (status === 'full' ? 'full' : '');
+    const btnText = status === 'booked' ? L().booked : (status === 'full' ? L().full : L().book);
+    return `
+    <div class="class-row" onclick="openClassModal('${c.id}')">
+      <div class="class-time-block">
+        <div class="hour">${c.hour}</div>
+        <div class="period">${c.period}</div>
+        <div class="dur">${c.dur} min</div>
+      </div>
+      <div class="class-row-info">
+        <div class="name">${currentLang==='ar'?c.nameAr:c.nameEn}</div>
+        <div class="desc">${currentLang==='ar'?c.coachAr:c.coachEn}</div>
+        <div class="footer">
+          <span class="class-tag">${c.tag}</span>
+          <span class="class-tag">${currentLang==='ar'?c.lvlAr:c.lvlEn}</span>
+        </div>
+      </div>
+      <div class="class-row-action">
+        <button class="book-btn ${btnClass}" onclick="event.stopPropagation();handleBookClick('${c.id}')">${btnText}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setFilter(f){
+  activeFilter = f;
+  renderClassesFull();
+}
+
+window._bookings = {box: true}; // pre-existing booking
+
+function handleBookClick(id){
+  const cls = CLASSES_DATA.find(c=>c.id===id);
+  if(!cls) return;
+  if(cls.status === 'full' && !window._bookings[id]){
+    showToast(L().full, 'error');
+    return;
+  }
+  if(window._bookings[id]){
+    // cancel booking
+    delete window._bookings[id];
+    showToast(L().bookCancel);
+  } else {
+    window._bookings[id] = true;
+    showToast(L().bookSuccess, 'success');
+  }
+  renderClassesFull();
+}
+
+// =================================================================
+// RENDER: WORKOUT SCREEN
+// =================================================================
+function renderWorkoutScreen(){
+  const tabs = document.getElementById('muscleTabs');
+  const muscles = [
+    {id:'chest', icon:'💪'},
+    {id:'back', icon:'🏋️'},
+    {id:'legs', icon:'🦵'},
+    {id:'arms', icon:'💥'}
+  ];
+  const t = L();
+  tabs.innerHTML = muscles.map(m=>`
+    <div class="muscle-tab ${currentMuscle===m.id?'active':''}" onclick="setMuscle('${m.id}')">
+      <div class="muscle-icon">${m.icon}</div>
+      <div class="lbl">${t.muscleNames[m.id]}</div>
+    </div>
+  `).join('');
+
+  const exKey = currentMuscle + 'Ex';
+  const exercises = t[exKey] || [];
+  const container = document.getElementById('exercisesContainer');
+  container.innerHTML = exercises.map((ex,i)=>`
+    <div class="exercise-card">
+      <div class="exercise-card-head">
+        <div>
+          <div class="ex-card-name">${ex.name}</div>
+          <div class="ex-card-target">${ex.target}</div>
+        </div>
+        ${i===0 ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>' : ''}
+      </div>
+      <div class="sets-grid">
+        ${ex.sets.map(s=>`
+          <div class="set-box">
+            <div class="set-num">${s.set}</div>
+            <div class="set-val">${s.val}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function setMuscle(id){
+  currentMuscle = id;
+  renderWorkoutScreen();
+}
+
+function startWorkout(){
+  showToast(L().workoutStarted, 'success');
+}
+
+// =================================================================
+// RENDER: ACHIEVEMENTS
+// =================================================================
+function renderAchievements(){
+  const el = document.getElementById('achievementsGrid');
+  if(!el) return;
+  el.innerHTML = L().achList.map(a=>`
+    <div class="achievement ${a.unlocked?'unlocked':'locked'}">
+      <div class="ach-icon">${a.ic}</div>
+      <div class="ach-name">${a.name}</div>
+    </div>
+  `).join('');
+}
+
+// =================================================================
+// RENDER: MENU (PROFILE)
+// =================================================================
+function renderMenu(){
+  const el = document.getElementById('menuList');
+  if(!el) return;
+  const icons = {
+    plan:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+    pay:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
+    goal:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+    set:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 008 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H2a2 2 0 010-4h.09A1.65 1.65 0 004.6 8a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V2a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H22a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>',
+    help:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>'
+  };
+  el.innerHTML = L().menuItems.map(m=>`
+    <div class="menu-item" onclick="handleMenu('${m.action}')">
+      <div class="menu-icon">${icons[m.ic]}</div>
+      <div class="menu-text">
+        <div class="t">${m.t}</div>
+        <div class="s">${m.s}</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+  `).join('');
+}
+
+function handleMenu(action){
+  const labels = {
+    subscription: currentLang==='ar' ? 'سيتم فتح صفحة الاشتراك قريباً' : 'Subscription page coming soon',
+    payments: currentLang==='ar' ? 'سيتم فتح المدفوعات قريباً' : 'Payments page coming soon',
+    goals: currentLang==='ar' ? 'الأهداف الصحية قريباً' : 'Health goals coming soon',
+    settings: currentLang==='ar' ? 'الإعدادات قريباً' : 'Settings coming soon',
+    support: currentLang==='ar' ? 'تواصل: 01xxxxxxxx' : 'Contact: 01xxxxxxxx'
+  };
+  showToast(labels[action] || '...');
+}
+
+// =================================================================
+// MODAL
+// =================================================================
+function openClassModal(id){
+  const cls = CLASSES_DATA.find(c=>c.id===id);
+  if(!cls) return;
+  modalContext = { type:'class', data:cls };
+  setText('modalTitle', currentLang==='ar'?cls.nameAr:cls.nameEn);
+  setText('modalSub', (currentLang==='ar'?cls.coachAr:cls.coachEn) + ' • ' + cls.dur + ' min');
+  const t = L();
+  document.getElementById('modalBody').innerHTML = `
+    <div class="detail-row"><span class="k">${t.timeKey}</span><span class="v">${cls.hour}:00 ${cls.period}</span></div>
+    <div class="detail-row"><span class="k">${t.levelKey}</span><span class="v">${currentLang==='ar'?cls.lvlAr:cls.lvlEn}</span></div>
+    <div class="detail-row"><span class="k">${t.spotsKey}</span><span class="v gold">${cls.spots}</span></div>
+    <div class="detail-row"><span class="k">${t.priceKey}</span><span class="v gold">${t.free}</span></div>
+  `;
+  const btn = document.getElementById('modalAction');
+  if(window._bookings[cls.id]){
+    btn.textContent = currentLang==='ar' ? 'إلغاء الحجز' : 'CANCEL BOOKING';
+    btn.style.background = 'transparent';
+    btn.style.color = 'var(--danger)';
+    btn.style.border = '1px solid var(--danger)';
+  } else if(cls.status === 'full'){
+    btn.textContent = t.full;
+    btn.disabled = true;
+  } else {
+    btn.textContent = t.confirm;
+    btn.disabled = false;
+    btn.style.background = 'var(--gold)';
+    btn.style.color = 'var(--bg)';
+    btn.style.border = 'none';
+  }
   document.getElementById('modal').classList.add('show');
 }
+
 function closeModal(){
   document.getElementById('modal').classList.remove('show');
-}
-function confirmBooking(){
-  closeModal();
-  setTimeout(()=>showToast(L().bookSuccess), 200);
-}
-function bookTrainer(name){
-  showToast(L().trainerBook);
+  modalContext = null;
 }
 
-// ===== BOOK BUTTON HANDLERS =====
-document.addEventListener('click', e=>{
-  if(e.target.classList.contains('book-btn') && !e.target.classList.contains('booked') && !e.target.classList.contains('full')){
-    e.stopPropagation();
-    e.target.classList.add('booked');
-    e.target.textContent = currentLang === 'ar' ? '✓ محجوز' : '✓ Booked';
-    showToast(L().bookSuccess);
+function confirmModalAction(){
+  if(!modalContext) return;
+  if(modalContext.type === 'class'){
+    handleBookClick(modalContext.data.id);
+    closeModal();
   }
-});
+}
 
-// ===== FILTER CHIPS =====
-document.querySelectorAll('.chip').forEach(chip=>{
-  chip.addEventListener('click', ()=>{
-    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-    chip.classList.add('active');
-  });
-});
+function bookTrainer(id){
+  const tr = TRAINERS_DATA.find(t=>t.id===id);
+  if(!tr) return;
+  showToast((currentLang==='ar'?'تم إرسال طلب الحجز للكابتن ':'Booking request sent to ') + (currentLang==='ar'?tr.nameAr:tr.nameEn), 'success');
+}
 
-// ===== MUSCLE TABS =====
-document.querySelectorAll('.muscle-tab').forEach(tab=>{
-  tab.addEventListener('click', ()=>{
-    document.querySelectorAll('.muscle-tab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-  });
-});
+function showNotifications(){
+  showToast(L().notif);
+}
 
-// ===== PREVENT DOUBLE-TAP ZOOM =====
+// =================================================================
+// PREVENT DOUBLE-TAP ZOOM
+// =================================================================
 let lastTap = 0;
 document.addEventListener('touchend', e=>{
   const now = Date.now();
-  if(now - lastTap < 300) e.preventDefault();
+  if(now - lastTap < 300){
+    const target = e.target;
+    if(!target.matches('input,textarea,select')) e.preventDefault();
+  }
   lastTap = now;
 }, {passive:false});
 
-// init
-applyLang();
+// =================================================================
+// INIT
+// =================================================================
+function init(){
+  // Restore language
+  const savedLang = localStorage.getItem('if_lang');
+  if(savedLang) setLang(savedLang); else setLang('ar');
+
+  // Auto-restore session
+  const saved = localStorage.getItem('if_member');
+  if(saved){
+    try {
+      const member = JSON.parse(saved);
+      // Re-validate from DB silently
+      sb.from('members').select('*').eq('id', member.id).maybeSingle().then(({data}) => {
+        if(data && data.status === 'active' && data.password === member.password){
+          currentMember = data;
+          localStorage.setItem('if_member', JSON.stringify(data));
+          initApp();
+        } else {
+          localStorage.removeItem('if_member');
+        }
+      }).catch(()=>{
+        // offline — use cached
+        if(member.status === 'active'){
+          currentMember = member;
+          initApp();
+        }
+      });
+    } catch(e){
+      localStorage.removeItem('if_member');
+    }
+  }
+
+  // Allow Enter to login
+  document.getElementById('passwordInput').addEventListener('keydown', e=>{
+    if(e.key === 'Enter') handleLogin();
+  });
+  document.getElementById('memberIdInput').addEventListener('keydown', e=>{
+    if(e.key === 'Enter') document.getElementById('passwordInput').focus();
+  });
+}
+
+init();
 </script>
 </body>
 </html>
