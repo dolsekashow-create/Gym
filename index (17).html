@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0a">
+<title>IRON FORGE — Premium Gym</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;
+  --bg-2:#111111;
+  --bg-3:#1a1a1a;
+  --surface:#161616;
+  --surface-2:#1f1f1f;
+  --line:rgba(255,255,255,0.08);
+  --line-2:rgba(255,255,255,0.04);
+  --text:#f5f5f5;
+  --text-dim:#a8a8a8;
+  --text-muted:#6b6b6b;
+  --gold:#d4af37;
+  --gold-2:#f4cf60;
+  --gold-dim:#8a7325;
+  --danger:#ef4444;
+  --success:#22c55e;
+  --safe-top:env(safe-area-inset-top, 0px);
+  --safe-bottom:env(safe-area-inset-bottom, 0px);
+  --nav-h:72px;
+  --header-h:64px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{
+  font-family:'Tajawal','Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overscroll-behavior:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+[data-lang="en"] body{font-family:'Inter','Tajawal',sans-serif;}
+.display{font-family:'Bebas Neue',sans-serif;letter-spacing:0.02em;}
+[data-lang="ar"] .display{font-family:'Cairo',sans-serif;font-weight:900;letter-spacing:-0.01em;}
+.serif{font-family:'Cormorant Garamond',serif;}
+[data-lang="ar"] .serif{font-family:'Cairo',serif;}
+
+/* ===== APP SHELL ===== */
+.app{
+  position:relative;
+  width:100%;
+  height:100vh;
+  height:100dvh;
+  max-width:480px;
+  margin:0 auto;
+  background:var(--bg);
+  overflow:hidden;
+  box-shadow:0 0 60px rgba(0,0,0,0.5);
+}
+
+/* ===== TOP HEADER ===== */
+.app-header{
+  position:absolute;
+  top:0;left:0;right:0;
+  height:calc(var(--header-h) + var(--safe-top));
+  padding:var(--safe-top) 20px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(180deg,rgba(10,10,10,0.95) 0%,rgba(10,10,10,0.7) 70%,transparent 100%);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  z-index:50;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-mark{
+  width:34px;height:34px;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-2) 50%,var(--gold-dim) 100%);
+  display:flex;align-items:center;justify-content:center;
+  border-radius:8px;
+  position:relative;
+  box-shadow:0 4px 12px rgba(212,175,55,0.25);
+}
+.brand-mark::after{
+  content:'';position:absolute;inset:2px;
+  border-radius:6px;
+  background:var(--bg);
+}
+.brand-mark svg{position:relative;z-index:1;}
+.brand-text{display:flex;flex-direction:column;line-height:1;}
+.brand-text .name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.15em;color:var(--text);}
+[data-lang="ar"] .brand-text .name{font-family:'Cairo',sans-serif;font-weight:900;font-size:16px;letter-spacing:0;}
+.brand-text .tag{font-size:9px;color:var(--gold);letter-spacing:0.3em;margin-top:3px;text-transform:uppercase;}
+[data-lang="ar"] .brand-text .tag{letter-spacing:0.05em;}
+
+.header-actions{display:flex;align-items:center;gap:8px;}
+.icon-btn{
+  width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--line);
+  border-radius:10px;
+  color:var(--text-dim);
+  cursor:pointer;
+  transition:all 0.2s;
+  position:relative;
+}
+.icon-btn:active{transform:scale(0.94);background:rgba(212,175,55,0.1);color:var(--gold);}
+.icon-btn .badge{
+  position:absolute;top:-2px;right:-2px;
+  width:8px;height:8px;
+  background:var(--gold);
+  border-radius:50%;
+  border:2px solid var(--bg);
+}
+.lang-toggle{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:12px;
+  letter-spacing:0.1em;
+  padding:0 10px;
+  width:auto;
+  min-width:38px;
+}
+
+/* ===== MAIN VIEWPORT ===== */
+.viewport{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  padding-top:calc(var(--header-h) + var(--safe-top));
+  padding-bottom:calc(var(--nav-h) + var(--safe-bottom));
+  overflow:hidden;
+}
+.screen{
+  position:absolute;inset:0;
+  padding-top:calc(var(--header-h) + var(--safe-top));
+  padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 20px);
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(8px);
+  transition:opacity 0.3s ease,transform 0.3s ease;
+  scrollbar-width:none;
+}
+.screen::-webkit-scrollbar{display:none;}
+.screen.active{opacity:1;pointer-events:auto;transform:translateY(0);}
+
+/* ===== HOME SCREEN ===== */
+.hero{
+  position:relative;
+  margin:16px 16px 0;
+  padding:28px 22px;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(212,175,55,0.18) 0%,transparent 50%),
+    radial-gradient(circle at 100% 100%,rgba(212,175,55,0.08) 0%,transparent 50%),
+    linear-gradient(135deg,#1a1a1a 0%,#0d0d0d 100%);
+  border:1px solid var(--line);
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;
+  top:-40%;right:-20%;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(212,175,55,0.15) 0%,transparent 60%);
+  filter:blur(40px);
+  pointer-events:none;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(212,175,55,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,175,55,0.04) 1px,transparent 1px);
+  background-size:24px 24px;
+  mask-image:radial-gradient(ellipse at top right,black 30%,transparent 70%);
+  pointer-events:none;
+}
+.greeting{
+  position:relative;
+  font-size:13px;
+  color:var(--text-dim);
+  margin-bottom:6px;
+  letter-spacing:0.05em;
+}
+.user-name{
+  position:relative;
+  font-size:26px;
+  font-weight:900;
+  color:var(--text);
+  margin-bottom:4px;
+}
+.user-status{
+  position:relative;
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;
+  color:var(--gold);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  margin-top:6px;
+}
+.user-status::before{
+  content:'';width:6px;height:6px;
+  background:var(--gold);
+  border-radius:50%;
+  box-shadow:0 0 10px var(--gold);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:0.5;transform:scale(1.3);}
+}
+
+.membership-card{
+  position:relative;
+  margin-top:24px;
+  padding:18px;
+  background:linear-gradient(135deg,rgba(212,175,55,0.12) 0%,rgba(212,175,55,0.04) 100%);
+  border:1px solid rgba(212,175,55,0.2);
+  border-radius:16px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.membership-info .label{font-size:10px;color:var(--text-muted);letter-spacing:0.2em;text-transform:uppercase;}
+.membership-info .plan{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);letter-spacing:0.1em;margin-top:2px;}
+[data-lang="ar"] .membership-info .plan{font-family:'Cairo',sans-serif;font-weight:900;font-size:18px;letter-spacing:0;}
+.membership-info .expires{font-size:11px;color:var(--text-dim);margin-top:4px;}
+.days-left{
+  text-align:center;
+  padding:0 14px;
+  border-right:1px solid rgba(212,175,55,0.2);
+}
+[dir="rtl"] .days-left{border-right:none;border-left:1px solid rgba(212,175,55,0.2);}
+.days-left .num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--text);line-height:1;}
+.days-left .lbl{font-size:9px;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:4px;}
+
+/* ===== STATS GRID ===== */
+.section{padding:24px 16px 0;}
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+  padding:0 4px;
+}
+.section-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;
+  letter-spacing:0.15em;
+  color:var(--text);
+}
+[data-lang="ar"] .section-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:16px;letter-spacing:0;}
+.section-title .accent{color:var(--gold);}
+.section-link{font-size:12px;color:var(--gold);letter-spacing:0.05em;cursor:pointer;}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.stat-card{
+  position:relative;
+  padding:16px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+}
+.stat-card .icon{
+  width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(212,175,55,0.1);
+  border-radius:8px;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+.stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--text);line-height:1;}
+[data-lang="ar"] .stat-card .value{font-family:'Cairo',sans-serif;font-weight:900;font-size:24px;}
+.stat-card .label{font-size:11px;color:var(--text-dim);margin-top:6px;letter-spacing:0.05em;}
+.stat-card .trend{
+  position:absolute;top:14px;left:14px;
+  font-size:10px;
+  color:var(--success);
+  display:flex;align-items:center;gap:2px;
+}
+[dir="rtl"] .stat-card .trend{left:auto;right:14px;}
+
+/* ===== CLASSES SCROLL ===== */
+.classes-scroll{
+  display:flex;gap:12px;
+  overflow-x:auto;
+  padding:0 16px 4px;
+  scrollbar-width:none;
+  scroll-snap-type:x mandatory;
+}
+.classes-scroll::-webkit-scrollbar{display:none;}
+.class-card{
+  flex:0 0 240px;
+  scroll-snap-align:start;
+  position:relative;
+  height:160px;
+  padding:16px;
+  border-radius:18px;
+  overflow:hidden;
+  background:var(--surface);
+  border:1px solid var(--line);
+  display:flex;flex-direction:column;justify-content:space-between;
+  cursor:pointer;
+  transition:transform 0.2s;
+}
+.class-card:active{transform:scale(0.97);}
+.class-card.featured{
+  background:
+    linear-gradient(135deg,rgba(212,175,55,0.2) 0%,transparent 60%),
+    linear-gradient(225deg,rgba(212,175,55,0.05) 0%,#1a1a1a 100%);
+  border-color:rgba(212,175,55,0.3);
+}
+.class-time{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;
+  background:rgba(0,0,0,0.5);
+  border:1px solid var(--line);
+  border-radius:100px;
+  font-size:11px;
+  width:fit-content;
+  letter-spacing:0.05em;
+}
+.class-time .dot{width:5px;height:5px;background:var(--gold);border-radius:50%;}
+.class-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;color:var(--text);line-height:1;}
+[data-lang="ar"] .class-name{font-family:'Cairo',sans-serif;font-weight:900;font-size:18px;}
+.class-meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+.class-coach{font-size:11px;color:var(--text-dim);}
+.class-spots{
+  font-size:10px;
+  color:var(--gold);
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+}
+
+/* ===== WORKOUT TODAY ===== */
+.workout-today{
+  margin:0 16px;
+  padding:20px;
+  background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%);
+  border:1px solid var(--line);
+  border-radius:18px;
+  position:relative;
+  overflow:hidden;
+}
+.workout-today::before{
+  content:'';position:absolute;
+  top:0;right:0;
+  width:120px;height:120px;
+  background:radial-gradient(circle,rgba(212,175,55,0.15),transparent 70%);
+  pointer-events:none;
+}
+.workout-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;position:relative;}
+.workout-day{font-size:11px;color:var(--gold);letter-spacing:0.2em;text-transform:uppercase;}
+.workout-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.05em;color:var(--text);margin-top:4px;}
+[data-lang="ar"] .workout-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:20px;}
+.workout-progress{
+  width:48px;height:48px;
+  position:relative;
+}
+.workout-progress svg{transform:rotate(-90deg);}
+.workout-progress circle{fill:none;stroke-width:4;}
+.workout-progress .bg{stroke:var(--line);}
+.workout-progress .fg{stroke:var(--gold);stroke-linecap:round;stroke-dasharray:138.2;stroke-dashoffset:55.3;transition:stroke-dashoffset 0.6s;}
+.workout-progress .pct{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:13px;color:var(--gold);
+}
+
+.exercise-list{display:flex;flex-direction:column;gap:10px;position:relative;}
+.exercise{
+  display:flex;align-items:center;gap:12px;
+  padding:12px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--line-2);
+  border-radius:12px;
+}
+.exercise.done{opacity:0.5;}
+.exercise.done .ex-name{text-decoration:line-through;}
+.ex-check{
+  width:22px;height:22px;
+  border:2px solid var(--line);
+  border-radius:6px;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.ex-check.checked{background:var(--gold);border-color:var(--gold);}
+.ex-check svg{opacity:0;transition:opacity 0.2s;}
+.ex-check.checked svg{opacity:1;}
+.ex-info{flex:1;min-width:0;}
+.ex-name{font-size:14px;font-weight:600;color:var(--text);}
+.ex-meta{font-size:11px;color:var(--text-dim);margin-top:2px;}
+.ex-weight{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:14px;
+  color:var(--gold);
+  letter-spacing:0.05em;
+  text-align:center;
+}
+[data-lang="ar"] .ex-weight{font-family:'Cairo',sans-serif;font-weight:700;}
+
+/* ===== TRAINERS SECTION ===== */
+.trainers-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  padding:0 16px;
+}
+.trainer-card{
+  position:relative;
+  padding:16px 14px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:16px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.trainer-card:active{transform:scale(0.97);}
+.trainer-avatar{
+  width:60px;height:60px;
+  margin:0 auto 10px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold-dim),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;
+  color:var(--bg);
+  position:relative;
+}
+.trainer-avatar::after{
+  content:'';position:absolute;
+  bottom:2px;right:2px;
+  width:14px;height:14px;
+  background:var(--success);
+  border:2px solid var(--surface);
+  border-radius:50%;
+}
+.trainer-name{font-size:13px;font-weight:700;color:var(--text);}
+.trainer-spec{font-size:10px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;}
+.trainer-rating{font-size:11px;color:var(--text-dim);margin-top:6px;display:flex;align-items:center;justify-content:center;gap:3px;}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:calc(var(--nav-h) + var(--safe-bottom));
+  padding-bottom:var(--safe-bottom);
+  background:rgba(10,10,10,0.95);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--line);
+  display:flex;
+  z-index:50;
+}
+.nav-item{
+  flex:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;
+  background:none;border:none;
+  color:var(--text-muted);
+  cursor:pointer;
+  position:relative;
+  padding-top:6px;
+  transition:color 0.2s;
+}
+.nav-item.center{transform:translateY(-12px);}
+.nav-item.center .nav-icon-wrap{
+  width:54px;height:54px;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-2) 100%);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--bg);
+  box-shadow:0 8px 24px rgba(212,175,55,0.4),0 0 0 4px var(--bg);
+}
+.nav-item.center .nav-label{color:var(--gold);font-weight:700;}
+.nav-item.active:not(.center){color:var(--gold);}
+.nav-item.active:not(.center)::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:24px;height:3px;background:var(--gold);border-radius:0 0 3px 3px;
+}
+.nav-label{font-size:10px;letter-spacing:0.05em;font-weight:500;}
+
+/* ===== CLASSES SCREEN ===== */
+.page-head{padding:8px 20px 20px;}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:0.05em;color:var(--text);}
+[data-lang="ar"] .page-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:26px;}
+.page-sub{font-size:13px;color:var(--text-dim);margin-top:4px;}
+
+.filter-chips{
+  display:flex;gap:8px;
+  padding:0 20px 16px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.filter-chips::-webkit-scrollbar{display:none;}
+.chip{
+  flex-shrink:0;
+  padding:8px 16px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:100px;
+  font-size:12px;
+  color:var(--text-dim);
+  cursor:pointer;
+  transition:all 0.2s;
+  letter-spacing:0.03em;
+}
+.chip.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700;}
+
+.class-list{padding:0 20px;display:flex;flex-direction:column;gap:14px;}
+.class-row{
+  display:flex;gap:14px;
+  padding:14px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:16px;
+  cursor:pointer;
+  transition:transform 0.2s;
+}
+.class-row:active{transform:scale(0.98);}
+.class-time-block{
+  flex-shrink:0;
+  width:56px;
+  text-align:center;
+  padding-right:14px;
+  border-right:1px solid var(--line);
+}
+[dir="rtl"] .class-time-block{padding-right:0;padding-left:14px;border-right:none;border-left:1px solid var(--line);}
+.class-time-block .hour{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);line-height:1;}
+.class-time-block .period{font-size:9px;color:var(--text-muted);letter-spacing:0.15em;margin-top:3px;}
+.class-time-block .dur{font-size:10px;color:var(--text-dim);margin-top:8px;}
+.class-row-info{flex:1;min-width:0;}
+.class-row-info .name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.class-row-info .desc{font-size:12px;color:var(--text-dim);margin-bottom:8px;}
+.class-row-info .footer{display:flex;align-items:center;gap:10px;}
+.class-tag{
+  font-size:10px;
+  padding:3px 8px;
+  background:rgba(212,175,55,0.1);
+  color:var(--gold);
+  border-radius:6px;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+}
+.class-row-action{
+  flex-shrink:0;
+  display:flex;align-items:center;
+}
+.book-btn{
+  padding:8px 14px;
+  background:var(--gold);
+  color:var(--bg);
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  font-size:12px;
+  cursor:pointer;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+}
+.book-btn.booked{background:var(--surface-2);color:var(--success);border:1px solid var(--success);}
+.book-btn.full{background:var(--surface-2);color:var(--text-muted);}
+
+/* ===== WORKOUT SCREEN (CENTER) ===== */
+.workout-screen{padding:8px 20px;}
+.muscle-tabs{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-bottom:20px;
+}
+.muscle-tab{
+  padding:14px 8px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.muscle-tab.active{background:linear-gradient(135deg,rgba(212,175,55,0.2),rgba(212,175,55,0.05));border-color:var(--gold);}
+.muscle-icon{font-size:24px;margin-bottom:4px;}
+.muscle-tab .lbl{font-size:10px;color:var(--text-dim);letter-spacing:0.05em;}
+.muscle-tab.active .lbl{color:var(--gold);}
+
+.start-workout{
+  display:block;width:100%;
+  padding:18px;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-2) 50%,var(--gold-dim) 100%);
+  color:var(--bg);
+  border:none;
+  border-radius:16px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;
+  letter-spacing:0.2em;
+  cursor:pointer;
+  margin-bottom:20px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(212,175,55,0.3);
+}
+[data-lang="ar"] .start-workout{font-family:'Cairo',sans-serif;font-weight:900;font-size:16px;letter-spacing:0;}
+.start-workout::after{
+  content:'';position:absolute;
+  top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+  animation:shimmer 3s infinite;
+}
+@keyframes shimmer{to{left:200%;}}
+
+.exercise-card{
+  margin-bottom:12px;
+  padding:16px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+.exercise-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.ex-card-name{font-size:15px;font-weight:700;}
+.ex-card-target{font-size:11px;color:var(--gold);letter-spacing:0.05em;text-transform:uppercase;}
+.sets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.set-box{
+  padding:10px 8px;
+  background:rgba(0,0,0,0.3);
+  border:1px solid var(--line-2);
+  border-radius:10px;
+  text-align:center;
+}
+.set-num{font-size:9px;color:var(--text-muted);letter-spacing:0.15em;text-transform:uppercase;}
+.set-val{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);margin-top:2px;}
+[data-lang="ar"] .set-val{font-family:'Cairo',sans-serif;font-weight:700;}
+
+/* ===== PROGRESS SCREEN ===== */
+.progress-screen{padding:8px 20px;}
+.progress-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  margin-bottom:24px;
+}
+.progress-stat{
+  padding:16px 10px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:14px;
+  text-align:center;
+}
+.progress-stat .v{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--gold);}
+[data-lang="ar"] .progress-stat .v{font-family:'Cairo',sans-serif;font-weight:900;font-size:20px;}
+.progress-stat .l{font-size:10px;color:var(--text-dim);margin-top:4px;letter-spacing:0.05em;}
+
+.chart-card{
+  padding:18px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:16px;
+  margin-bottom:16px;
+}
+.chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.chart-title{font-size:13px;font-weight:700;letter-spacing:0.05em;}
+.chart-period{font-size:11px;color:var(--gold);}
+.chart{height:140px;display:flex;align-items:flex-end;gap:6px;}
+.bar{
+  flex:1;
+  background:linear-gradient(180deg,var(--gold) 0%,var(--gold-dim) 100%);
+  border-radius:4px 4px 0 0;
+  position:relative;
+  min-height:4px;
+  transition:height 0.6s;
+}
+.bar::after{
+  content:attr(data-day);
+  position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
+  font-size:9px;color:var(--text-muted);
+  letter-spacing:0.1em;
+}
+.bar.weak{background:linear-gradient(180deg,var(--line),var(--line-2));}
+
+.achievements{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.achievement{
+  aspect-ratio:1;
+  padding:10px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  position:relative;
+}
+.achievement.unlocked{background:linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05));border-color:rgba(212,175,55,0.3);}
+.achievement.locked{opacity:0.4;}
+.ach-icon{font-size:24px;margin-bottom:4px;}
+.ach-name{font-size:9px;color:var(--text-dim);letter-spacing:0.05em;line-height:1.2;}
+
+/* ===== PROFILE SCREEN ===== */
+.profile-screen{padding:0 20px;}
+.profile-head{
+  display:flex;flex-direction:column;align-items:center;
+  padding:20px 0;
+  text-align:center;
+}
+.profile-avatar{
+  width:90px;height:90px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold-dim),var(--gold) 50%,var(--gold-2));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:36px;
+  color:var(--bg);
+  margin-bottom:14px;
+  position:relative;
+  box-shadow:0 8px 24px rgba(212,175,55,0.3);
+}
+.profile-avatar::after{
+  content:'';position:absolute;inset:-3px;
+  border:2px solid var(--gold);
+  border-radius:50%;
+  opacity:0.3;
+}
+.profile-name{font-size:22px;font-weight:900;}
+.profile-id{font-size:11px;color:var(--text-muted);letter-spacing:0.2em;margin-top:4px;}
+.profile-since{font-size:11px;color:var(--gold);margin-top:8px;}
+
+.profile-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  margin:20px 0;
+  padding:18px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+.profile-stat{text-align:center;position:relative;}
+.profile-stat:not(:last-child)::after{
+  content:'';position:absolute;
+  top:20%;right:0;height:60%;width:1px;
+  background:var(--line);
+}
+[dir="rtl"] .profile-stat:not(:last-child)::after{right:auto;left:0;}
+.profile-stat .v{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);}
+[data-lang="ar"] .profile-stat .v{font-family:'Cairo',sans-serif;font-weight:900;font-size:18px;}
+.profile-stat .l{font-size:10px;color:var(--text-dim);margin-top:4px;}
+
+.menu-list{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.menu-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:12px;
+  cursor:pointer;
+  transition:transform 0.2s;
+}
+.menu-item:active{transform:scale(0.98);}
+.menu-icon{
+  width:36px;height:36px;
+  background:rgba(212,175,55,0.1);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);
+  flex-shrink:0;
+}
+.menu-text{flex:1;}
+.menu-text .t{font-size:14px;font-weight:600;}
+.menu-text .s{font-size:11px;color:var(--text-dim);margin-top:2px;}
+.menu-arrow{color:var(--text-muted);}
+[dir="rtl"] .menu-arrow{transform:rotate(180deg);}
+
+.logout-btn{
+  display:block;width:100%;
+  padding:14px;
+  background:transparent;
+  border:1px solid var(--danger);
+  border-radius:12px;
+  color:var(--danger);
+  font-size:13px;font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  margin-bottom:20px;
+}
+
+/* ===== TOAST ===== */
+.toast{
+  position:absolute;
+  bottom:calc(var(--nav-h) + var(--safe-bottom) + 16px);
+  left:50%;transform:translateX(-50%) translateY(80px);
+  padding:12px 20px;
+  background:var(--gold);
+  color:var(--bg);
+  border-radius:100px;
+  font-weight:700;
+  font-size:13px;
+  z-index:100;
+  opacity:0;
+  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 8px 24px rgba(212,175,55,0.4);
+  pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ===== MODAL ===== */
+.modal-overlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(8px);
+  z-index:200;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.25s;
+  display:flex;align-items:flex-end;
+}
+.modal-overlay.show{opacity:1;pointer-events:auto;}
+.modal{
+  width:100%;
+  background:var(--bg-2);
+  border-top-left-radius:24px;
+  border-top-right-radius:24px;
+  padding:24px 20px calc(20px + var(--safe-bottom));
+  border-top:1px solid var(--line);
+  transform:translateY(100%);
+  transition:transform 0.3s cubic-bezier(0.34,1.36,0.64,1);
+}
+.modal-overlay.show .modal{transform:translateY(0);}
+.modal-handle{
+  width:40px;height:4px;
+  background:var(--line);
+  border-radius:2px;
+  margin:0 auto 16px;
+}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;margin-bottom:6px;}
+[data-lang="ar"] .modal-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:20px;}
+.modal-sub{font-size:13px;color:var(--text-dim);margin-bottom:20px;}
+.modal-body{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;}
+.detail-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line-2);}
+.detail-row:last-child{border:none;}
+.detail-row .k{font-size:12px;color:var(--text-dim);}
+.detail-row .v{font-size:13px;font-weight:600;color:var(--text);}
+.detail-row .v.gold{color:var(--gold);}
+.modal-action{
+  display:block;width:100%;
+  padding:14px;
+  background:var(--gold);
+  color:var(--bg);
+  border:none;
+  border-radius:12px;
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+/* ===== UTILITIES ===== */
+[data-lang="en"] .ar-only{display:none;}
+[data-lang="ar"] .en-only{display:none;}
+.hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12h2M19 12h2M7 8v8M17 8v8M7 12h10" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="name ar-only">آيرون فورج</span>
+        <span class="name en-only">IRON FORGE</span>
+        <span class="tag ar-only">جيم بريميوم</span>
+        <span class="tag en-only">PREMIUM GYM</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn lang-toggle" onclick="toggleLang()">
+        <span class="ar-only">EN</span>
+        <span class="en-only">AR</span>
+      </button>
+      <button class="icon-btn" onclick="showToast(L().notif)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 01-3.46 0"/>
+        </svg>
+        <span class="badge"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- VIEWPORT -->
+  <div class="viewport">
+
+    <!-- HOME SCREEN -->
+    <div class="screen active" data-screen="home">
+      <div class="hero">
+        <div class="hero-grid"></div>
+        <div class="greeting" data-i18n="greeting">صباح القوة،</div>
+        <div class="user-name" data-i18n="user">أحمد فاروق</div>
+        <div class="user-status" data-i18n="status">عضو نشط</div>
+
+        <div class="membership-card">
+          <div class="membership-info">
+            <div class="label" data-i18n="plan">الباقة الحالية</div>
+            <div class="plan" data-i18n="planName">VIP غير محدود</div>
+            <div class="expires" data-i18n="exp">تنتهي 15 يونيو 2026</div>
+          </div>
+          <div class="days-left">
+            <div class="num">38</div>
+            <div class="lbl" data-i18n="days">يوم متبقي</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title" data-i18n="thisWeek">إحصائيات <span class="accent">الأسبوع</span></div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="trend">↑ 12%</div>
+            <div class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="value">5</div>
+            <div class="label" data-i18n="visits">زيارة هذا الأسبوع</div>
+          </div>
+          <div class="stat-card">
+            <div class="trend">↑ 8%</div>
+            <div class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div class="value">7.2h</div>
+            <div class="label" data-i18n="time">إجمالي الوقت</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div class="value">2,840</div>
+            <div class="label" data-i18n="cal">سعرة محروقة</div>
+          </div>
+          <div class="stat-card">
+            <div class="trend">↑ 15kg</div>
+            <div class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5h11M6.5 17.5h11M3 9.5l3-3 3 3M21 9.5l-3-3-3 3M3 14.5l3 3 3-3M21 14.5l-3 3-3-3"/></svg>
+            </div>
+            <div class="value">18.5K</div>
+            <div class="label" data-i18n="vol">حجم الرفع (كجم)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title" data-i18n="todayClasses">كلاسات <span class="accent">اليوم</span></div>
+          <div class="section-link" data-i18n="seeAll" onclick="navigate('classes')">عرض الكل ←</div>
+        </div>
+      </div>
+      <div class="classes-scroll">
+        <div class="class-card featured" onclick="openClass('crossfit')">
+          <div class="class-time"><span class="dot"></span><span data-i18n="now">جاري الآن</span></div>
+          <div>
+            <div class="class-name" data-i18n="cf">CROSSFIT شدة عالية</div>
+            <div class="class-meta">
+              <span class="class-coach">كابتن محمود</span>
+              <span class="class-spots">3/12</span>
+            </div>
+          </div>
+        </div>
+        <div class="class-card" onclick="openClass('boxing')">
+          <div class="class-time"><span class="dot"></span><span>5:30 PM</span></div>
+          <div>
+            <div class="class-name" data-i18n="boxing">BOXING ملاكمة</div>
+            <div class="class-meta">
+              <span class="class-coach">كابتن سامي</span>
+              <span class="class-spots">7/15</span>
+            </div>
+          </div>
+        </div>
+        <div class="class-card" onclick="openClass('yoga')">
+          <div class="class-time"><span class="dot"></span><span>7:00 PM</span></div>
+          <div>
+            <div class="class-name" data-i18n="yoga">YOGA يوجا</div>
+            <div class="class-meta">
+              <span class="class-coach">كابتن نور</span>
+              <span class="class-spots">10/20</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title" data-i18n="todayWorkout">تمرين <span class="accent">اليوم</span></div>
+        </div>
+      </div>
+      <div class="workout-today">
+        <div class="workout-head">
+          <div>
+            <div class="workout-day" data-i18n="day">الأربعاء — يوم الصدر</div>
+            <div class="workout-title" data-i18n="chest">CHEST DAY</div>
+          </div>
+          <div class="workout-progress">
+            <svg width="48" height="48"><circle class="bg" cx="24" cy="24" r="22"/><circle class="fg" cx="24" cy="24" r="22"/></svg>
+            <div class="pct">60%</div>
+          </div>
+        </div>
+        <div class="exercise-list">
+          <div class="exercise done">
+            <div class="ex-check checked"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="ex-info">
+              <div class="ex-name" data-i18n="bench">بنش برس</div>
+              <div class="ex-meta">4 × 10</div>
+            </div>
+            <div class="ex-weight">80 kg</div>
+          </div>
+          <div class="exercise done">
+            <div class="ex-check checked"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="ex-info">
+              <div class="ex-name" data-i18n="incline">إنكلاين دامبل</div>
+              <div class="ex-meta">3 × 12</div>
+            </div>
+            <div class="ex-weight">25 kg</div>
+          </div>
+          <div class="exercise" onclick="this.classList.toggle('done');this.querySelector('.ex-check').classList.toggle('checked')">
+            <div class="ex-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="ex-info">
+              <div class="ex-name" data-i18n="fly">كابل فلاي</div>
+              <div class="ex-meta">3 × 15</div>
+            </div>
+            <div class="ex-weight">15 kg</div>
+          </div>
+          <div class="exercise" onclick="this.classList.toggle('done');this.querySelector('.ex-check').classList.toggle('checked')">
+            <div class="ex-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+            <div class="ex-info">
+              <div class="ex-name" data-i18n="dips">ديبس متوازي</div>
+              <div class="ex-meta">3 × 10</div>
+            </div>
+            <div class="ex-weight">BW</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title" data-i18n="trainers">المدربين <span class="accent">المتاحين</span></div>
+          <div class="section-link" data-i18n="seeAll">عرض الكل ←</div>
+        </div>
+      </div>
+      <div class="trainers-grid">
+        <div class="trainer-card" onclick="bookTrainer('محمود')">
+          <div class="trainer-avatar">م.ع</div>
+          <div class="trainer-name" data-i18n="t1">محمود علي</div>
+          <div class="trainer-spec" data-i18n="s1">كروسفت • قوة</div>
+          <div class="trainer-rating">★ 4.9 (124)</div>
+        </div>
+        <div class="trainer-card" onclick="bookTrainer('سامي')">
+          <div class="trainer-avatar">س.ح</div>
+          <div class="trainer-name" data-i18n="t2">سامي حسن</div>
+          <div class="trainer-spec" data-i18n="s2">ملاكمة • كارديو</div>
+          <div class="trainer-rating">★ 4.8 (89)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLASSES SCREEN -->
+    <div class="screen" data-screen="classes">
+      <div class="page-head">
+        <div class="page-title" data-i18n="classesTitle">الكلاسات</div>
+        <div class="page-sub" data-i18n="classesSub">احجز مكانك في أي كلاس متاح</div>
+      </div>
+      <div class="filter-chips">
+        <div class="chip active" data-i18n="all">الكل</div>
+        <div class="chip" data-i18n="cardio">كارديو</div>
+        <div class="chip" data-i18n="strength">قوة</div>
+        <div class="chip" data-i18n="cf2">كروسفت</div>
+        <div class="chip" data-i18n="boxing2">ملاكمة</div>
+        <div class="chip" data-i18n="yoga2">يوجا</div>
+      </div>
+      <div class="class-list">
+        <div class="class-row" onclick="openClass('cf')">
+          <div class="class-time-block">
+            <div class="hour">04</div>
+            <div class="period">PM</div>
+            <div class="dur">60 min</div>
+          </div>
+          <div class="class-row-info">
+            <div class="name" data-i18n="cfFull">CrossFit شدة عالية</div>
+            <div class="desc" data-i18n="cfDesc">كابتن محمود علي</div>
+            <div class="footer">
+              <span class="class-tag">HIIT</span>
+              <span class="class-tag" data-i18n="advanced">متقدم</span>
+            </div>
+          </div>
+          <div class="class-row-action"><button class="book-btn" data-i18n="book">احجز</button></div>
+        </div>
+        <div class="class-row">
+          <div class="class-time-block">
+            <div class="hour">05</div>
+            <div class="period">PM</div>
+            <div class="dur">45 min</div>
+          </div>
+          <div class="class-row-info">
+            <div class="name" data-i18n="boxingFull">Boxing ملاكمة</div>
+            <div class="desc" data-i18n="boxingDesc">كابتن سامي حسن</div>
+            <div class="footer">
+              <span class="class-tag">CARDIO</span>
+              <span class="class-tag" data-i18n="medium">متوسط</span>
+            </div>
+          </div>
+          <div class="class-row-action"><button class="book-btn booked" data-i18n="booked">✓ محجوز</button></div>
+        </div>
+        <div class="class-row">
+          <div class="class-time-block">
+            <div class="hour">06</div>
+            <div class="period">PM</div>
+            <div class="dur">50 min</div>
+          </div>
+          <div class="class-row-info">
+            <div class="name" data-i18n="powerFull">Power Lifting</div>
+            <div class="desc" data-i18n="powerDesc">كابتن أحمد رضا</div>
+            <div class="footer">
+              <span class="class-tag">STRENGTH</span>
+              <span class="class-tag" data-i18n="advanced2">متقدم</span>
+            </div>
+          </div>
+          <div class="class-row-action"><button class="book-btn" data-i18n="book2">احجز</button></div>
+        </div>
+        <div class="class-row">
+          <div class="class-time-block">
+            <div class="hour">07</div>
+            <div class="period">PM</div>
+            <div class="dur">60 min</div>
+          </div>
+          <div class="class-row-info">
+            <div class="name" data-i18n="yogaFull">Yoga & Stretch</div>
+            <div class="desc" data-i18n="yogaDesc">كابتن نور إبراهيم</div>
+            <div class="footer">
+              <span class="class-tag">FLEXIBILITY</span>
+              <span class="class-tag" data-i18n="all_lvl">جميع المستويات</span>
+            </div>
+          </div>
+          <div class="class-row-action"><button class="book-btn full" data-i18n="full">ممتلئ</button></div>
+        </div>
+        <div class="class-row">
+          <div class="class-time-block">
+            <div class="hour">08</div>
+            <div class="period">PM</div>
+            <div class="dur">45 min</div>
+          </div>
+          <div class="class-row-info">
+            <div class="name" data-i18n="hiitFull">HIIT حرق دهون</div>
+            <div class="desc" data-i18n="hiitDesc">كابتن لينا سامي</div>
+            <div class="footer">
+              <span class="class-tag">CARDIO</span>
+              <span class="class-tag" data-i18n="medium2">متوسط</span>
+            </div>
+          </div>
+          <div class="class-row-action"><button class="book-btn" data-i18n="book3">احجز</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORKOUT SCREEN -->
+    <div class="screen" data-screen="workout">
+      <div class="page-head">
+        <div class="page-title" data-i18n="workoutTitle">برنامج التمرين</div>
+        <div class="page-sub" data-i18n="workoutSub">برنامجك الأسبوعي المخصص</div>
+      </div>
+      <div class="workout-screen">
+        <div class="muscle-tabs">
+          <div class="muscle-tab active">
+            <div class="muscle-icon">💪</div>
+            <div class="lbl" data-i18n="chest2">صدر</div>
+          </div>
+          <div class="muscle-tab">
+            <div class="muscle-icon">🏋️</div>
+            <div class="lbl" data-i18n="back">ظهر</div>
+          </div>
+          <div class="muscle-tab">
+            <div class="muscle-icon">🦵</div>
+            <div class="lbl" data-i18n="legs">رجل</div>
+          </div>
+          <div class="muscle-tab">
+            <div class="muscle-icon">💥</div>
+            <div class="lbl" data-i18n="arms">ذراع</div>
+          </div>
+        </div>
+
+        <button class="start-workout" data-i18n="startNow">ابدأ التمرين الآن</button>
+
+        <div class="exercise-card">
+          <div class="exercise-card-head">
+            <div>
+              <div class="ex-card-name" data-i18n="benchE">بنش برس مسطح</div>
+              <div class="ex-card-target" data-i18n="chestTar">صدر • علوي</div>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <div class="sets-grid">
+            <div class="set-box"><div class="set-num">SET 1</div><div class="set-val">80×10</div></div>
+            <div class="set-box"><div class="set-num">SET 2</div><div class="set-val">85×8</div></div>
+            <div class="set-box"><div class="set-num">SET 3</div><div class="set-val">90×6</div></div>
+          </div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-card-head">
+            <div>
+              <div class="ex-card-name" data-i18n="inclineE">إنكلاين دامبل</div>
+              <div class="ex-card-target" data-i18n="chestUp">صدر • علوي</div>
+            </div>
+          </div>
+          <div class="sets-grid">
+            <div class="set-box"><div class="set-num">SET 1</div><div class="set-val">25×12</div></div>
+            <div class="set-box"><div class="set-num">SET 2</div><div class="set-val">27×10</div></div>
+            <div class="set-box"><div class="set-num">SET 3</div><div class="set-val">30×8</div></div>
+          </div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-card-head">
+            <div>
+              <div class="ex-card-name" data-i18n="flyE">كابل فلاي</div>
+              <div class="ex-card-target" data-i18n="chestMid">صدر • وسطي</div>
+            </div>
+          </div>
+          <div class="sets-grid">
+            <div class="set-box"><div class="set-num">SET 1</div><div class="set-val">15×15</div></div>
+            <div class="set-box"><div class="set-num">SET 2</div><div class="set-val">17×12</div></div>
+            <div class="set-box"><div class="set-num">SET 3</div><div class="set-val">20×10</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESS SCREEN -->
+    <div class="screen" data-screen="progress">
+      <div class="page-head">
+        <div class="page-title" data-i18n="progressTitle">تقدمك</div>
+        <div class="page-sub" data-i18n="progressSub">تتبع رحلتك نحو الأفضل</div>
+      </div>
+      <div class="progress-screen">
+        <div class="progress-stats">
+          <div class="progress-stat">
+            <div class="v">82</div>
+            <div class="l" data-i18n="weight">الوزن (كجم)</div>
+          </div>
+          <div class="progress-stat">
+            <div class="v">14%</div>
+            <div class="l" data-i18n="bodyfat">دهون الجسم</div>
+          </div>
+          <div class="progress-stat">
+            <div class="v">68</div>
+            <div class="l" data-i18n="muscle">الكتلة العضلية</div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-head">
+            <div class="chart-title" data-i18n="weeklyAct">النشاط الأسبوعي</div>
+            <div class="chart-period" data-i18n="thisW">هذا الأسبوع</div>
+          </div>
+          <div class="chart">
+            <div class="bar" style="height:40%" data-day="S"></div>
+            <div class="bar" style="height:75%" data-day="M"></div>
+            <div class="bar weak" style="height:10%" data-day="T"></div>
+            <div class="bar" style="height:90%" data-day="W"></div>
+            <div class="bar" style="height:60%" data-day="T"></div>
+            <div class="bar weak" style="height:5%" data-day="F"></div>
+            <div class="bar" style="height:80%" data-day="S"></div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-head">
+            <div class="chart-title" data-i18n="strProg">تقدم القوة</div>
+            <div class="chart-period" data-i18n="threeM">3 شهور</div>
+          </div>
+          <div class="chart">
+            <div class="bar" style="height:30%" data-day="N"></div>
+            <div class="bar" style="height:42%" data-day="D"></div>
+            <div class="bar" style="height:55%" data-day="J"></div>
+            <div class="bar" style="height:68%" data-day="F"></div>
+            <div class="bar" style="height:85%" data-day="M"></div>
+            <div class="bar" style="height:95%" data-day="A"></div>
+          </div>
+        </div>
+
+        <div class="section-head" style="margin:20px 0 12px;padding:0 4px;">
+          <div class="section-title" data-i18n="achs">الإنجازات</div>
+        </div>
+        <div class="achievements">
+          <div class="achievement unlocked">
+            <div class="ach-icon">🔥</div>
+            <div class="ach-name" data-i18n="ach1">7 أيام متواصلة</div>
+          </div>
+          <div class="achievement unlocked">
+            <div class="ach-icon">💪</div>
+            <div class="ach-name" data-i18n="ach2">100 تمرين</div>
+          </div>
+          <div class="achievement unlocked">
+            <div class="ach-icon">⚡</div>
+            <div class="ach-name" data-i18n="ach3">قوة جديدة</div>
+          </div>
+          <div class="achievement locked">
+            <div class="ach-icon">🏆</div>
+            <div class="ach-name" data-i18n="ach4">30 يوم</div>
+          </div>
+          <div class="achievement locked">
+            <div class="ach-icon">🥇</div>
+            <div class="ach-name" data-i18n="ach5">200 تمرين</div>
+          </div>
+          <div class="achievement locked">
+            <div class="ach-icon">👑</div>
+            <div class="ach-name" data-i18n="ach6">المحترف</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE SCREEN -->
+    <div class="screen" data-screen="profile">
+      <div class="profile-screen">
+        <div class="profile-head">
+          <div class="profile-avatar">A.F</div>
+          <div class="profile-name" data-i18n="pName">أحمد فاروق</div>
+          <div class="profile-id">ID: #IF-2024-0892</div>
+          <div class="profile-since" data-i18n="since">عضو منذ يناير 2024</div>
+        </div>
+
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <div class="v">142</div>
+            <div class="l" data-i18n="totalV">زيارة</div>
+          </div>
+          <div class="profile-stat">
+            <div class="v">28</div>
+            <div class="l" data-i18n="totalC">كلاس</div>
+          </div>
+          <div class="profile-stat">
+            <div class="v">12</div>
+            <div class="l" data-i18n="totalA">إنجاز</div>
+          </div>
+        </div>
+
+        <div class="menu-list">
+          <div class="menu-item">
+            <div class="menu-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </div>
+            <div class="menu-text">
+              <div class="t" data-i18n="m1">الاشتراك والباقات</div>
+              <div class="s" data-i18n="m1s">VIP — 38 يوم متبقي</div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            </div>
+            <div class="menu-text">
+              <div class="t" data-i18n="m2">المدفوعات والفواتير</div>
+              <div class="s" data-i18n="m2s">3 معاملات</div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            </div>
+            <div class="menu-text">
+              <div class="t" data-i18n="m3">الأهداف الصحية</div>
+              <div class="s" data-i18n="m3s">3 أهداف نشطة</div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 008 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H2a2 2 0 010-4h.09A1.65 1.65 0 004.6 8a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V2a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H22a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            </div>
+            <div class="menu-text">
+              <div class="t" data-i18n="m4">الإعدادات</div>
+              <div class="s" data-i18n="m4s">إشعارات • خصوصية • لغة</div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+            </div>
+            <div class="menu-text">
+              <div class="t" data-i18n="m5">المساعدة والدعم</div>
+              <div class="s" data-i18n="m5s">تواصل معنا</div>
+            </div>
+            <div class="menu-arrow">›</div>
+          </div>
+        </div>
+
+        <button class="logout-btn" data-i18n="logout">تسجيل الخروج</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="navigate('home')">
+      <div class="nav-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+      </div>
+      <span class="nav-label" data-i18n="nHome">الرئيسية</span>
+    </button>
+    <button class="nav-item" onclick="navigate('classes')">
+      <div class="nav-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </div>
+      <span class="nav-label" data-i18n="nClasses">الكلاسات</span>
+    </button>
+    <button class="nav-item center" onclick="navigate('workout')">
+      <div class="nav-icon-wrap">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6.5 6.5h11M6.5 17.5h11M3 9.5l3-3 3 3M21 9.5l-3-3-3 3M3 14.5l3 3 3-3M21 14.5l-3 3-3-3"/></svg>
+      </div>
+      <span class="nav-label" data-i18n="nWorkout">تمرين</span>
+    </button>
+    <button class="nav-item" onclick="navigate('progress')">
+      <div class="nav-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+      </div>
+      <span class="nav-label" data-i18n="nProgress">التقدم</span>
+    </button>
+    <button class="nav-item" onclick="navigate('profile')">
+      <div class="nav-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <span class="nav-label" data-i18n="nProfile">حسابي</span>
+    </button>
+  </nav>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title" id="modalTitle">CrossFit شدة عالية</div>
+      <div class="modal-sub" id="modalSub">كابتن محمود علي • 60 دقيقة</div>
+      <div class="modal-body" id="modalBody">
+        <div class="detail-row"><span class="k" data-i18n="dTime">الوقت</span><span class="v">04:00 PM — 05:00 PM</span></div>
+        <div class="detail-row"><span class="k" data-i18n="dLevel">المستوى</span><span class="v">متقدم</span></div>
+        <div class="detail-row"><span class="k" data-i18n="dSpots">المقاعد المتاحة</span><span class="v gold">9 من 12</span></div>
+        <div class="detail-row"><span class="k" data-i18n="dPrice">السعر</span><span class="v gold" data-i18n="free">مجاني (VIP)</span></div>
+      </div>
+      <button class="modal-action" onclick="confirmBooking()" data-i18n="confirm">تأكيد الحجز</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== TRANSLATIONS =====
+const i18n = {
+  ar: {
+    greeting:'صباح القوة،', user:'أحمد فاروق', status:'عضو نشط',
+    plan:'الباقة الحالية', planName:'VIP غير محدود', exp:'تنتهي 15 يونيو 2026', days:'يوم متبقي',
+    thisWeek:['إحصائيات ','الأسبوع'], visits:'زيارة هذا الأسبوع', time:'إجمالي الوقت', cal:'سعرة محروقة', vol:'حجم الرفع (كجم)',
+    todayClasses:['كلاسات ','اليوم'], seeAll:'عرض الكل ←',
+    now:'جاري الآن', cf:'CROSSFIT شدة عالية', boxing:'BOXING ملاكمة', yoga:'YOGA يوجا',
+    todayWorkout:['تمرين ','اليوم'], day:'الأربعاء — يوم الصدر', chest:'يوم الصدر',
+    bench:'بنش برس', incline:'إنكلاين دامبل', fly:'كابل فلاي', dips:'ديبس متوازي',
+    trainers:['المدربين ','المتاحين'],
+    t1:'محمود علي', s1:'كروسفت • قوة', t2:'سامي حسن', s2:'ملاكمة • كارديو',
+    classesTitle:'الكلاسات', classesSub:'احجز مكانك في أي كلاس متاح',
+    all:'الكل', cardio:'كارديو', strength:'قوة', cf2:'كروسفت', boxing2:'ملاكمة', yoga2:'يوجا',
+    cfFull:'CrossFit شدة عالية', cfDesc:'كابتن محمود علي', advanced:'متقدم', book:'احجز',
+    boxingFull:'Boxing ملاكمة', boxingDesc:'كابتن سامي حسن', medium:'متوسط', booked:'✓ محجوز',
+    powerFull:'Power Lifting', powerDesc:'كابتن أحمد رضا', advanced2:'متقدم', book2:'احجز',
+    yogaFull:'Yoga & Stretch', yogaDesc:'كابتن نور إبراهيم', all_lvl:'جميع المستويات', full:'ممتلئ',
+    hiitFull:'HIIT حرق دهون', hiitDesc:'كابتن لينا سامي', medium2:'متوسط', book3:'احجز',
+    workoutTitle:'برنامج التمرين', workoutSub:'برنامجك الأسبوعي المخصص',
+    chest2:'صدر', back:'ظهر', legs:'رجل', arms:'ذراع', startNow:'ابدأ التمرين الآن',
+    benchE:'بنش برس مسطح', chestTar:'صدر • علوي', inclineE:'إنكلاين دامبل', chestUp:'صدر • علوي',
+    flyE:'كابل فلاي', chestMid:'صدر • وسطي',
+    progressTitle:'تقدمك', progressSub:'تتبع رحلتك نحو الأفضل',
+    weight:'الوزن (كجم)', bodyfat:'دهون الجسم', muscle:'الكتلة العضلية',
+    weeklyAct:'النشاط الأسبوعي', thisW:'هذا الأسبوع', strProg:'تقدم القوة', threeM:'3 شهور',
+    achs:'الإنجازات', ach1:'7 أيام متواصلة', ach2:'100 تمرين', ach3:'قوة جديدة',
+    ach4:'30 يوم', ach5:'200 تمرين', ach6:'المحترف',
+    pName:'أحمد فاروق', since:'عضو منذ يناير 2024',
+    totalV:'زيارة', totalC:'كلاس', totalA:'إنجاز',
+    m1:'الاشتراك والباقات', m1s:'VIP — 38 يوم متبقي',
+    m2:'المدفوعات والفواتير', m2s:'3 معاملات',
+    m3:'الأهداف الصحية', m3s:'3 أهداف نشطة',
+    m4:'الإعدادات', m4s:'إشعارات • خصوصية • لغة',
+    m5:'المساعدة والدعم', m5s:'تواصل معنا',
+    logout:'تسجيل الخروج',
+    nHome:'الرئيسية', nClasses:'الكلاسات', nWorkout:'تمرين', nProgress:'التقدم', nProfile:'حسابي',
+    dTime:'الوقت', dLevel:'المستوى', dSpots:'المقاعد المتاحة', dPrice:'السعر', free:'مجاني (VIP)',
+    confirm:'تأكيد الحجز',
+    notif:'لا يوجد إشعارات جديدة',
+    bookSuccess:'✓ تم تأكيد حجزك بنجاح',
+    trainerBook:'تم إرسال طلب الحجز للمدرب',
+  },
+  en: {
+    greeting:'Morning Champion,', user:'Ahmed Farouk', status:'ACTIVE MEMBER',
+    plan:'Current Plan', planName:'VIP UNLIMITED', exp:'Expires June 15, 2026', days:'DAYS LEFT',
+    thisWeek:['THIS ','WEEK'], visits:'Visits this week', time:'Total time', cal:'Calories burned', vol:'Lift volume (kg)',
+    todayClasses:["TODAY'S ",'CLASSES'], seeAll:'See all →',
+    now:'Live Now', cf:'CROSSFIT INTENSE', boxing:'BOXING', yoga:'YOGA FLOW',
+    todayWorkout:["TODAY'S ",'WORKOUT'], day:'Wednesday — Chest Day', chest:'CHEST DAY',
+    bench:'Bench Press', incline:'Incline Dumbbell', fly:'Cable Fly', dips:'Parallel Dips',
+    trainers:['AVAILABLE ','TRAINERS'],
+    t1:'Mahmoud Ali', s1:'CROSSFIT • STRENGTH', t2:'Samy Hassan', s2:'BOXING • CARDIO',
+    classesTitle:'CLASSES', classesSub:'Book your spot in any available class',
+    all:'All', cardio:'Cardio', strength:'Strength', cf2:'CrossFit', boxing2:'Boxing', yoga2:'Yoga',
+    cfFull:'CrossFit Intense', cfDesc:'Coach Mahmoud Ali', advanced:'Advanced', book:'Book',
+    boxingFull:'Boxing Class', boxingDesc:'Coach Samy Hassan', medium:'Medium', booked:'✓ Booked',
+    powerFull:'Power Lifting', powerDesc:'Coach Ahmed Reda', advanced2:'Advanced', book2:'Book',
+    yogaFull:'Yoga & Stretch', yogaDesc:'Coach Noor Ibrahim', all_lvl:'All levels', full:'Full',
+    hiitFull:'HIIT Fat Burn', hiitDesc:'Coach Lina Samy', medium2:'Medium', book3:'Book',
+    workoutTitle:'WORKOUT PLAN', workoutSub:'Your customized weekly program',
+    chest2:'Chest', back:'Back', legs:'Legs', arms:'Arms', startNow:'START WORKOUT NOW',
+    benchE:'Flat Bench Press', chestTar:'CHEST • UPPER', inclineE:'Incline Dumbbell', chestUp:'CHEST • UPPER',
+    flyE:'Cable Fly', chestMid:'CHEST • MIDDLE',
+    progressTitle:'YOUR PROGRESS', progressSub:'Track your journey to greatness',
+    weight:'Weight (kg)', bodyfat:'Body Fat', muscle:'Muscle Mass',
+    weeklyAct:'Weekly Activity', thisW:'This Week', strProg:'Strength Progress', threeM:'3 Months',
+    achs:'ACHIEVEMENTS', ach1:'7 Day Streak', ach2:'100 Workouts', ach3:'New PR',
+    ach4:'30 Days', ach5:'200 Workouts', ach6:'Pro Status',
+    pName:'Ahmed Farouk', since:'Member since January 2024',
+    totalV:'VISITS', totalC:'CLASSES', totalA:'AWARDS',
+    m1:'Subscription & Plans', m1s:'VIP — 38 days left',
+    m2:'Payments & Invoices', m2s:'3 transactions',
+    m3:'Health Goals', m3s:'3 active goals',
+    m4:'Settings', m4s:'Notifications • Privacy • Language',
+    m5:'Help & Support', m5s:'Contact us',
+    logout:'LOG OUT',
+    nHome:'Home', nClasses:'Classes', nWorkout:'Workout', nProgress:'Progress', nProfile:'Profile',
+    dTime:'Time', dLevel:'Level', dSpots:'Available spots', dPrice:'Price', free:'FREE (VIP)',
+    confirm:'CONFIRM BOOKING',
+    notif:'No new notifications',
+    bookSuccess:'✓ Booking confirmed successfully',
+    trainerBook:'Booking request sent to trainer',
+  }
+};
+
+let currentLang = 'ar';
+function L(){return i18n[currentLang];}
+
+function applyLang(){
+  const html = document.documentElement;
+  html.setAttribute('lang', currentLang);
+  html.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+  html.setAttribute('data-lang', currentLang);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    const v = L()[k];
+    if(v === undefined) return;
+    if(Array.isArray(v)){
+      // Has accent span
+      const accent = el.querySelector('.accent');
+      if(accent){
+        const accentText = accent.textContent;
+        el.innerHTML = '';
+        el.appendChild(document.createTextNode(v[0]));
+        const newAccent = document.createElement('span');
+        newAccent.className = 'accent';
+        newAccent.textContent = v[1];
+        el.appendChild(newAccent);
+      }
+    } else {
+      el.textContent = v;
+    }
+  });
+}
+
+function toggleLang(){
+  currentLang = currentLang === 'ar' ? 'en' : 'ar';
+  applyLang();
+  showToast(currentLang === 'ar' ? 'العربية' : 'English');
+}
+
+// ===== NAVIGATION =====
+function navigate(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelector(`[data-screen="${screen}"]`).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const navMap = {home:0, classes:1, workout:2, progress:3, profile:4};
+  document.querySelectorAll('.nav-item')[navMap[screen]].classList.add('active');
+  // scroll to top
+  document.querySelector(`[data-screen="${screen}"]`).scrollTop = 0;
+}
+
+// ===== TOAST =====
+let toastTimeout;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+// ===== MODAL =====
+function openClass(name){
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('show');
+}
+function confirmBooking(){
+  closeModal();
+  setTimeout(()=>showToast(L().bookSuccess), 200);
+}
+function bookTrainer(name){
+  showToast(L().trainerBook);
+}
+
+// ===== BOOK BUTTON HANDLERS =====
+document.addEventListener('click', e=>{
+  if(e.target.classList.contains('book-btn') && !e.target.classList.contains('booked') && !e.target.classList.contains('full')){
+    e.stopPropagation();
+    e.target.classList.add('booked');
+    e.target.textContent = currentLang === 'ar' ? '✓ محجوز' : '✓ Booked';
+    showToast(L().bookSuccess);
+  }
+});
+
+// ===== FILTER CHIPS =====
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+
+// ===== MUSCLE TABS =====
+document.querySelectorAll('.muscle-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.muscle-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+// ===== PREVENT DOUBLE-TAP ZOOM =====
+let lastTap = 0;
+document.addEventListener('touchend', e=>{
+  const now = Date.now();
+  if(now - lastTap < 300) e.preventDefault();
+  lastTap = now;
+}, {passive:false});
+
+// init
+applyLang();
+</script>
+</body>
+</html>
