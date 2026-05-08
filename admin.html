@@ -3,14 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IRON FORGE — Admin Panel</title>
+<title>Zero Nine — Admin Panel</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0a;--bg-2:#111;--bg-3:#1a1a1a;--surface:#161616;--surface-2:#1f1f1f;--line:rgba(255,255,255,0.08);--line-2:rgba(255,255,255,0.04);--text:#f5f5f5;--text-dim:#a8a8a8;--text-muted:#6b6b6b;--gold:#d4af37;--gold-2:#f4cf60;--gold-dim:#8a7325;--danger:#ef4444;--success:#22c55e;--info:#3b82f6;--warning:#f59e0b;}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;overflow:hidden;}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;}
+.content{overscroll-behavior:contain;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch;}
 body{font-family:'Tajawal','Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
 [data-lang="en"] body{font-family:'Inter','Tajawal',sans-serif;}
 .mono{font-family:'JetBrains Mono',monospace;}
@@ -278,13 +281,14 @@ input,button,textarea,select{font-family:inherit;outline:none;}
   <div class="gate-card">
     <div class="gate-brand">
       <div class="gate-mark">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+        <img src="logo.png" alt="Zero Nine" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" style="width:46px;height:46px;object-fit:contain;position:relative;z-index:2;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style="display:none;">
           <path d="M3 12h2M19 12h2M7 8v8M17 8v8M7 12h10" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="gate-title">
-        <span class="ar-only">آيرون فورج</span>
-        <span class="en-only">IRON FORGE</span>
+        <span class="ar-only">زيرو ناين</span>
+        <span class="en-only">ZERO NINE</span>
       </div>
       <div class="gate-tag">
         <span class="ar-only">لوحة الإدارة</span>
@@ -315,13 +319,14 @@ input,button,textarea,select{font-family:inherit;outline:none;}
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <img src="logo.png" alt="Zero Nine" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" style="width:26px;height:26px;object-fit:contain;position:relative;z-index:2;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="display:none;">
           <path d="M3 12h2M19 12h2M7 8v8M17 8v8M7 12h10" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="brand-text">
-        <span class="name ar-only">آيرون فورج</span>
-        <span class="name en-only">IRON FORGE</span>
+        <span class="name ar-only">زيرو ناين</span>
+        <span class="name en-only">ZERO NINE</span>
         <span class="tag ar-only">إدارة</span>
         <span class="tag en-only">ADMIN</span>
       </div>
@@ -1177,7 +1182,8 @@ async function bootApp(){
   try {
     await Promise.all([
       loadMembers(), loadClasses(), loadTrainers(),
-      loadPlans(), loadPayments(), loadEquipment(), loadAttendance()
+      loadPlans(), loadPayments(), loadEquipment(), loadAttendance(),
+      loadSettings()
     ]);
     applyTexts();
   } catch(e){
@@ -2432,8 +2438,107 @@ function renderReports(){
 }
 
 // =================================================================
-// SETTINGS
+// SETTINGS — كل تاب فيه إعداداته الخاصة + تتحفظ في Supabase
 // =================================================================
+let SETTINGS_DATA = {
+  general: {
+    notifications_live: true,
+    expiry_reminder: true,
+    auto_confirm_booking: false,
+    daily_email_report: true,
+    whatsapp_integration: false,
+    dark_mode: true
+  },
+  business: {
+    gym_name_ar: 'زيرو ناين',
+    gym_name_en: 'Zero Nine',
+    gym_phone: '01001234567',
+    gym_email: 'info@zeronine.com',
+    gym_address: '',
+    gym_working_hours: '6:00 AM - 12:00 AM',
+    gym_currency: 'EGP'
+  },
+  notifications: {
+    notify_new_member: true,
+    notify_payment: true,
+    notify_class_booking: true,
+    notify_expiry_7days: true,
+    notify_low_capacity: false,
+    notify_equipment_issue: true
+  },
+  payment: {
+    accept_cash: true,
+    accept_card: true,
+    accept_transfer: true,
+    accept_wallet: false,
+    require_invoice: true,
+    auto_renew: false
+  },
+  security: {
+    require_2fa: false,
+    auto_logout_30min: true,
+    log_admin_actions: true,
+    backup_daily: true,
+    encrypt_passwords: true
+  }
+};
+
+async function loadSettings(){
+  try {
+    const { data, error } = await sb.from('settings').select('*');
+    if(error) throw error;
+    if(data && data.length > 0){
+      data.forEach(row => {
+        if(SETTINGS_DATA[row.tab]){
+          try {
+            const parsed = typeof row.value === 'string' ? JSON.parse(row.value) : row.value;
+            SETTINGS_DATA[row.tab] = { ...SETTINGS_DATA[row.tab], ...parsed };
+          } catch(e){ console.warn('parse settings', e); }
+        }
+      });
+    }
+  } catch(e){ console.warn('settings load failed', e); }
+}
+
+async function saveSettingTab(tab){
+  try {
+    const value = SETTINGS_DATA[tab];
+    const { error } = await sb.from('settings').upsert({
+      tab: tab,
+      value: value,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'tab' });
+    if(error) throw error;
+    return true;
+  } catch(e){
+    console.error('save setting failed', e);
+    showToast(currentLang==='ar' ? 'خطأ في الحفظ' : 'Save failed', 'error');
+    return false;
+  }
+}
+
+async function toggleSetting(tab, key, btn){
+  SETTINGS_DATA[tab][key] = !SETTINGS_DATA[tab][key];
+  btn.classList.toggle('on');
+  const ok = await saveSettingTab(tab);
+  if(ok){
+    showToast(SETTINGS_DATA[tab][key]
+      ? (currentLang==='ar' ? '✓ تم التفعيل' : '✓ Enabled')
+      : (currentLang==='ar' ? 'تم الإيقاف' : 'Disabled'),
+      'success');
+  } else {
+    // rollback
+    SETTINGS_DATA[tab][key] = !SETTINGS_DATA[tab][key];
+    btn.classList.toggle('on');
+  }
+}
+
+async function saveSettingField(tab, key, val){
+  SETTINGS_DATA[tab][key] = val;
+  const ok = await saveSettingTab(tab);
+  if(ok) showToast(currentLang==='ar' ? '✓ تم الحفظ' : '✓ Saved', 'success');
+}
+
 function renderSettings(){
   const t = L();
   const tabs = ['general','business','notifications','payment','security'];
@@ -2442,37 +2547,165 @@ function renderSettings(){
     <button class="settings-tab ${activeSettingsTab===tab?'active':''}" onclick="setSettingsTab('${tab}')">${tabLbls[i]}</button>
   `).join('');
 
-  document.getElementById('settingsPanel').innerHTML = `
+  let html = '';
+  const data = SETTINGS_DATA[activeSettingsTab] || {};
+
+  if(activeSettingsTab === 'general'){
+    html = `
+      ${settingToggleHTML('general', 'notifications_live', t.setting1, t.setting1s, data.notifications_live)}
+      ${settingToggleHTML('general', 'expiry_reminder', t.setting2, t.setting2s, data.expiry_reminder)}
+      ${settingToggleHTML('general', 'auto_confirm_booking', t.setting3, t.setting3s, data.auto_confirm_booking)}
+      ${settingToggleHTML('general', 'daily_email_report', t.setting4, t.setting4s, data.daily_email_report)}
+      ${settingToggleHTML('general', 'whatsapp_integration', t.setting5, t.setting5s, data.whatsapp_integration)}
+      ${settingToggleHTML('general', 'dark_mode', t.setting6, t.setting6s, data.dark_mode)}
+    `;
+  } else if(activeSettingsTab === 'business'){
+    const lbl = currentLang==='ar' ? {
+      gymName:'اسم الجيم (عربي)', gymNameEn:'اسم الجيم (English)',
+      phone:'رقم الهاتف', email:'البريد الإلكتروني',
+      address:'العنوان', hours:'ساعات العمل', currency:'العملة',
+      info:'هذه البيانات هتظهر للأعضاء في التطبيق'
+    } : {
+      gymName:'Gym Name (Arabic)', gymNameEn:'Gym Name (English)',
+      phone:'Phone', email:'Email',
+      address:'Address', hours:'Working Hours', currency:'Currency',
+      info:'These details will be visible to members in the app'
+    };
+    html = `
+      <div style="padding:16px 20px;border-bottom:1px solid var(--line-2);background:rgba(212,175,55,0.05);font-size:12px;color:var(--text-dim);">
+        💡 ${lbl.info}
+      </div>
+      ${settingFieldHTML('business', 'gym_name_ar', lbl.gymName, data.gym_name_ar, 'text')}
+      ${settingFieldHTML('business', 'gym_name_en', lbl.gymNameEn, data.gym_name_en, 'text')}
+      ${settingFieldHTML('business', 'gym_phone', lbl.phone, data.gym_phone, 'tel')}
+      ${settingFieldHTML('business', 'gym_email', lbl.email, data.gym_email, 'email')}
+      ${settingFieldHTML('business', 'gym_address', lbl.address, data.gym_address, 'text')}
+      ${settingFieldHTML('business', 'gym_working_hours', lbl.hours, data.gym_working_hours, 'text')}
+      ${settingFieldHTML('business', 'gym_currency', lbl.currency, data.gym_currency, 'text')}
+    `;
+  } else if(activeSettingsTab === 'notifications'){
+    const lbl = currentLang==='ar' ? {
+      newMem:['تنبيه عضو جديد','إشعار عند انضمام عضو'],
+      pay:['تنبيه دفعة جديدة','إشعار عند استلام أي دفعة'],
+      book:['تنبيه حجز كلاس','إشعار عند حجز كلاس جديد'],
+      exp:['تنبيه قرب الانتهاء','قبل 7 أيام من انتهاء أي اشتراك'],
+      cap:['تنبيه قرب الامتلاء','عند وصول الكلاس لـ 80% من سعته'],
+      eq:['تنبيه عطل في المعدات','عند الإبلاغ عن جهاز عاطل']
+    } : {
+      newMem:['New Member Alert','When a new member joins'],
+      pay:['Payment Alert','When any payment is received'],
+      book:['Class Booking Alert','When a new class is booked'],
+      exp:['Expiry Alert','7 days before subscription ends'],
+      cap:['Capacity Alert','When class reaches 80% capacity'],
+      eq:['Equipment Issue Alert','When equipment is reported broken']
+    };
+    html = `
+      ${settingToggleHTML('notifications', 'notify_new_member', lbl.newMem[0], lbl.newMem[1], data.notify_new_member)}
+      ${settingToggleHTML('notifications', 'notify_payment', lbl.pay[0], lbl.pay[1], data.notify_payment)}
+      ${settingToggleHTML('notifications', 'notify_class_booking', lbl.book[0], lbl.book[1], data.notify_class_booking)}
+      ${settingToggleHTML('notifications', 'notify_expiry_7days', lbl.exp[0], lbl.exp[1], data.notify_expiry_7days)}
+      ${settingToggleHTML('notifications', 'notify_low_capacity', lbl.cap[0], lbl.cap[1], data.notify_low_capacity)}
+      ${settingToggleHTML('notifications', 'notify_equipment_issue', lbl.eq[0], lbl.eq[1], data.notify_equipment_issue)}
+    `;
+  } else if(activeSettingsTab === 'payment'){
+    const lbl = currentLang==='ar' ? {
+      cash:['قبول الكاش','الدفع النقدي في الجيم'],
+      card:['قبول الكروت البنكية','فيزا/ماستركارد'],
+      tr:['قبول التحويلات','تحويل بنكي مباشر'],
+      wallet:['قبول المحافظ الإلكترونية','فودافون كاش، إنستا باي إلخ'],
+      inv:['طباعة الفواتير تلقائياً','إنشاء فاتورة بكل دفعة'],
+      ren:['التجديد التلقائي','تجديد الاشتراك تلقائياً عند انتهائه']
+    } : {
+      cash:['Accept Cash','In-gym cash payments'],
+      card:['Accept Cards','Visa / Mastercard'],
+      tr:['Accept Transfers','Direct bank transfer'],
+      wallet:['Accept E-Wallets','Vodafone Cash, InstaPay etc.'],
+      inv:['Auto-print Invoices','Generate invoice for each payment'],
+      ren:['Auto-renewal','Renew subscription automatically']
+    };
+    html = `
+      ${settingToggleHTML('payment', 'accept_cash', lbl.cash[0], lbl.cash[1], data.accept_cash)}
+      ${settingToggleHTML('payment', 'accept_card', lbl.card[0], lbl.card[1], data.accept_card)}
+      ${settingToggleHTML('payment', 'accept_transfer', lbl.tr[0], lbl.tr[1], data.accept_transfer)}
+      ${settingToggleHTML('payment', 'accept_wallet', lbl.wallet[0], lbl.wallet[1], data.accept_wallet)}
+      ${settingToggleHTML('payment', 'require_invoice', lbl.inv[0], lbl.inv[1], data.require_invoice)}
+      ${settingToggleHTML('payment', 'auto_renew', lbl.ren[0], lbl.ren[1], data.auto_renew)}
+    `;
+  } else if(activeSettingsTab === 'security'){
+    const lbl = currentLang==='ar' ? {
+      tfa:['التحقق بخطوتين','تأكيد الدخول برمز إضافي'],
+      logout:['تسجيل خروج تلقائي','بعد 30 دقيقة من عدم النشاط'],
+      log:['سجل عمليات الأدمن','تسجيل كل العمليات الإدارية'],
+      backup:['نسخ احتياطي يومي','نسخة احتياطية تلقائية كل يوم'],
+      enc:['تشفير كلمات المرور','تشفير قوي لبيانات العملاء']
+    } : {
+      tfa:['Two-Factor Auth','Login confirmation with extra code'],
+      logout:['Auto Logout','After 30 minutes of inactivity'],
+      log:['Admin Actions Log','Track all admin operations'],
+      backup:['Daily Backup','Automatic backup every day'],
+      enc:['Password Encryption','Strong encryption for customer data']
+    };
+    html = `
+      ${settingToggleHTML('security', 'require_2fa', lbl.tfa[0], lbl.tfa[1], data.require_2fa)}
+      ${settingToggleHTML('security', 'auto_logout_30min', lbl.logout[0], lbl.logout[1], data.auto_logout_30min)}
+      ${settingToggleHTML('security', 'log_admin_actions', lbl.log[0], lbl.log[1], data.log_admin_actions)}
+      ${settingToggleHTML('security', 'backup_daily', lbl.backup[0], lbl.backup[1], data.backup_daily)}
+      ${settingToggleHTML('security', 'encrypt_passwords', lbl.enc[0], lbl.enc[1], data.encrypt_passwords)}
+      <div style="padding:20px;border-top:1px solid var(--line);">
+        <button class="btn danger" onclick="changeAdminPassword()" style="width:100%;justify-content:center;">
+          🔐 ${currentLang==='ar' ? 'تغيير كلمة مرور الأدمن' : 'Change Admin Password'}
+        </button>
+      </div>
+    `;
+  }
+
+  document.getElementById('settingsPanel').innerHTML = html;
+}
+
+function settingToggleHTML(tab, key, title, sub, isOn){
+  return `
     <div class="setting-item">
-      <div class="setting-info"><div class="t">${t.setting1}</div><div class="s">${t.setting1s}</div></div>
-      <button class="toggle on" onclick="this.classList.toggle('on');showToast(this.classList.contains('on')?'تم التفعيل':'تم الإيقاف')"></button>
-    </div>
+      <div class="setting-info"><div class="t">${title}</div><div class="s">${sub}</div></div>
+      <button class="toggle ${isOn?'on':''}" onclick="toggleSetting('${tab}','${key}',this)"></button>
+    </div>`;
+}
+
+function settingFieldHTML(tab, key, title, val, type){
+  const v = (val||'').toString().replace(/"/g, '&quot;');
+  return `
     <div class="setting-item">
-      <div class="setting-info"><div class="t">${t.setting2}</div><div class="s">${t.setting2s}</div></div>
-      <button class="toggle on" onclick="this.classList.toggle('on');showToast(this.classList.contains('on')?'تم التفعيل':'تم الإيقاف')"></button>
-    </div>
-    <div class="setting-item">
-      <div class="setting-info"><div class="t">${t.setting3}</div><div class="s">${t.setting3s}</div></div>
-      <button class="toggle" onclick="this.classList.toggle('on');showToast(this.classList.contains('on')?'تم التفعيل':'تم الإيقاف')"></button>
-    </div>
-    <div class="setting-item">
-      <div class="setting-info"><div class="t">${t.setting4}</div><div class="s">${t.setting4s}</div></div>
-      <button class="toggle on" onclick="this.classList.toggle('on');showToast(this.classList.contains('on')?'تم التفعيل':'تم الإيقاف')"></button>
-    </div>
-    <div class="setting-item">
-      <div class="setting-info"><div class="t">${t.setting5}</div><div class="s">${t.setting5s}</div></div>
-      <button class="toggle" onclick="this.classList.toggle('on');showToast(this.classList.contains('on')?'تم التفعيل':'تم الإيقاف')"></button>
-    </div>
-    <div class="setting-item">
-      <div class="setting-info"><div class="t">${t.setting6}</div><div class="s">${t.setting6s}</div></div>
-      <button class="toggle on" onclick="this.classList.toggle('on')"></button>
-    </div>
-  `;
+      <div class="setting-info" style="flex:1;">
+        <div class="t">${title}</div>
+        <input type="${type}" value="${v}" 
+          onchange="saveSettingField('${tab}','${key}',this.value)"
+          style="margin-top:8px;width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text);font-size:13px;outline:none;"
+          onfocus="this.style.borderColor='var(--gold)'"
+          onblur="this.style.borderColor='var(--line)'">
+      </div>
+    </div>`;
 }
 
 function setSettingsTab(tab){
   activeSettingsTab = tab;
   renderSettings();
+}
+
+function changeAdminPassword(){
+  const t = L();
+  const oldPw = prompt(currentLang==='ar' ? 'كلمة المرور الحالية:' : 'Current password:');
+  if(oldPw === null) return;
+  if(oldPw !== ADMIN_PASSWORD){
+    showToast(currentLang==='ar' ? 'كلمة المرور الحالية خاطئة' : 'Wrong current password', 'error');
+    return;
+  }
+  const newPw = prompt(currentLang==='ar' ? 'كلمة المرور الجديدة (6 خانات على الأقل):' : 'New password (min 6 chars):');
+  if(!newPw || newPw.length < 6){
+    showToast(currentLang==='ar' ? 'كلمة المرور قصيرة' : 'Password too short', 'error');
+    return;
+  }
+  // ⚠️ ملاحظة: تغيير كلمة سر الأدمن من المتصفح بيغير المتغير في الذاكرة فقط
+  // لتغيير دائم لازم تعدل ADMIN_PASSWORD في الكود نفسه أو تستخدم Supabase
+  showToast(currentLang==='ar' ? 'لتغيير كلمة المرور بشكل دائم، عدّلها من الكود مباشرة في admin.html (السطر اللي فيه ADMIN_PASSWORD)' : 'To change permanently, edit ADMIN_PASSWORD in admin.html source code', 'error');
 }
 
 // =================================================================
