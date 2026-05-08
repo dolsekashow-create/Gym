@@ -1699,7 +1699,6 @@ async function handleLogin(){
 }
 
 function handleLogout(){
-  if(!confirm(currentLang === 'ar' ? 'تأكيد تسجيل الخروج؟' : 'Confirm logout?')) return;
   localStorage.removeItem('if_member');
   currentMember = null;
   document.getElementById('loginScreen').classList.remove('hidden');
