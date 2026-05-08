@@ -1,0 +1,2513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRON FORGE — Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--bg-2:#111;--bg-3:#1a1a1a;--surface:#161616;--surface-2:#1f1f1f;--line:rgba(255,255,255,0.08);--line-2:rgba(255,255,255,0.04);--text:#f5f5f5;--text-dim:#a8a8a8;--text-muted:#6b6b6b;--gold:#d4af37;--gold-2:#f4cf60;--gold-dim:#8a7325;--danger:#ef4444;--success:#22c55e;--info:#3b82f6;--warning:#f59e0b;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Tajawal','Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+[data-lang="en"] body{font-family:'Inter','Tajawal',sans-serif;}
+.mono{font-family:'JetBrains Mono',monospace;}
+input,button,textarea,select{font-family:inherit;outline:none;}
+.gate{position:fixed;inset:0;background:radial-gradient(circle at 30% 20%,rgba(212,175,55,0.18),transparent 50%),radial-gradient(circle at 70% 80%,rgba(212,175,55,0.08),transparent 50%),linear-gradient(180deg,#0a0a0a,#050505);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;transition:opacity 0.4s,transform 0.4s;}
+.gate.hidden{opacity:0;pointer-events:none;transform:scale(1.05);}
+.gate::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(212,175,55,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(212,175,55,0.04) 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);pointer-events:none;}
+.gate-card{width:100%;max-width:440px;background:linear-gradient(135deg,rgba(26,26,26,0.95),rgba(13,13,13,0.95));backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:24px;padding:36px 32px;position:relative;}
+.gate-brand{display:flex;flex-direction:column;align-items:center;margin-bottom:32px;}
+.gate-mark{width:72px;height:72px;background:linear-gradient(135deg,var(--gold),var(--gold-2),var(--gold-dim));border-radius:18px;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:18px;box-shadow:0 8px 32px rgba(212,175,55,0.4);}
+.gate-mark::after{content:'';position:absolute;inset:3px;border-radius:15px;background:var(--bg);}
+.gate-mark svg{position:relative;z-index:1;}
+.gate-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:0.2em;text-align:center;}
+[data-lang="ar"] .gate-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:24px;letter-spacing:0;}
+.gate-tag{font-size:11px;color:var(--gold);letter-spacing:0.4em;margin-top:8px;text-transform:uppercase;text-align:center;}
+[data-lang="ar"] .gate-tag{letter-spacing:0.1em;}
+.gate-heading{font-size:14px;color:var(--text-dim);text-align:center;margin-bottom:24px;}
+.gate-error{display:none;padding:10px 14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;color:var(--danger);font-size:13px;margin-bottom:14px;text-align:center;}
+.gate-error.show{display:block;}
+.gate-input{width:100%;padding:14px 18px;background:rgba(0,0,0,0.4);border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:16px;margin-bottom:14px;letter-spacing:0.05em;}
+.gate-input:focus{border-color:var(--gold);background:rgba(212,175,55,0.05);}
+.gate-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--gold),var(--gold-2),var(--gold-dim));color:var(--bg);border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.25em;cursor:pointer;font-weight:700;box-shadow:0 8px 24px rgba(212,175,55,0.3);}
+[data-lang="ar"] .gate-btn{font-family:'Cairo',sans-serif;font-weight:900;letter-spacing:0.05em;}
+.gate-btn:active{transform:scale(0.98);}
+.app{display:grid;grid-template-columns:240px 1fr;height:100vh;height:100dvh;}
+.sidebar{background:var(--bg-2);border-left:1px solid var(--line);padding:20px 0;overflow-y:auto;}
+[dir="ltr"] .sidebar{border-left:none;border-right:1px solid var(--line);}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px;}
+.brand{display:flex;align-items:center;gap:12px;padding:0 20px 24px;margin-bottom:8px;border-bottom:1px solid var(--line);}
+.brand-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold-2),var(--gold-dim));display:flex;align-items:center;justify-content:center;border-radius:9px;position:relative;box-shadow:0 4px 12px rgba(212,175,55,0.25);}
+.brand-mark::after{content:'';position:absolute;inset:2px;border-radius:7px;background:var(--bg);}
+.brand-mark svg{position:relative;z-index:1;}
+.brand-text{display:flex;flex-direction:column;line-height:1;}
+.brand-text .name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.15em;}
+[data-lang="ar"] .brand-text .name{font-family:'Cairo',sans-serif;font-weight:900;font-size:16px;letter-spacing:0;}
+.brand-text .tag{font-size:9px;color:var(--gold);letter-spacing:0.3em;margin-top:3px;text-transform:uppercase;}
+[data-lang="ar"] .brand-text .tag{letter-spacing:0.05em;}
+.nav-section{padding:16px 12px 8px;}
+.nav-section-title{font-size:10px;color:var(--text-muted);letter-spacing:0.2em;text-transform:uppercase;padding:0 12px 8px;}
+.nav-link{display:flex;align-items:center;gap:12px;padding:10px 14px;color:var(--text-dim);cursor:pointer;border-radius:10px;font-size:13px;font-weight:500;transition:all 0.15s;position:relative;margin-bottom:2px;background:none;border:none;width:100%;text-align:right;}
+[dir="ltr"] .nav-link{text-align:left;}
+.nav-link:hover{background:var(--surface);color:var(--text);}
+.nav-link.active{background:linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05));color:var(--gold);}
+.nav-link.active::before{content:'';position:absolute;right:0;top:8px;bottom:8px;width:3px;background:var(--gold);border-radius:2px 0 0 2px;}
+[dir="ltr"] .nav-link.active::before{right:auto;left:0;border-radius:0 2px 2px 0;}
+.nav-link svg{flex-shrink:0;}
+.nav-link span:not(.badge){flex:1;}
+.nav-link .badge{font-size:10px;padding:2px 7px;background:var(--gold);color:var(--bg);border-radius:10px;font-weight:700;}
+.main{overflow:hidden;display:flex;flex-direction:column;background:var(--bg);}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--line);background:var(--bg-2);gap:12px;}
+.search-box{flex:1;max-width:400px;position:relative;}
+.search-box input{width:100%;padding:10px 16px 10px 40px;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:13px;}
+[dir="rtl"] .search-box input{padding:10px 40px 10px 16px;}
+.search-box input:focus{border-color:var(--gold);}
+.search-box svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);}
+[dir="rtl"] .search-box svg{left:auto;right:14px;}
+.topbar-actions{display:flex;align-items:center;gap:10px;}
+.icon-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--text-dim);cursor:pointer;position:relative;transition:all 0.15s;}
+.icon-btn:hover{color:var(--gold);border-color:rgba(212,175,55,0.3);}
+.icon-btn .badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 4px;background:var(--gold);color:var(--bg);border-radius:9px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg-2);}
+.lang-btn{width:auto;padding:0 14px;font-family:'Bebas Neue',sans-serif;letter-spacing:0.1em;font-size:12px;}
+.admin-pill{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;background:var(--surface);border:1px solid var(--line);border-radius:100px;}
+[dir="rtl"] .admin-pill{padding:6px 6px 6px 14px;}
+.admin-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--bg);}
+.admin-info{display:flex;flex-direction:column;line-height:1.2;}
+.admin-name{font-size:12px;font-weight:600;}
+.admin-role{font-size:10px;color:var(--gold);letter-spacing:0.05em;}
+.content{flex:1;overflow-y:auto;padding:24px 28px;}
+.content::-webkit-scrollbar{width:6px;}
+.content::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap;gap:14px;}
+.page-title-block .title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:0.05em;color:var(--text);line-height:1;}
+[data-lang="ar"] .page-title-block .title{font-family:'Cairo',sans-serif;font-weight:900;font-size:24px;letter-spacing:0;}
+.page-title-block .sub{font-size:13px;color:var(--text-dim);margin-top:6px;}
+.page-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{padding:9px 16px;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.15s;}
+.btn:hover{border-color:var(--gold);color:var(--gold);}
+.btn.primary{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700;}
+.btn.primary:hover{background:var(--gold-2);color:var(--bg);}
+.btn.danger{color:var(--danger);border-color:rgba(239,68,68,0.3);}
+.btn.danger:hover{background:rgba(239,68,68,0.1);color:var(--danger);}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.kpi-card{position:relative;padding:20px;background:var(--bg-2);border:1px solid var(--line);border-radius:16px;overflow:hidden;}
+.kpi-card.primary{background:radial-gradient(circle at 100% 0%,rgba(212,175,55,0.15),transparent 50%),linear-gradient(135deg,#1a1a1a,#0d0d0d);border-color:rgba(212,175,55,0.2);}
+.kpi-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.kpi-icon{width:36px;height:36px;background:rgba(212,175,55,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--gold);}
+.kpi-trend{font-size:11px;padding:4px 8px;background:rgba(34,197,94,0.1);color:var(--success);border-radius:6px;font-weight:600;}
+.kpi-trend.down{background:rgba(239,68,68,0.1);color:var(--danger);}
+.kpi-value{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:0.02em;color:var(--text);line-height:1;margin-bottom:6px;}
+[data-lang="ar"] .kpi-value{font-family:'Cairo',sans-serif;font-weight:900;font-size:28px;}
+.kpi-label{font-size:12px;color:var(--text-dim);letter-spacing:0.05em;}
+.kpi-foot{font-size:11px;color:var(--text-muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--line-2);}
+.row{display:grid;gap:14px;margin-bottom:24px;}
+.row.cols-2{grid-template-columns:2fr 1fr;}
+.panel{background:var(--bg-2);border:1px solid var(--line);border-radius:16px;overflow:hidden;}
+.panel-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:10px;}
+.panel-title{font-size:14px;font-weight:700;}
+.panel-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.tab-pill{padding:5px 12px;font-size:11px;background:var(--surface);border:1px solid var(--line);border-radius:100px;cursor:pointer;color:var(--text-dim);}
+.tab-pill.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700;}
+.panel-body{padding:20px;}
+.activity-list{display:flex;flex-direction:column;}
+.activity{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--line-2);}
+.activity:last-child{border:none;}
+.activity-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.activity-dot.gold{background:rgba(212,175,55,0.1);color:var(--gold);}
+.activity-dot.success{background:rgba(34,197,94,0.1);color:var(--success);}
+.activity-dot.info{background:rgba(59,130,246,0.1);color:var(--info);}
+.activity-dot.danger{background:rgba(239,68,68,0.1);color:var(--danger);}
+.activity-info{flex:1;min-width:0;}
+.activity-text{font-size:13px;line-height:1.4;}
+.activity-text strong{color:var(--gold);}
+.activity-time{font-size:11px;color:var(--text-muted);margin-top:3px;}
+.table-wrap{overflow-x:auto;}
+.table{width:100%;border-collapse:collapse;font-size:13px;}
+.table th{text-align:right;padding:12px 16px;font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--line);white-space:nowrap;}
+[dir="ltr"] .table th{text-align:left;}
+.table td{padding:14px 16px;border-bottom:1px solid var(--line-2);color:var(--text-dim);}
+.table tr:hover td{background:rgba(255,255,255,0.015);}
+.table tr:last-child td{border:none;}
+.user-cell{display:flex;align-items:center;gap:10px;}
+.user-cell-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dim),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:12px;color:var(--bg);flex-shrink:0;}
+.user-cell-info{display:flex;flex-direction:column;line-height:1.3;}
+.user-cell-name{color:var(--text);font-weight:600;font-size:13px;}
+.user-cell-id{color:var(--text-muted);font-size:11px;}
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;}
+.status-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
+.status-pill.active{background:rgba(34,197,94,0.1);color:var(--success);}
+.status-pill.expiring{background:rgba(245,158,11,0.1);color:var(--warning);}
+.status-pill.inactive,.status-pill.expired{background:rgba(239,68,68,0.1);color:var(--danger);}
+.status-pill.pending{background:rgba(59,130,246,0.1);color:var(--info);}
+.plan-tag{font-size:11px;padding:3px 9px;border-radius:6px;font-weight:600;display:inline-block;}
+.plan-tag.vip{background:linear-gradient(135deg,rgba(212,175,55,0.2),rgba(212,175,55,0.05));color:var(--gold);border:1px solid rgba(212,175,55,0.3);}
+.plan-tag.gold{background:rgba(212,175,55,0.1);color:var(--gold);}
+.plan-tag.silver{background:rgba(168,168,168,0.1);color:#a8a8a8;}
+.plan-tag.bronze{background:rgba(180,83,9,0.15);color:#d97706;}
+.action-icons{display:flex;gap:6px;}
+.action-icon{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--text-muted);cursor:pointer;transition:all 0.15s;}
+.action-icon:hover{color:var(--gold);border-color:var(--gold);}
+.action-icon.danger:hover{color:var(--danger);border-color:var(--danger);}
+.screen{display:none;}
+.screen.active{display:block;animation:fadeIn 0.3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.classes-grid,.trainers-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.plans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.equipment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.class-mgmt-card{background:var(--bg-2);border:1px solid var(--line);border-radius:16px;overflow:hidden;}
+.class-mgmt-head{padding:16px 18px;background:linear-gradient(135deg,rgba(212,175,55,0.1),transparent);border-bottom:1px solid var(--line);}
+.class-mgmt-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.05em;}
+[data-lang="ar"] .class-mgmt-name{font-family:'Cairo',sans-serif;font-weight:900;font-size:16px;}
+.class-mgmt-time{font-size:11px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;}
+.class-mgmt-body{padding:16px 18px;}
+.class-info-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;}
+.class-info-row .k{color:var(--text-muted);}
+.class-info-row .v{color:var(--text);font-weight:600;}
+.capacity-bar{height:6px;background:var(--surface);border-radius:3px;overflow:hidden;margin-top:8px;}
+.capacity-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-2));}
+.class-mgmt-foot{padding:12px 18px;background:rgba(0,0,0,0.2);display:flex;gap:8px;border-top:1px solid var(--line-2);}
+.class-mgmt-foot .btn{flex:1;justify-content:center;}
+.trainer-mgmt-card{padding:20px;background:var(--bg-2);border:1px solid var(--line);border-radius:16px;text-align:center;position:relative;}
+.trainer-status{position:absolute;top:14px;right:14px;padding:3px 8px;font-size:10px;font-weight:600;border-radius:6px;}
+[dir="rtl"] .trainer-status{right:auto;left:14px;}
+.trainer-status.online{background:rgba(34,197,94,0.1);color:var(--success);}
+.trainer-status.offline{background:rgba(107,107,107,0.1);color:var(--text-muted);}
+.trainer-mgmt-avatar{width:80px;height:80px;margin:0 auto 12px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dim),var(--gold-2));display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--bg);}
+.trainer-mgmt-name{font-size:15px;font-weight:700;}
+.trainer-mgmt-spec{font-size:11px;color:var(--gold);margin-top:3px;letter-spacing:0.1em;text-transform:uppercase;}
+.trainer-stats-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;padding:12px 0;border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2);}
+.tsm{text-align:center;}
+.tsm .v{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);}
+[data-lang="ar"] .tsm .v{font-family:'Cairo',sans-serif;font-weight:900;font-size:15px;}
+.tsm .l{font-size:10px;color:var(--text-muted);margin-top:2px;}
+.trainer-actions{display:flex;gap:6px;}
+.trainer-actions .btn{flex:1;justify-content:center;font-size:11px;padding:7px;}
+.plan-card{padding:24px 20px;background:var(--bg-2);border:1px solid var(--line);border-radius:18px;position:relative;overflow:hidden;}
+.plan-card.featured{background:radial-gradient(circle at 0% 0%,rgba(212,175,55,0.15),transparent 50%),linear-gradient(135deg,#1a1a1a,#0d0d0d);border-color:rgba(212,175,55,0.3);}
+.plan-card .plan-badge{position:absolute;top:14px;left:14px;padding:3px 9px;background:var(--gold);color:var(--bg);font-size:10px;font-weight:700;letter-spacing:0.1em;border-radius:6px;}
+[dir="rtl"] .plan-card .plan-badge{left:auto;right:14px;}
+.plan-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.05em;}
+[data-lang="ar"] .plan-name{font-family:'Cairo',sans-serif;font-weight:900;font-size:18px;}
+.plan-price{display:flex;align-items:baseline;gap:6px;margin:14px 0;}
+.plan-price .amount{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--gold);}
+[data-lang="ar"] .plan-price .amount{font-family:'Cairo',sans-serif;font-weight:900;font-size:30px;}
+.plan-price .currency{font-size:14px;color:var(--text-dim);}
+.plan-price .period{font-size:12px;color:var(--text-muted);}
+.plan-features{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;font-size:12px;color:var(--text-dim);}
+.plan-feature{display:flex;align-items:center;gap:8px;}
+.plan-feature::before{content:'✓';color:var(--gold);font-weight:700;}
+.plan-stats{padding-top:14px;border-top:1px solid var(--line-2);display:flex;justify-content:space-between;}
+.plan-stat .v{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);}
+[data-lang="ar"] .plan-stat .v{font-family:'Cairo',sans-serif;font-weight:900;font-size:14px;}
+.plan-stat .l{font-size:10px;color:var(--text-muted);}
+.eq-card{padding:18px;background:var(--bg-2);border:1px solid var(--line);border-radius:14px;}
+.eq-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.eq-icon{width:44px;height:44px;background:rgba(212,175,55,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.eq-name{font-size:14px;font-weight:700;}
+.eq-cat{font-size:11px;color:var(--gold);margin-top:2px;letter-spacing:0.05em;text-transform:uppercase;}
+.eq-stats{display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--line-2);font-size:12px;}
+.eq-stat .k{color:var(--text-muted);}
+.eq-stat .v{color:var(--text);font-weight:600;margin-top:2px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);padding:12px 22px;background:var(--gold);color:var(--bg);border-radius:100px;font-weight:700;font-size:13px;z-index:1000;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 8px 24px rgba(212,175,55,0.4);pointer-events:none;max-width:90%;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.error{background:var(--danger);color:#fff;}
+.toast.success{background:var(--success);color:#fff;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:500;opacity:0;pointer-events:none;transition:opacity 0.2s;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.show{opacity:1;pointer-events:auto;}
+.modal{width:100%;max-width:560px;background:var(--bg-2);border:1px solid var(--line);border-radius:16px;padding:24px;transform:scale(0.95);transition:transform 0.2s;max-height:90vh;overflow-y:auto;}
+.modal.wide{max-width:760px;}
+.modal-overlay.show .modal{transform:scale(1);}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:6px;}
+.modal-sub{font-size:13px;color:var(--text-dim);margin-bottom:20px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:11px;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
+.field input,.field select,.field textarea{width:100%;padding:10px 14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:13px;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.field-row.cols-3{grid-template-columns:1fr 1fr 1fr;}
+.modal-actions{display:flex;gap:10px;margin-top:20px;}
+.modal-actions .btn{flex:1;justify-content:center;}
+.gen-pw-box{padding:16px;background:linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05));border:1px solid rgba(212,175,55,0.3);border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px;flex-wrap:wrap;}
+.gen-pw-box .pwl{font-size:11px;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:4px;}
+.gen-pw-box .pwv{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--gold);font-weight:600;letter-spacing:0.05em;word-break:break-all;}
+.gen-pw-box button{padding:8px 14px;background:var(--gold);color:var(--bg);border:none;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:0.1em;cursor:pointer;text-transform:uppercase;flex-shrink:0;}
+.detail-section{padding:16px;background:var(--surface);border-radius:12px;margin-bottom:14px;}
+.detail-section h4{font-size:12px;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;}
+.detail-cell .lbl{font-size:11px;color:var(--text-muted);margin-bottom:3px;}
+.detail-cell .val{font-size:13px;color:var(--text);font-weight:500;word-break:break-word;}
+.detail-cell .val.gold{color:var(--gold);}
+.detail-cell .val.mono{font-family:'JetBrains Mono',monospace;font-size:12px;}
+.settings-wrap{display:grid;grid-template-columns:200px 1fr;gap:24px;}
+.settings-tabs{display:flex;flex-direction:column;gap:4px;}
+.settings-tab{padding:10px 14px;font-size:13px;color:var(--text-dim);cursor:pointer;border-radius:8px;text-align:right;background:none;border:none;width:100%;}
+[dir="ltr"] .settings-tab{text-align:left;}
+.settings-tab.active{background:var(--surface);color:var(--gold);font-weight:600;}
+.setting-item{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line-2);gap:12px;}
+.setting-item:last-child{border:none;}
+.setting-info .t{font-size:13px;font-weight:600;}
+.setting-info .s{font-size:11px;color:var(--text-dim);margin-top:2px;}
+.toggle{width:44px;height:24px;background:var(--surface);border-radius:12px;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;border:none;padding:0;}
+.toggle::after{content:'';position:absolute;top:3px;right:3px;width:18px;height:18px;background:var(--text-dim);border-radius:50%;transition:all 0.2s;}
+[dir="ltr"] .toggle::after{right:auto;left:3px;}
+.toggle.on{background:var(--gold);}
+.toggle.on::after{right:23px;background:var(--bg);}
+[dir="ltr"] .toggle.on::after{right:auto;left:23px;}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-muted);}
+.empty-state .ic{font-size:48px;margin-bottom:12px;opacity:0.4;}
+.empty-state .t{font-size:15px;font-weight:600;color:var(--text-dim);margin-bottom:6px;}
+.empty-state .s{font-size:12px;}
+.loader-overlay{position:fixed;inset:0;background:rgba(10,10,10,0.85);backdrop-filter:blur(4px);z-index:9000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.loader-overlay.show{opacity:1;pointer-events:auto;}
+.spinner{width:44px;height:44px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+[data-lang="en"] .ar-only{display:none;}
+[data-lang="ar"] .en-only{display:none;}
+@media (max-width:1024px){.kpi-grid{grid-template-columns:repeat(2,1fr);}.row.cols-2{grid-template-columns:1fr;}.classes-grid,.trainers-list,.plans-grid,.equipment-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:768px){.app{grid-template-columns:60px 1fr;}.sidebar{padding:16px 0;}.brand{padding:0 10px 16px;justify-content:center;}.brand-text,.nav-section-title{display:none;}.nav-link{justify-content:center;padding:12px;}.nav-link span{display:none;}.nav-link .badge{display:none;}.nav-section{padding:8px 6px;}.topbar{padding:12px 16px;}.content{padding:16px;}.search-box{display:none;}.admin-pill .admin-info{display:none;}.kpi-grid{grid-template-columns:repeat(2,1fr);gap:10px;}.kpi-card{padding:14px;}.kpi-value{font-size:24px;}.classes-grid,.trainers-list,.plans-grid,.equipment-grid{grid-template-columns:1fr;}.settings-wrap{grid-template-columns:1fr;}.settings-tabs{flex-direction:row;overflow-x:auto;}.field-row,.field-row.cols-3{grid-template-columns:1fr;}.detail-grid{grid-template-columns:1fr;}.table th:nth-child(n+5),.table td:nth-child(n+5){display:none;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-brand">
+      <div class="gate-mark">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12h2M19 12h2M7 8v8M17 8v8M7 12h10" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="gate-title">
+        <span class="ar-only">آيرون فورج</span>
+        <span class="en-only">IRON FORGE</span>
+      </div>
+      <div class="gate-tag">
+        <span class="ar-only">لوحة الإدارة</span>
+        <span class="en-only">ADMIN PANEL</span>
+      </div>
+    </div>
+    <div class="gate-heading">
+      <span class="ar-only">برجاء إدخال كلمة المرور للدخول</span>
+      <span class="en-only">Please enter password to access</span>
+    </div>
+    <div class="gate-error" id="gateError">
+      <span class="ar-only">كلمة المرور خاطئة</span>
+      <span class="en-only">Incorrect password</span>
+    </div>
+    <input type="password" class="gate-input" id="gatePw" placeholder="••••••••" autofocus />
+    <button class="gate-btn" onclick="checkGate()">
+      <span class="ar-only">دخول</span>
+      <span class="en-only">SIGN IN</span>
+    </button>
+    <div style="text-align:center;margin-top:18px;">
+      <button onclick="toggleGateLang()" style="background:none;border:none;color:var(--text-muted);font-size:11px;letter-spacing:0.1em;cursor:pointer;">AR / EN</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app" id="adminApp" style="display:none;">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12h2M19 12h2M7 8v8M17 8v8M7 12h10" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="name ar-only">آيرون فورج</span>
+        <span class="name en-only">IRON FORGE</span>
+        <span class="tag ar-only">إدارة</span>
+        <span class="tag en-only">ADMIN</span>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title" id="navMainLbl">الرئيسية</div>
+      <button class="nav-link active" data-nav="dashboard" onclick="navigate('dashboard')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span id="navDash">لوحة التحكم</span>
+      </button>
+      <button class="nav-link" data-nav="members" onclick="navigate('members')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        <span id="navMem">الأعضاء</span>
+        <span class="badge" id="membersBadge">0</span>
+      </button>
+      <button class="nav-link" data-nav="classes" onclick="navigate('classes')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span id="navCls">الكلاسات</span>
+      </button>
+      <button class="nav-link" data-nav="trainers" onclick="navigate('trainers')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="navTr">المدربين</span>
+      </button>
+      <button class="nav-link" data-nav="plans" onclick="navigate('plans')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span id="navPl">الباقات</span>
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title" id="navOpsLbl">العمليات</div>
+      <button class="nav-link" data-nav="payments" onclick="navigate('payments')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        <span id="navPay">المدفوعات</span>
+      </button>
+      <button class="nav-link" data-nav="equipment" onclick="navigate('equipment')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/></svg>
+        <span id="navEq">المعدات</span>
+      </button>
+      <button class="nav-link" data-nav="attendance" onclick="navigate('attendance')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span id="navAtt">الحضور</span>
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-title" id="navOtherLbl">أخرى</div>
+      <button class="nav-link" data-nav="reports" onclick="navigate('reports')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+        <span id="navRep">التقارير</span>
+      </button>
+      <button class="nav-link" data-nav="settings" onclick="navigate('settings')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 008 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H2a2 2 0 010-4h.09A1.65 1.65 0 004.6 8a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V2a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H22a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span id="navSet">الإعدادات</span>
+      </button>
+      <button class="nav-link" onclick="adminLogout()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span id="navLogout">خروج</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="globalSearch" placeholder="ابحث عن عضو..." oninput="handleSearch(this.value)" />
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn lang-btn" onclick="toggleLang()">
+          <span class="ar-only">EN</span>
+          <span class="en-only">AR</span>
+        </button>
+        <button class="icon-btn" onclick="showToast(L().notif)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+        <div class="admin-pill">
+          <div class="admin-info">
+            <span class="admin-name" id="adminName">مدير الجيم</span>
+            <span class="admin-role">SUPER ADMIN</span>
+          </div>
+          <div class="admin-avatar">M.A</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- DASHBOARD -->
+      <div class="screen active" data-screen="dashboard">
+        <div class="page-head">
+          <div class="page-title-block">
+            <div class="title" id="dashTitle">لوحة التحكم</div>
+            <div class="sub" id="dashSub">نظرة عامة على أداء الجيم</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn" onclick="exportData('all')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span id="exportBtn">تصدير</span>
+            </button>
+            <button class="btn primary" onclick="openMemberModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span id="newMemBtn">إضافة عضو</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="kpi-grid" id="dashKpis"></div>
+
+        <div class="row cols-2">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title" id="revChartTitle">حركة الإيرادات</div>
+              <div class="panel-actions">
+                <div class="tab-pill" onclick="setRevPeriod(this,'day')" id="revDay">يوم</div>
+                <div class="tab-pill active" onclick="setRevPeriod(this,'week')" id="revWeek">أسبوع</div>
+                <div class="tab-pill" onclick="setRevPeriod(this,'month')" id="revMonth">شهر</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div style="height:240px;">
+                <svg width="100%" height="100%" viewBox="0 0 600 240" preserveAspectRatio="none">
+                  <line x1="0" y1="60" x2="600" y2="60" stroke="rgba(255,255,255,0.05)"/>
+                  <line x1="0" y1="120" x2="600" y2="120" stroke="rgba(255,255,255,0.05)"/>
+                  <line x1="0" y1="180" x2="600" y2="180" stroke="rgba(255,255,255,0.05)"/>
+                  <defs>
+                    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#d4af37" stop-opacity="0.4"/>
+                      <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path id="revAreaPath" d="M 30 180 L 110 140 L 190 160 L 270 100 L 350 120 L 430 70 L 510 90 L 570 50 L 570 220 L 30 220 Z" fill="url(#goldGrad)"/>
+                  <path id="revLinePath" d="M 30 180 L 110 140 L 190 160 L 270 100 L 350 120 L 430 70 L 510 90 L 570 50" stroke="#d4af37" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title" id="liveActLbl">النشاط المباشر</div>
+              <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--success);">
+                <span style="width:6px;height:6px;background:var(--success);border-radius:50%;"></span>Live
+              </span>
+            </div>
+            <div class="panel-body" style="padding-top:8px;">
+              <div class="activity-list" id="activityList"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title" id="latestMemLbl">أحدث الأعضاء</div>
+            <button class="btn" onclick="navigate('members')">
+              <span id="viewAllBtn">عرض الكل</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead id="latestMembersHead"></thead>
+              <tbody id="latestMembersBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEMBERS -->
+      <div class="screen" data-screen="members">
+        <div class="page-head">
+          <div class="page-title-block">
+            <div class="title" id="membersTitle">إدارة الأعضاء</div>
+            <div class="sub" id="membersSub">—</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn primary" onclick="openMemberModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span id="addMemBtn">إضافة عضو جديد</span>
+            </button>
+          </div>
+        </div>
+        <div class="kpi-grid" id="membersKpis"></div>
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title" id="allMemLbl">جميع الأعضاء</div>
+            <div class="panel-actions" id="memberFilters"></div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead id="membersHead"></thead>
+              <tbody id="membersBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLASSES -->
+      <div class="screen" data-screen="classes">
+        <div class="page-head">
+          <div class="page-title-block">
+            <div class="title" id="clsPageTitle">الكلاسات والجدول</div>
+            <div class="sub" id="clsPageSub">إدارة جدول الكلاسات</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn primary" onclick="openClassModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span id="addClsBtn">إضافة كلاس</span>
+            </button>
+          </div>
+        </div>
+        <div class="classes-grid" id="classesGrid"></div>
+      </div>
+
+      <!-- TRAINERS -->
+      <div class="screen" data-screen="trainers">
+        <div class="page-head">
+          <div class="page-title-block">
+            <div class="title" id="trPageTitle">المدربين</div>
+            <div class="sub" id="trPageSub">—</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn primary" onclick="openTrainerModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span id="addTrBtn">إضافة مدرب</span>
+            </button>
+          </div>
+        </div>
+        <div class="trainers-list" id="trainersList"></div>
+      </div>
+
+      <!-- PLANS -->
+      <div class="screen" data-screen="plans">
+        <div class="page-head">
+          <div class="page-title-block">
+            <div class="title" id="plPageTitle">الباقات والاشتراكات</div>
+            <div class="sub" id="plPageSub">إدارة باقات العضوية</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn primary" onclick="openPlanModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span id="addPlanBtn">إضافة باقة</span>
+            </button>
+          </div>
+        </div>
+        <div class="plans-grid" id="plansGrid"></div>
+      </div>
+
+      <!-- PAYMENTS -->
+      <div class="screen" data-screen="payments">
+        <div class="page-head">
+          <div class="page-title-block">
+            <div class="title" id="payTitle">المدفوعات والمعاملات</div>
+            <div class="sub" id="paySub">سجل جميع المعاملات المالية</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn" onclick="exportData('payments')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span id="expCsv">تصدير CSV</span>
+            </button>
+            <button class="btn primary" onclick="openPaymentModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span id="addPayBtn">تسجيل دفعة</span>
+            </button>
+          </div>
+        </div>
+        <div class="kpi-grid" id="paymentsKpis"></div>
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title" id="latestTxLbl">المعاملات</div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead id="paymentsHead"></thead>
+              <tbody id="paymentsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- EQUIPMENT -->
+      <div class="screen" data-screen="equipment">
+        <div class="page-head">
+          <div class="page-title-block">
+            <div class="title" id="eqTitle">المعدات والصيانة</div>
+            <div class="sub" id="eqSub">إدارة معدات الجيم</div>
+          </div>
+          <div class="page-actions">
+            <button class="btn primary" onclick="openEquipModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span id="addEqBtn">إضافة جهاز</span>
+            </button>
+          </div>
+        </div>
+        <div class="equipment-grid" id="equipmentGrid"></div>
+      </div>
+
+      <!-- ATTENDANCE -->
+      <div class="screen" data-screen="attendance">
+        <div class="page-head">
+          <div class="page-title-block">
+            <div class="title" id="attTitle">الحضور والانصراف</div>
+            <div class="sub" id="attSub">سجل الحضور المباشر</div>
+          </div>
+        </div>
+        <div class="kpi-grid" id="attendanceKpis"></div>
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title" id="checkLogLbl">سجل الحضور</div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead id="attendanceHead"></thead>
+              <tbody id="attendanceBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="screen" data-screen="reports">
+        <div class="page-head">
+          <div class="page-title-block">
+            <div class="title" id="repTitle">التقارير والإحصائيات</div>
+            <div class="sub" id="repSub">تحليلات شاملة لأداء الجيم</div>
+          </div>
+        </div>
+        <div class="row cols-2">
+          <div class="panel">
+            <div class="panel-head"><div class="panel-title" id="revBreakLbl">توزيع الإيرادات</div></div>
+            <div class="panel-body" id="revBreakBody"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div class="panel-title" id="topClsLbl">أكثر الكلاسات إقبالاً</div></div>
+            <div class="panel-body" id="topClassesBody"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title" id="monthCmpLbl">مقارنة شهرية</div></div>
+          <div class="panel-body">
+            <div style="height:240px;">
+              <svg width="100%" height="100%" viewBox="0 0 600 240" preserveAspectRatio="none">
+                <line x1="0" y1="60" x2="600" y2="60" stroke="rgba(255,255,255,0.05)"/>
+                <line x1="0" y1="120" x2="600" y2="120" stroke="rgba(255,255,255,0.05)"/>
+                <line x1="0" y1="180" x2="600" y2="180" stroke="rgba(255,255,255,0.05)"/>
+                <rect x="40" y="140" width="40" height="80" rx="4" fill="#d4af37" opacity="0.6"/>
+                <rect x="120" y="120" width="40" height="100" rx="4" fill="#d4af37" opacity="0.7"/>
+                <rect x="200" y="100" width="40" height="120" rx="4" fill="#d4af37" opacity="0.75"/>
+                <rect x="280" y="80" width="40" height="140" rx="4" fill="#d4af37" opacity="0.85"/>
+                <rect x="360" y="60" width="40" height="160" rx="4" fill="#d4af37" opacity="0.9"/>
+                <rect x="440" y="40" width="40" height="180" rx="4" fill="#d4af37"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="screen" data-screen="settings">
+        <div class="page-head">
+          <div class="page-title-block">
+            <div class="title" id="setTitle">الإعدادات</div>
+            <div class="sub" id="setSub">تخصيص الجيم والتطبيق</div>
+          </div>
+        </div>
+        <div class="settings-wrap">
+          <div class="settings-tabs" id="settingsTabs"></div>
+          <div class="panel" id="settingsPanel"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- LOADER -->
+<div class="loader-overlay" id="loader"><div class="spinner"></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// =================================================================
+// SUPABASE CONFIG
+// =================================================================
+const SUPABASE_URL = 'https://xfdphshinrlsoguvxbje.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_nYY4LEiiF2k-fChvczOz6g_KwBvAv9K';
+const ADMIN_PASSWORD = 'Gym1939';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// =================================================================
+// STATE
+// =================================================================
+let currentLang = 'ar';
+let MEMBERS = [];
+let CLASSES = [];
+let TRAINERS = [];
+let PLANS = [];
+let PAYMENTS = [];
+let EQUIPMENT = [];
+let ATTENDANCE = [];
+let memberFilter = 'all';
+let memberSearch = '';
+let modalCtx = null;
+let activeSettingsTab = 'general';
+
+// =================================================================
+// I18N
+// =================================================================
+const T = {
+  ar: {
+    navMain:'الرئيسية', navOps:'العمليات', navOther:'أخرى',
+    dashboard:'لوحة التحكم', members:'الأعضاء', classes:'الكلاسات',
+    trainers:'المدربين', plans:'الباقات', payments:'المدفوعات',
+    equipment:'المعدات', attendance:'الحضور', reports:'التقارير',
+    settings:'الإعدادات', logout:'تسجيل الخروج',
+    adminName:'مدير الجيم',
+    dashTitle:'لوحة التحكم', dashSub:'نظرة عامة على أداء الجيم',
+    exportBtn:'تصدير', newMember:'إضافة عضو',
+    revChart:'حركة الإيرادات', day:'يوم', week:'أسبوع', month:'شهر',
+    rev:'الإيرادات', newMembers:'أعضاء جدد',
+    liveAct:'النشاط المباشر',
+    latestMembers:'أحدث الأعضاء', viewAll:'عرض الكل',
+    membersTitle:'إدارة الأعضاء', addMember:'إضافة عضو جديد',
+    allMembers:'جميع الأعضاء',
+    classesPageTitle:'الكلاسات والجدول', classesPageSub:'إدارة جدول الكلاسات والمواعيد',
+    addClass:'إضافة كلاس',
+    trainersPageTitle:'المدربين', addTrainer:'إضافة مدرب',
+    plansPageTitle:'الباقات والاشتراكات', plansPageSub:'إدارة باقات العضوية والأسعار',
+    addPlan:'إضافة باقة',
+    paymentsTitle:'المدفوعات والمعاملات', paymentsSub:'سجل جميع المعاملات المالية',
+    exportXlsx:'تصدير CSV', addPayment:'تسجيل دفعة',
+    equipTitle:'المعدات والصيانة', equipSub:'إدارة معدات الجيم وحالتها',
+    addEquip:'إضافة جهاز',
+    attTitle:'الحضور والانصراف', attSub:'سجل الحضور المباشر',
+    checkLog:'سجل الحضور',
+    repTitle:'التقارير والإحصائيات', repSub:'تحليلات شاملة لأداء الجيم',
+    revBreak:'توزيع الإيرادات حسب الباقة', topClasses:'أكثر الكلاسات إقبالاً',
+    monthCmp:'مقارنة شهرية — آخر 6 شهور',
+    setTitle:'الإعدادات', setSub:'تخصيص الجيم والتطبيق',
+    notif:'لا يوجد إشعارات جديدة',
+    searchPh:'ابحث عن عضو، مدرب، كلاس...',
+    // Table headers
+    thMember:'العضو', thPhone:'الهاتف', thPlan:'الباقة', thStart:'الانضمام',
+    thEnd:'الانتهاء', thStatus:'الحالة', thActions:'الإجراءات', thPwd:'كلمة المرور',
+    thInv:'رقم الفاتورة', thCust:'العميل', thDesc:'الوصف', thAmt:'المبلغ',
+    thMethod:'طريقة الدفع', thDate:'التاريخ',
+    thIn:'دخول', thOut:'خروج', thDur:'المدة',
+    // Status
+    active:'نشط', expiring:'قارب الانتهاء', expired:'منتهي', pending:'معلق',
+    inactive:'غير نشط',
+    // KPIs
+    kpiActiveMem:'عضو نشط', kpiRevenue:'الإيرادات (ج.م)', kpiCheckins:'حضور اليوم',
+    kpiExpiring:'قارب على الانتهاء', thisMonth:'هذا الشهر',
+    comparedLast:'مقارنة بالشهر الماضي', peakHour:'ذروة 6-8 مساءً',
+    next7Days:'خلال 7 أيام',
+    totalActive:'إجمالي النشطين', expiringSoon:'قارب على الانتهاء',
+    expiredK:'منتهي', newThisMonth:'جديد هذا الشهر',
+    monthRev:'إيرادات الشهر (ج.م)', monthTx:'معاملة هذا الشهر',
+    avgTx:'متوسط المعاملة (ج.م)', pendingAmt:'دفعات معلقة (ج.م)',
+    todayCheckin:'حضور اليوم', currInside:'داخل الجيم الآن',
+    avgStay:'متوسط المدة', peak:'ساعة الذروة',
+    // Actions
+    view:'عرض', edit:'تعديل', delete:'حذف', save:'حفظ',
+    cancel:'إلغاء', confirm:'تأكيد', close:'إغلاق',
+    deleteConfirm:'هل أنت متأكد من الحذف؟', cannotUndo:'لا يمكن التراجع عن هذا الإجراء',
+    yes:'نعم، حذف', no:'لا، تراجع',
+    // Member modal
+    memberDetails:'تفاصيل العضو', addNewMember:'إضافة عضو جديد', editMember:'تعديل بيانات العضو',
+    fullName:'الاسم الكامل (عربي)', fullNameEn:'الاسم بالإنجليزي', phone:'رقم الهاتف',
+    email:'البريد الإلكتروني', dob:'تاريخ الميلاد', gender:'النوع',
+    male:'ذكر', female:'أنثى', address:'العنوان',
+    emergencyContact:'جهة الاتصال للطوارئ', emergencyPhone:'هاتف الطوارئ',
+    plan:'الباقة', startDate:'تاريخ بداية الاشتراك', endDate:'تاريخ نهاية الاشتراك',
+    height:'الطول (سم)', weight:'الوزن (كجم)', bodyfat:'نسبة الدهون %',
+    muscleMass:'الكتلة العضلية (كجم)', goal:'الهدف الصحي',
+    medicalNotes:'ملاحظات طبية', injuries:'إصابات',
+    notes:'ملاحظات إدارية', generatedPw:'كلمة المرور المُولّدة',
+    copyPw:'نسخ', regeneratePw:'تجديد', pwCopied:'تم نسخ كلمة المرور',
+    saveSuccess:'تم الحفظ بنجاح', deleteSuccess:'تم الحذف بنجاح',
+    saveError:'حصل خطأ أثناء الحفظ',
+    fillRequired:'برجاء ملء الحقول الأساسية',
+    personalInfo:'البيانات الشخصية', subscriptionInfo:'بيانات الاشتراك',
+    healthInfo:'البيانات الصحية', appAccess:'بيانات الدخول للتطبيق',
+    memberCode:'رقم العضوية', loginInstr:'هذه البيانات هيستخدمها العضو لتسجيل الدخول للتطبيق',
+    visitsLog:'سجل الزيارات', recentPayments:'آخر المدفوعات',
+    // Class modal
+    addNewClass:'إضافة كلاس جديد', editClass:'تعديل الكلاس',
+    classNameAr:'اسم الكلاس (عربي)', classNameEn:'اسم الكلاس (English)',
+    classCoach:'المدرب', classTime:'وقت البداية', classDuration:'المدة (دقيقة)',
+    classCapacity:'العدد الأقصى', classLevel:'المستوى', classCategory:'التصنيف',
+    classDesc:'وصف الكلاس',
+    advanced:'متقدم', medium:'متوسط', beginner:'مبتدئ', allLevels:'جميع المستويات',
+    cardio:'كارديو', strength:'قوة', crossfit:'كروسفت', boxing:'ملاكمة', yoga:'يوجا',
+    // Trainer modal
+    addNewTrainer:'إضافة مدرب جديد', editTrainer:'تعديل المدرب',
+    trainerNameAr:'الاسم (عربي)', trainerNameEn:'الاسم (English)',
+    specialty:'التخصص', experience:'سنوات الخبرة', salary:'الراتب الشهري',
+    bio:'نبذة', certifications:'الشهادات والمؤهلات',
+    online:'متاح', offline:'غير متاح',
+    // Plan modal
+    addNewPlan:'إضافة باقة جديدة', editPlan:'تعديل الباقة',
+    planNameAr:'اسم الباقة (عربي)', planNameEn:'اسم الباقة (English)',
+    price:'السعر (ج.م)', durationDays:'المدة (يوم)', features:'المميزات (افصل بفاصلة)',
+    // Payment modal
+    addPayment:'تسجيل دفعة جديدة', selectMember:'اختر العضو',
+    amount:'المبلغ', paymentMethod:'طريقة الدفع', paymentDate:'تاريخ الدفع',
+    cash:'نقدي', card:'كارت بنكي', transfer:'تحويل', wallet:'محفظة إلكترونية',
+    description:'وصف الدفعة', paid:'مدفوع',
+    // Equipment
+    addNewEquip:'إضافة جهاز جديد', equipName:'اسم الجهاز',
+    equipCategory:'الفئة', equipStatus:'الحالة',
+    equipPurchase:'تاريخ الشراء', lastMaintenance:'آخر صيانة',
+    operational:'يعمل', maintenance:'تحت الصيانة', broken:'عاطل',
+    // Filters
+    fAll:'الكل', fVip:'VIP', fGold:'ذهبي', fSilver:'فضي', fBronze:'برونزي',
+    // Settings
+    setGen:'عام', setBus:'بيانات الجيم', setNotif:'الإشعارات',
+    setPay:'الدفع', setSec:'الأمان',
+    setting1:'الإشعارات اللحظية', setting1s:'تنبيهات الحجز الجديد والمدفوعات',
+    setting2:'تذكير قبل انتهاء الاشتراك', setting2s:'إرسال تنبيه قبل 7 أيام من الانتهاء',
+    setting3:'تأكيد الحجز التلقائي', setting3s:'تأكيد الكلاسات بدون موافقة يدوية',
+    setting4:'تقرير يومي عبر البريد', setting4s:'إحصائيات يومية كل صباح 8 صباحاً',
+    setting5:'تكامل واتساب', setting5s:'إرسال إشعارات الأعضاء عبر واتساب',
+    setting6:'المظهر الداكن', setting6s:'واجهة المستخدم الداكنة (افتراضي)',
+    days:['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],
+    minAgo:'منذ', mins:'دقيقة', hourAgo:'منذ ساعة', justNow:'الآن',
+    paidStatus:'مدفوع', pendingStatus:'معلق',
+    inside:'داخل', leftAt:'غادر',
+    // Equipment categories
+    cat_cardio:'كارديو', cat_strength:'قوة', cat_freeweight:'حر', cat_functional:'وظيفي'
+  },
+  en: {
+    navMain:'MAIN', navOps:'OPERATIONS', navOther:'OTHER',
+    dashboard:'Dashboard', members:'Members', classes:'Classes',
+    trainers:'Trainers', plans:'Plans', payments:'Payments',
+    equipment:'Equipment', attendance:'Attendance', reports:'Reports',
+    settings:'Settings', logout:'Logout',
+    adminName:'Gym Admin',
+    dashTitle:'Dashboard', dashSub:'Overview of gym performance',
+    exportBtn:'Export', newMember:'Add Member',
+    revChart:'Revenue Trends', day:'Day', week:'Week', month:'Month',
+    rev:'Revenue', newMembers:'New Members',
+    liveAct:'Live Activity',
+    latestMembers:'Latest Members', viewAll:'View All',
+    membersTitle:'Member Management', addMember:'Add New Member',
+    allMembers:'All Members',
+    classesPageTitle:'Classes Schedule', classesPageSub:'Manage class schedules',
+    addClass:'Add Class',
+    trainersPageTitle:'Trainers', addTrainer:'Add Trainer',
+    plansPageTitle:'Subscription Plans', plansPageSub:'Manage membership plans',
+    addPlan:'Add Plan',
+    paymentsTitle:'Payments & Transactions', paymentsSub:'All financial records',
+    exportXlsx:'Export CSV', addPayment:'Record Payment',
+    equipTitle:'Equipment & Maintenance', equipSub:'Manage gym equipment',
+    addEquip:'Add Equipment',
+    attTitle:'Attendance', attSub:'Live check-in log',
+    checkLog:'Check-in Log',
+    repTitle:'Reports & Analytics', repSub:'Comprehensive performance analytics',
+    revBreak:'Revenue by Plan', topClasses:'Most Popular Classes',
+    monthCmp:'Monthly Comparison — Last 6 Months',
+    setTitle:'Settings', setSub:'Customize gym and app',
+    notif:'No new notifications',
+    searchPh:'Search members, trainers, classes...',
+    thMember:'Member', thPhone:'Phone', thPlan:'Plan', thStart:'Joined',
+    thEnd:'Expires', thStatus:'Status', thActions:'Actions', thPwd:'Password',
+    thInv:'Invoice #', thCust:'Customer', thDesc:'Description', thAmt:'Amount',
+    thMethod:'Method', thDate:'Date',
+    thIn:'Check-in', thOut:'Check-out', thDur:'Duration',
+    active:'ACTIVE', expiring:'EXPIRING', expired:'EXPIRED', pending:'PENDING',
+    inactive:'INACTIVE',
+    kpiActiveMem:'Active Members', kpiRevenue:'Revenue (EGP)', kpiCheckins:'Check-ins Today',
+    kpiExpiring:'Expiring Soon', thisMonth:'this month',
+    comparedLast:'vs last month', peakHour:'Peak 6-8 PM',
+    next7Days:'next 7 days',
+    totalActive:'Total Active', expiringSoon:'Expiring Soon',
+    expiredK:'Expired', newThisMonth:'New This Month',
+    monthRev:'Monthly Revenue', monthTx:'Transactions',
+    avgTx:'Avg Transaction', pendingAmt:'Pending Payments',
+    todayCheckin:'Today Check-ins', currInside:'Currently Inside',
+    avgStay:'Avg Stay', peak:'Peak Hour',
+    view:'View', edit:'Edit', delete:'Delete', save:'Save',
+    cancel:'Cancel', confirm:'Confirm', close:'Close',
+    deleteConfirm:'Are you sure?', cannotUndo:'This cannot be undone',
+    yes:'Yes, Delete', no:'No, Keep',
+    memberDetails:'Member Details', addNewMember:'Add New Member', editMember:'Edit Member',
+    fullName:'Full Name (Arabic)', fullNameEn:'Full Name (English)', phone:'Phone',
+    email:'Email', dob:'Date of Birth', gender:'Gender',
+    male:'Male', female:'Female', address:'Address',
+    emergencyContact:'Emergency Contact', emergencyPhone:'Emergency Phone',
+    plan:'Plan', startDate:'Start Date', endDate:'End Date',
+    height:'Height (cm)', weight:'Weight (kg)', bodyfat:'Body Fat %',
+    muscleMass:'Muscle Mass (kg)', goal:'Health Goal',
+    medicalNotes:'Medical Notes', injuries:'Injuries',
+    notes:'Admin Notes', generatedPw:'Generated Password',
+    copyPw:'Copy', regeneratePw:'Regenerate', pwCopied:'Password copied',
+    saveSuccess:'Saved successfully', deleteSuccess:'Deleted successfully',
+    saveError:'Save failed',
+    fillRequired:'Please fill required fields',
+    personalInfo:'Personal Info', subscriptionInfo:'Subscription Info',
+    healthInfo:'Health Info', appAccess:'App Access Credentials',
+    memberCode:'Member Code', loginInstr:'These credentials are used to sign into the app',
+    visitsLog:'Visits Log', recentPayments:'Recent Payments',
+    addNewClass:'Add New Class', editClass:'Edit Class',
+    classNameAr:'Class Name (Arabic)', classNameEn:'Class Name (English)',
+    classCoach:'Coach', classTime:'Start Time', classDuration:'Duration (min)',
+    classCapacity:'Max Capacity', classLevel:'Level', classCategory:'Category',
+    classDesc:'Description',
+    advanced:'Advanced', medium:'Medium', beginner:'Beginner', allLevels:'All Levels',
+    cardio:'Cardio', strength:'Strength', crossfit:'CrossFit', boxing:'Boxing', yoga:'Yoga',
+    addNewTrainer:'Add New Trainer', editTrainer:'Edit Trainer',
+    trainerNameAr:'Name (Arabic)', trainerNameEn:'Name (English)',
+    specialty:'Specialty', experience:'Years of Experience', salary:'Monthly Salary',
+    bio:'Bio', certifications:'Certifications',
+    online:'AVAILABLE', offline:'OFFLINE',
+    addNewPlan:'Add New Plan', editPlan:'Edit Plan',
+    planNameAr:'Plan Name (Arabic)', planNameEn:'Plan Name (English)',
+    price:'Price (EGP)', durationDays:'Duration (days)', features:'Features (comma separated)',
+    addPayment:'Record New Payment', selectMember:'Select Member',
+    amount:'Amount', paymentMethod:'Payment Method', paymentDate:'Payment Date',
+    cash:'Cash', card:'Card', transfer:'Bank Transfer', wallet:'E-Wallet',
+    description:'Description', paid:'Paid',
+    addNewEquip:'Add New Equipment', equipName:'Equipment Name',
+    equipCategory:'Category', equipStatus:'Status',
+    equipPurchase:'Purchase Date', lastMaintenance:'Last Maintenance',
+    operational:'Operational', maintenance:'Under Maintenance', broken:'Out of Order',
+    fAll:'All', fVip:'VIP', fGold:'Gold', fSilver:'Silver', fBronze:'Bronze',
+    setGen:'General', setBus:'Gym Info', setNotif:'Notifications',
+    setPay:'Payment', setSec:'Security',
+    setting1:'Live Notifications', setting1s:'New booking & payment alerts',
+    setting2:'Expiry Reminder', setting2s:'Notify 7 days before expiry',
+    setting3:'Auto-confirm Bookings', setting3s:'Confirm classes without manual approval',
+    setting4:'Daily Email Report', setting4s:'Daily stats every 8 AM',
+    setting5:'WhatsApp Integration', setting5s:'Send notifications via WhatsApp',
+    setting6:'Dark Mode', setting6s:'Dark UI (default)',
+    days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    minAgo:'', mins:'min ago', hourAgo:'1 hour ago', justNow:'Just now',
+    paidStatus:'Paid', pendingStatus:'Pending',
+    inside:'Inside', leftAt:'Left',
+    cat_cardio:'Cardio', cat_strength:'Strength', cat_freeweight:'Free Weights', cat_functional:'Functional'
+  }
+};
+
+const L = () => T[currentLang];
+
+// =================================================================
+// HELPERS
+// =================================================================
+function showLoader(s){document.getElementById('loader').classList.toggle('show', s);}
+
+let toastTimer;
+function showToast(msg, type=''){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+function getInitials(name){
+  if(!name) return '?';
+  const parts = name.trim().split(/\s+/);
+  if(parts.length === 1) return parts[0].substring(0,2).toUpperCase();
+  return (parts[0][0] + '.' + parts[1][0]).toUpperCase();
+}
+
+function formatDate(d){
+  if(!d) return '—';
+  const dt = new Date(d);
+  if(isNaN(dt)) return '—';
+  return dt.toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', {year:'numeric',month:'short',day:'numeric'});
+}
+
+function formatTime(d){
+  if(!d) return '—';
+  const dt = new Date(d);
+  if(isNaN(dt)) return '—';
+  return dt.toLocaleTimeString(currentLang === 'ar' ? 'ar-EG' : 'en-US', {hour:'2-digit',minute:'2-digit'});
+}
+
+function daysBetween(date){
+  if(!date) return 0;
+  const end = new Date(date);
+  return Math.max(0, Math.ceil((end - new Date()) / 86400000));
+}
+
+function getMemberStatus(m){
+  if(!m.expires_at) return 'inactive';
+  const days = daysBetween(m.expires_at);
+  if(days <= 0) return 'expired';
+  if(days <= 7) return 'expiring';
+  return m.status || 'active';
+}
+
+function generatePassword(len=8){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let pw = '';
+  for(let i=0;i<len;i++) pw += chars[Math.floor(Math.random()*chars.length)];
+  return pw;
+}
+
+function generateMemberCode(){
+  const year = new Date().getFullYear();
+  const num = String(Math.floor(Math.random()*9000)+1000);
+  return `IF-${year}-${num}`;
+}
+
+function timeAgo(dateStr){
+  if(!dateStr) return '—';
+  const dt = new Date(dateStr);
+  const diffMin = Math.floor((Date.now() - dt) / 60000);
+  if(diffMin < 1) return L().justNow;
+  if(diffMin < 60) return L().minAgo + ' ' + diffMin + ' ' + L().mins;
+  const hrs = Math.floor(diffMin / 60);
+  if(hrs < 24) return L().minAgo + ' ' + hrs + ' ' + (currentLang==='ar'?'ساعة':'hours');
+  const days = Math.floor(hrs / 24);
+  return L().minAgo + ' ' + days + ' ' + (currentLang==='ar'?'يوم':'days');
+}
+
+// =================================================================
+// LANGUAGE
+// =================================================================
+function setLang(lang){
+  currentLang = lang;
+  const html = document.documentElement;
+  html.setAttribute('lang', lang);
+  html.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  html.setAttribute('data-lang', lang);
+  applyTexts();
+  localStorage.setItem('if_admin_lang', lang);
+}
+
+function toggleLang(){ setLang(currentLang === 'ar' ? 'en' : 'ar'); }
+
+function toggleGateLang(){ setLang(currentLang === 'ar' ? 'en' : 'ar'); }
+
+function setText(id, val){
+  const el = document.getElementById(id);
+  if(el) el.textContent = val;
+}
+
+function applyTexts(){
+  const t = L();
+  setText('navMainLbl', t.navMain); setText('navOpsLbl', t.navOps); setText('navOtherLbl', t.navOther);
+  setText('navDash', t.dashboard); setText('navMem', t.members); setText('navCls', t.classes);
+  setText('navTr', t.trainers); setText('navPl', t.plans); setText('navPay', t.payments);
+  setText('navEq', t.equipment); setText('navAtt', t.attendance); setText('navRep', t.reports);
+  setText('navSet', t.settings); setText('navLogout', t.logout);
+  setText('adminName', t.adminName);
+  setText('dashTitle', t.dashTitle); setText('dashSub', t.dashSub);
+  setText('exportBtn', t.exportBtn); setText('newMemBtn', t.newMember);
+  setText('revChartTitle', t.revChart);
+  setText('revDay', t.day); setText('revWeek', t.week); setText('revMonth', t.month);
+  setText('liveActLbl', t.liveAct);
+  setText('latestMemLbl', t.latestMembers); setText('viewAllBtn', t.viewAll);
+  setText('membersTitle', t.membersTitle); setText('addMemBtn', t.addMember);
+  setText('allMemLbl', t.allMembers);
+  setText('clsPageTitle', t.classesPageTitle); setText('clsPageSub', t.classesPageSub);
+  setText('addClsBtn', t.addClass);
+  setText('trPageTitle', t.trainersPageTitle); setText('addTrBtn', t.addTrainer);
+  setText('plPageTitle', t.plansPageTitle); setText('plPageSub', t.plansPageSub);
+  setText('addPlanBtn', t.addPlan);
+  setText('payTitle', t.paymentsTitle); setText('paySub', t.paymentsSub);
+  setText('expCsv', t.exportXlsx); setText('addPayBtn', t.addPayment);
+  setText('latestTxLbl', t.latestTx || t.payments);
+  setText('eqTitle', t.equipTitle); setText('eqSub', t.equipSub);
+  setText('addEqBtn', t.addEquip);
+  setText('attTitle', t.attTitle); setText('attSub', t.attSub);
+  setText('checkLogLbl', t.checkLog);
+  setText('repTitle', t.repTitle); setText('repSub', t.repSub);
+  setText('revBreakLbl', t.revBreak); setText('topClsLbl', t.topClasses);
+  setText('monthCmpLbl', t.monthCmp);
+  setText('setTitle', t.setTitle); setText('setSub', t.setSub);
+  document.getElementById('globalSearch').placeholder = t.searchPh;
+
+  // Re-render lists
+  renderDashboard();
+  renderMembers();
+  renderClasses();
+  renderTrainers();
+  renderPlans();
+  renderPayments();
+  renderEquipment();
+  renderAttendance();
+  renderReports();
+  renderSettings();
+}
+
+// =================================================================
+// GATE / LOGIN
+// =================================================================
+function checkGate(){
+  const pw = document.getElementById('gatePw').value;
+  if(pw === ADMIN_PASSWORD){
+    sessionStorage.setItem('if_admin_auth', '1');
+    document.getElementById('gate').classList.add('hidden');
+    setTimeout(()=>{
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('adminApp').style.display = 'grid';
+      bootApp();
+    }, 400);
+  } else {
+    document.getElementById('gateError').classList.add('show');
+    document.getElementById('gatePw').value = '';
+    document.getElementById('gatePw').focus();
+    setTimeout(()=>document.getElementById('gateError').classList.remove('show'), 3000);
+  }
+}
+
+function adminLogout(){
+  if(!confirm(currentLang==='ar' ? 'تأكيد تسجيل الخروج؟' : 'Confirm logout?')) return;
+  sessionStorage.removeItem('if_admin_auth');
+  location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const savedLang = localStorage.getItem('if_admin_lang');
+  if(savedLang) setLang(savedLang);
+
+  document.getElementById('gatePw').addEventListener('keydown', e=>{
+    if(e.key === 'Enter') checkGate();
+  });
+
+  if(sessionStorage.getItem('if_admin_auth') === '1'){
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'grid';
+    bootApp();
+  }
+});
+
+// =================================================================
+// NAVIGATION
+// =================================================================
+function navigate(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelector(`[data-screen="${screen}"]`).classList.add('active');
+  document.querySelectorAll('.nav-link[data-nav]').forEach(n=>n.classList.remove('active'));
+  document.querySelector(`.nav-link[data-nav="${screen}"]`)?.classList.add('active');
+  document.querySelector('.content').scrollTop = 0;
+}
+
+// =================================================================
+// BOOT — LOAD DATA
+// =================================================================
+async function bootApp(){
+  showLoader(true);
+  try {
+    await Promise.all([
+      loadMembers(), loadClasses(), loadTrainers(),
+      loadPlans(), loadPayments(), loadEquipment(), loadAttendance()
+    ]);
+    applyTexts();
+  } catch(e){
+    console.error('Boot error:', e);
+    showToast(currentLang==='ar' ? 'خطأ في تحميل البيانات: ' + e.message : 'Load error: ' + e.message, 'error');
+  } finally {
+    showLoader(false);
+  }
+}
+
+async function loadMembers(){
+  try {
+    const { data, error } = await sb.from('members').select('*').order('created_at', {ascending:false});
+    if(error) throw error;
+    MEMBERS = data || [];
+  } catch(e){ console.warn('members load failed', e); MEMBERS = []; }
+}
+
+async function loadClasses(){
+  try {
+    const { data, error } = await sb.from('classes').select('*').order('start_time');
+    if(error) throw error;
+    CLASSES = data || [];
+  } catch(e){ console.warn('classes load failed', e); CLASSES = []; }
+}
+
+async function loadTrainers(){
+  try {
+    const { data, error } = await sb.from('trainers').select('*').order('created_at', {ascending:false});
+    if(error) throw error;
+    TRAINERS = data || [];
+  } catch(e){ console.warn('trainers load failed', e); TRAINERS = []; }
+}
+
+async function loadPlans(){
+  try {
+    const { data, error } = await sb.from('plans').select('*').order('price');
+    if(error) throw error;
+    PLANS = data || [];
+  } catch(e){ console.warn('plans load failed', e); PLANS = []; }
+}
+
+async function loadPayments(){
+  try {
+    const { data, error } = await sb.from('payments').select('*, members(full_name_ar, full_name, member_code)').order('created_at', {ascending:false}).limit(100);
+    if(error) throw error;
+    PAYMENTS = data || [];
+  } catch(e){ console.warn('payments load failed', e); PAYMENTS = []; }
+}
+
+async function loadEquipment(){
+  try {
+    const { data, error } = await sb.from('equipment').select('*').order('created_at', {ascending:false});
+    if(error) throw error;
+    EQUIPMENT = data || [];
+  } catch(e){ console.warn('equipment load failed', e); EQUIPMENT = []; }
+}
+
+async function loadAttendance(){
+  try {
+    const { data, error } = await sb.from('attendance').select('*, members(full_name_ar, full_name, member_code)').order('created_at', {ascending:false}).limit(50);
+    if(error) throw error;
+    ATTENDANCE = data || [];
+  } catch(e){ console.warn('attendance load failed', e); ATTENDANCE = []; }
+}
+
+// =================================================================
+// DASHBOARD
+// =================================================================
+function renderDashboard(){
+  const t = L();
+  const activeCount = MEMBERS.filter(m=>getMemberStatus(m)==='active').length;
+  const expiringCount = MEMBERS.filter(m=>getMemberStatus(m)==='expiring').length;
+  const monthRev = PAYMENTS.filter(p=>{
+    const d = new Date(p.created_at);
+    const now = new Date();
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear() && p.status === 'paid';
+  }).reduce((s,p)=>s+Number(p.amount||0),0);
+  const todayCheck = ATTENDANCE.filter(a=>{
+    const d = new Date(a.created_at);
+    const now = new Date();
+    return d.toDateString() === now.toDateString();
+  }).length;
+
+  document.getElementById('dashKpis').innerHTML = `
+    <div class="kpi-card primary">
+      <div class="kpi-head">
+        <div class="kpi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+        <div class="kpi-trend">↑ 12.5%</div>
+      </div>
+      <div class="kpi-value">${activeCount}</div>
+      <div class="kpi-label">${t.kpiActiveMem}</div>
+      <div class="kpi-foot">${t.thisMonth}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-head">
+        <div class="kpi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div class="kpi-trend">↑ 8.2%</div>
+      </div>
+      <div class="kpi-value">${monthRev.toLocaleString()}</div>
+      <div class="kpi-label">${t.kpiRevenue}</div>
+      <div class="kpi-foot">${t.comparedLast}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-head">
+        <div class="kpi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div class="kpi-trend">↑ 5.4%</div>
+      </div>
+      <div class="kpi-value">${todayCheck}</div>
+      <div class="kpi-label">${t.kpiCheckins}</div>
+      <div class="kpi-foot">${t.peakHour}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-head">
+        <div class="kpi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div class="kpi-trend down">↓ 2.1%</div>
+      </div>
+      <div class="kpi-value">${expiringCount}</div>
+      <div class="kpi-label">${t.kpiExpiring}</div>
+      <div class="kpi-foot">${t.next7Days}</div>
+    </div>
+  `;
+
+  document.getElementById('membersBadge').textContent = activeCount;
+
+  // Activity list
+  const activities = [];
+  ATTENDANCE.slice(0,3).forEach(a=>{
+    const m = a.members || {};
+    activities.push({
+      cls:'success', name:(m.full_name_ar||m.full_name||'—'),
+      action:(currentLang==='ar'?'سجل دخول للجيم':'checked in'),
+      time:timeAgo(a.created_at),
+      ic:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>'
+    });
+  });
+  PAYMENTS.slice(0,2).forEach(p=>{
+    const m = p.members || {};
+    activities.push({
+      cls:'gold', name:(m.full_name_ar||m.full_name||'—'),
+      action:(currentLang==='ar'?'دفع ':'paid ')+Number(p.amount||0).toLocaleString()+' ج.م',
+      time:timeAgo(p.created_at),
+      ic:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>'
+    });
+  });
+
+  if(activities.length === 0){
+    document.getElementById('activityList').innerHTML = `<div class="empty-state"><div class="ic">📊</div><div class="t">${currentLang==='ar'?'لا يوجد نشاط حالياً':'No recent activity'}</div></div>`;
+  } else {
+    document.getElementById('activityList').innerHTML = activities.map(a=>`
+      <div class="activity">
+        <div class="activity-dot ${a.cls}">${a.ic}</div>
+        <div class="activity-info">
+          <div class="activity-text"><strong>${a.name}</strong> ${a.action}</div>
+          <div class="activity-time">${a.time}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Latest members table
+  document.getElementById('latestMembersHead').innerHTML = `<tr>
+    <th>${t.thMember}</th><th>${t.thPhone}</th><th>${t.thPlan}</th>
+    <th>${t.thEnd}</th><th>${t.thStatus}</th><th>${t.thActions}</th>
+  </tr>`;
+  document.getElementById('latestMembersBody').innerHTML = MEMBERS.slice(0,5).map(m=>memberRowHTML(m)).join('') || `<tr><td colspan="6"><div class="empty-state"><div class="ic">👤</div><div class="t">${currentLang==='ar'?'لا يوجد أعضاء حتى الآن':'No members yet'}</div></div></td></tr>`;
+}
+
+function memberRowHTML(m){
+  const t = L();
+  const status = getMemberStatus(m);
+  const planTag = m.plan || 'silver';
+  const name = currentLang==='ar' ? (m.full_name_ar || m.full_name || '—') : (m.full_name || m.full_name_ar || '—');
+  return `
+    <tr onclick="viewMember('${m.id}')">
+      <td>
+        <div class="user-cell">
+          <div class="user-cell-avatar">${getInitials(m.full_name_ar || m.full_name)}</div>
+          <div class="user-cell-info">
+            <span class="user-cell-name">${name}</span>
+            <span class="user-cell-id">${m.member_code || '—'}</span>
+          </div>
+        </div>
+      </td>
+      <td class="mono">${m.phone || '—'}</td>
+      <td><span class="plan-tag ${planTag}">${(m.plan||'').toUpperCase()}</span></td>
+      <td class="mono">${formatDate(m.expires_at)}</td>
+      <td><span class="status-pill ${status}">${t[status]||status}</span></td>
+      <td>
+        <div class="action-icons" onclick="event.stopPropagation();">
+          <button class="action-icon" onclick="viewMember('${m.id}')" title="${t.view}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <button class="action-icon" onclick="openMemberModal('${m.id}')" title="${t.edit}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="action-icon danger" onclick="deleteMember('${m.id}')" title="${t.delete}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+        </div>
+      </td>
+    </tr>`;
+}
+
+function setRevPeriod(el, period){
+  el.parentElement.querySelectorAll('.tab-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  // Could regenerate chart based on period - simplified for now
+  showToast(currentLang==='ar' ? 'تم تغيير الفترة إلى '+period : 'Period changed to '+period);
+}
+
+// =================================================================
+// MEMBERS
+// =================================================================
+function renderMembers(){
+  const t = L();
+  const activeCount = MEMBERS.filter(m=>getMemberStatus(m)==='active').length;
+  const expiringCount = MEMBERS.filter(m=>getMemberStatus(m)==='expiring').length;
+  const expiredCount = MEMBERS.filter(m=>getMemberStatus(m)==='expired').length;
+  const newThisMonth = MEMBERS.filter(m=>{
+    if(!m.joined_at) return false;
+    const d = new Date(m.joined_at);
+    const now = new Date();
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+
+  setText('membersSub', `${MEMBERS.length} ${currentLang==='ar'?'عضو إجمالي':'total members'} • ${activeCount} ${t.active.toLowerCase()}`);
+
+  document.getElementById('membersKpis').innerHTML = `
+    <div class="kpi-card"><div class="kpi-value">${activeCount}</div><div class="kpi-label">${t.totalActive}</div></div>
+    <div class="kpi-card"><div class="kpi-value" style="color:var(--warning);">${expiringCount}</div><div class="kpi-label">${t.expiringSoon}</div></div>
+    <div class="kpi-card"><div class="kpi-value" style="color:var(--danger);">${expiredCount}</div><div class="kpi-label">${t.expiredK}</div></div>
+    <div class="kpi-card"><div class="kpi-value" style="color:var(--info);">${newThisMonth}</div><div class="kpi-label">${t.newThisMonth}</div></div>
+  `;
+
+  // Filter pills
+  const filters = ['all','vip','gold','silver','bronze'];
+  document.getElementById('memberFilters').innerHTML = filters.map(f=>{
+    const count = f==='all' ? MEMBERS.length : MEMBERS.filter(m=>m.plan===f).length;
+    const lbl = f==='all' ? t.fAll : t['f'+f.charAt(0).toUpperCase()+f.slice(1)];
+    return `<div class="tab-pill ${memberFilter===f?'active':''}" onclick="setMemberFilter('${f}')">${lbl} (${count})</div>`;
+  }).join('');
+
+  // Header
+  document.getElementById('membersHead').innerHTML = `<tr>
+    <th>${t.thMember}</th><th>${t.thPhone}</th><th>${t.thPlan}</th>
+    <th>${t.thStart}</th><th>${t.thEnd}</th><th>${t.thPwd}</th>
+    <th>${t.thStatus}</th><th>${t.thActions}</th>
+  </tr>`;
+
+  // Body — filter & search
+  let filtered = MEMBERS;
+  if(memberFilter !== 'all') filtered = filtered.filter(m=>m.plan === memberFilter);
+  if(memberSearch){
+    const q = memberSearch.toLowerCase();
+    filtered = filtered.filter(m=>
+      (m.full_name||'').toLowerCase().includes(q) ||
+      (m.full_name_ar||'').toLowerCase().includes(q) ||
+      (m.member_code||'').toLowerCase().includes(q) ||
+      (m.phone||'').toLowerCase().includes(q)
+    );
+  }
+
+  if(filtered.length === 0){
+    document.getElementById('membersBody').innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="ic">👤</div><div class="t">${currentLang==='ar'?'لا يوجد أعضاء':'No members found'}</div><div class="s">${currentLang==='ar'?'اضغط "إضافة عضو" لإضافة عضو جديد':'Click "Add Member" to start'}</div></div></td></tr>`;
+    return;
+  }
+
+  document.getElementById('membersBody').innerHTML = filtered.map(m=>{
+    const t = L();
+    const status = getMemberStatus(m);
+    const name = currentLang==='ar' ? (m.full_name_ar || m.full_name || '—') : (m.full_name || m.full_name_ar || '—');
+    return `
+    <tr onclick="viewMember('${m.id}')">
+      <td>
+        <div class="user-cell">
+          <div class="user-cell-avatar">${getInitials(m.full_name_ar || m.full_name)}</div>
+          <div class="user-cell-info">
+            <span class="user-cell-name">${name}</span>
+            <span class="user-cell-id">${m.member_code || '—'}</span>
+          </div>
+        </div>
+      </td>
+      <td class="mono">${m.phone || '—'}</td>
+      <td><span class="plan-tag ${m.plan||'silver'}">${(m.plan||'').toUpperCase()}</span></td>
+      <td class="mono">${formatDate(m.joined_at)}</td>
+      <td class="mono">${formatDate(m.expires_at)}</td>
+      <td class="mono" style="color:var(--gold);">${m.password || '—'}</td>
+      <td><span class="status-pill ${status}">${t[status]||status}</span></td>
+      <td>
+        <div class="action-icons" onclick="event.stopPropagation();">
+          <button class="action-icon" onclick="viewMember('${m.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <button class="action-icon" onclick="openMemberModal('${m.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="action-icon danger" onclick="deleteMember('${m.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 01-2 2H9a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function setMemberFilter(f){
+  memberFilter = f;
+  renderMembers();
+}
+
+function handleSearch(q){
+  memberSearch = q.trim();
+  renderMembers();
+}
+
+// =================================================================
+// MEMBER MODAL (CRUD)
+// =================================================================
+function openMemberModal(id){
+  const t = L();
+  const m = id ? MEMBERS.find(x=>x.id===id) : null;
+  const isEdit = !!m;
+
+  const memberCode = m?.member_code || generateMemberCode();
+  const password = m?.password || generatePassword();
+
+  document.getElementById('modalContent').classList.add('wide');
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-title">${isEdit ? t.editMember : t.addNewMember}</div>
+    <div class="modal-sub">${t.loginInstr}</div>
+
+    <div class="detail-section">
+      <h4>🔐 ${t.appAccess}</h4>
+      <div class="gen-pw-box">
+        <div>
+          <div class="pwl">${t.memberCode}</div>
+          <div class="pwv mono" id="genCode">${memberCode}</div>
+        </div>
+        <div>
+          <div class="pwl">${t.generatedPw}</div>
+          <div class="pwv mono" id="genPw">${password}</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="copyPassword()">${t.copyPw}</button>
+          <button onclick="regenPassword()">${t.regeneratePw}</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>👤 ${t.personalInfo}</h4>
+      <div class="field-row">
+        <div class="field"><label>${t.fullName} *</label><input id="mfNameAr" type="text" value="${m?.full_name_ar||''}"></div>
+        <div class="field"><label>${t.fullNameEn}</label><input id="mfNameEn" type="text" value="${m?.full_name||''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>${t.phone} *</label><input id="mfPhone" type="tel" value="${m?.phone||''}"></div>
+        <div class="field"><label>${t.email}</label><input id="mfEmail" type="email" value="${m?.email||''}"></div>
+      </div>
+      <div class="field-row cols-3">
+        <div class="field"><label>${t.dob}</label><input id="mfDob" type="date" value="${m?.date_of_birth||''}"></div>
+        <div class="field"><label>${t.gender}</label>
+          <select id="mfGender">
+            <option value="male" ${m?.gender==='male'?'selected':''}>${t.male}</option>
+            <option value="female" ${m?.gender==='female'?'selected':''}>${t.female}</option>
+          </select>
+        </div>
+        <div class="field"><label>${t.address}</label><input id="mfAddress" type="text" value="${m?.address||''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>${t.emergencyContact}</label><input id="mfEmName" type="text" value="${m?.emergency_contact||''}"></div>
+        <div class="field"><label>${t.emergencyPhone}</label><input id="mfEmPhone" type="tel" value="${m?.emergency_phone||''}"></div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>💎 ${t.subscriptionInfo}</h4>
+      <div class="field-row cols-3">
+        <div class="field"><label>${t.plan} *</label>
+          <select id="mfPlan">
+            <option value="bronze" ${m?.plan==='bronze'?'selected':''}>BRONZE</option>
+            <option value="silver" ${m?.plan==='silver'?'selected':''}>SILVER</option>
+            <option value="gold" ${m?.plan==='gold'?'selected':''}>GOLD</option>
+            <option value="vip" ${m?.plan==='vip'?'selected':''}>VIP UNLIMITED</option>
+          </select>
+        </div>
+        <div class="field"><label>${t.startDate}</label><input id="mfStart" type="date" value="${m?.joined_at?m.joined_at.split('T')[0]:new Date().toISOString().split('T')[0]}"></div>
+        <div class="field"><label>${t.endDate} *</label><input id="mfEnd" type="date" value="${m?.expires_at?m.expires_at.split('T')[0]:''}"></div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>💪 ${t.healthInfo}</h4>
+      <div class="field-row cols-3">
+        <div class="field"><label>${t.height}</label><input id="mfHeight" type="number" value="${m?.height||''}"></div>
+        <div class="field"><label>${t.weight}</label><input id="mfWeight" type="number" step="0.1" value="${m?.weight||''}"></div>
+        <div class="field"><label>${t.bodyfat}</label><input id="mfBodyfat" type="number" step="0.1" value="${m?.body_fat||''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>${t.muscleMass}</label><input id="mfMuscle" type="number" step="0.1" value="${m?.muscle_mass||''}"></div>
+        <div class="field"><label>${t.goal}</label><input id="mfGoal" type="text" value="${m?.health_goal||''}"></div>
+      </div>
+      <div class="field"><label>${t.medicalNotes}</label><textarea id="mfMedical" rows="2">${m?.medical_notes||''}</textarea></div>
+      <div class="field"><label>${t.notes}</label><textarea id="mfNotes" rows="2">${m?.admin_notes||''}</textarea></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">${t.cancel}</button>
+      <button class="btn primary" onclick="saveMember('${id||''}')">${t.save}</button>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('show');
+}
+
+async function saveMember(id){
+  const t = L();
+  const code = document.getElementById('genCode').textContent.trim();
+  const password = document.getElementById('genPw').textContent.trim();
+  const nameAr = document.getElementById('mfNameAr').value.trim();
+  const phone = document.getElementById('mfPhone').value.trim();
+  const plan = document.getElementById('mfPlan').value;
+  const expires = document.getElementById('mfEnd').value;
+
+  if(!nameAr || !phone || !plan || !expires){
+    showToast(t.fillRequired, 'error');
+    return;
+  }
+
+  const payload = {
+    member_code: code,
+    password,
+    full_name_ar: nameAr,
+    full_name: document.getElementById('mfNameEn').value.trim() || null,
+    phone,
+    email: document.getElementById('mfEmail').value.trim() || null,
+    date_of_birth: document.getElementById('mfDob').value || null,
+    gender: document.getElementById('mfGender').value,
+    address: document.getElementById('mfAddress').value.trim() || null,
+    emergency_contact: document.getElementById('mfEmName').value.trim() || null,
+    emergency_phone: document.getElementById('mfEmPhone').value.trim() || null,
+    plan,
+    joined_at: document.getElementById('mfStart').value || new Date().toISOString().split('T')[0],
+    expires_at: expires,
+    height: parseFloat(document.getElementById('mfHeight').value) || null,
+    weight: parseFloat(document.getElementById('mfWeight').value) || null,
+    body_fat: parseFloat(document.getElementById('mfBodyfat').value) || null,
+    muscle_mass: parseFloat(document.getElementById('mfMuscle').value) || null,
+    health_goal: document.getElementById('mfGoal').value.trim() || null,
+    medical_notes: document.getElementById('mfMedical').value.trim() || null,
+    admin_notes: document.getElementById('mfNotes').value.trim() || null,
+    status: 'active'
+  };
+
+  showLoader(true);
+  try {
+    if(id){
+      const { error } = await sb.from('members').update(payload).eq('id', id);
+      if(error) throw error;
+    } else {
+      const { error } = await sb.from('members').insert(payload);
+      if(error) throw error;
+    }
+    await loadMembers();
+    closeModal();
+    renderMembers();
+    renderDashboard();
+    showToast(t.saveSuccess, 'success');
+  } catch(e){
+    showToast(t.saveError + ': ' + e.message, 'error');
+  } finally {
+    showLoader(false);
+  }
+}
+
+async function deleteMember(id){
+  const t = L();
+  if(!confirm(t.deleteConfirm + '\n' + t.cannotUndo)) return;
+  showLoader(true);
+  try {
+    const { error } = await sb.from('members').delete().eq('id', id);
+    if(error) throw error;
+    await loadMembers();
+    renderMembers();
+    renderDashboard();
+    showToast(t.deleteSuccess, 'success');
+  } catch(e){
+    showToast(e.message, 'error');
+  } finally {
+    showLoader(false);
+  }
+}
+
+function viewMember(id){
+  const t = L();
+  const m = MEMBERS.find(x=>x.id===id);
+  if(!m) return;
+
+  const status = getMemberStatus(m);
+  const days = daysBetween(m.expires_at);
+  const memberPayments = PAYMENTS.filter(p=>p.member_id===id);
+  const memberAttendance = ATTENDANCE.filter(a=>a.member_id===id);
+
+  document.getElementById('modalContent').classList.add('wide');
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-title">${currentLang==='ar'?(m.full_name_ar||m.full_name):(m.full_name||m.full_name_ar)}</div>
+    <div class="modal-sub">${m.member_code} • <span class="status-pill ${status}" style="display:inline-flex;">${t[status]||status}</span></div>
+
+    <div class="detail-section">
+      <h4>🔐 ${t.appAccess}</h4>
+      <div class="detail-grid">
+        <div class="detail-cell"><div class="lbl">${t.memberCode}</div><div class="val mono gold">${m.member_code}</div></div>
+        <div class="detail-cell"><div class="lbl">${t.generatedPw}</div><div class="val mono gold">${m.password}</div></div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>👤 ${t.personalInfo}</h4>
+      <div class="detail-grid">
+        <div class="detail-cell"><div class="lbl">${t.fullName}</div><div class="val">${m.full_name_ar||'—'}</div></div>
+        <div class="detail-cell"><div class="lbl">${t.fullNameEn}</div><div class="val">${m.full_name||'—'}</div></div>
+        <div class="detail-cell"><div class="lbl">${t.phone}</div><div class="val mono">${m.phone||'—'}</div></div>
+        <div class="detail-cell"><div class="lbl">${t.email}</div><div class="val mono">${m.email||'—'}</div></div>
+        <div class="detail-cell"><div class="lbl">${t.dob}</div><div class="val">${formatDate(m.date_of_birth)}</div></div>
+        <div class="detail-cell"><div class="lbl">${t.gender}</div><div class="val">${m.gender==='male'?t.male:t.female}</div></div>
+        <div class="detail-cell"><div class="lbl">${t.address}</div><div class="val">${m.address||'—'}</div></div>
+        <div class="detail-cell"><div class="lbl">${t.emergencyContact}</div><div class="val">${m.emergency_contact||'—'} ${m.emergency_phone?'• '+m.emergency_phone:''}</div></div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>💎 ${t.subscriptionInfo}</h4>
+      <div class="detail-grid">
+        <div class="detail-cell"><div class="lbl">${t.plan}</div><div class="val gold"><span class="plan-tag ${m.plan}">${(m.plan||'').toUpperCase()}</span></div></div>
+        <div class="detail-cell"><div class="lbl">${t.startDate}</div><div class="val">${formatDate(m.joined_at)}</div></div>
+        <div class="detail-cell"><div class="lbl">${t.endDate}</div><div class="val gold">${formatDate(m.expires_at)} (${days} ${currentLang==='ar'?'يوم':'days'})</div></div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>💪 ${t.healthInfo}</h4>
+      <div class="detail-grid">
+        <div class="detail-cell"><div class="lbl">${t.height}</div><div class="val">${m.height||'—'} cm</div></div>
+        <div class="detail-cell"><div class="lbl">${t.weight}</div><div class="val">${m.weight||'—'} kg</div></div>
+        <div class="detail-cell"><div class="lbl">${t.bodyfat}</div><div class="val">${m.body_fat||'—'}%</div></div>
+        <div class="detail-cell"><div class="lbl">${t.muscleMass}</div><div class="val">${m.muscle_mass||'—'} kg</div></div>
+        <div class="detail-cell" style="grid-column:1/-1;"><div class="lbl">${t.goal}</div><div class="val">${m.health_goal||'—'}</div></div>
+        <div class="detail-cell" style="grid-column:1/-1;"><div class="lbl">${t.medicalNotes}</div><div class="val">${m.medical_notes||'—'}</div></div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h4>📊 ${currentLang==='ar'?'الإحصائيات':'Statistics'}</h4>
+      <div class="detail-grid">
+        <div class="detail-cell"><div class="lbl">${currentLang==='ar'?'إجمالي الزيارات':'Total Visits'}</div><div class="val gold">${m.total_visits||0}</div></div>
+        <div class="detail-cell"><div class="lbl">${currentLang==='ar'?'الكلاسات المحضورة':'Classes Attended'}</div><div class="val gold">${m.total_classes||0}</div></div>
+        <div class="detail-cell"><div class="lbl">${currentLang==='ar'?'إجمالي المدفوعات':'Total Payments'}</div><div class="val gold">${memberPayments.reduce((s,p)=>s+Number(p.amount||0),0).toLocaleString()} ج.م</div></div>
+        <div class="detail-cell"><div class="lbl">${currentLang==='ar'?'آخر زيارة':'Last Visit'}</div><div class="val">${memberAttendance[0]?formatDate(memberAttendance[0].created_at):'—'}</div></div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">${t.close}</button>
+      <button class="btn danger" onclick="closeModal();deleteMember('${m.id}')">${t.delete}</button>
+      <button class="btn primary" onclick="closeModal();openMemberModal('${m.id}')">${t.edit}</button>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('show');
+}
+
+function copyPassword(){
+  const pw = document.getElementById('genPw').textContent + ' / ' + document.getElementById('genCode').textContent;
+  navigator.clipboard.writeText(pw).then(()=>showToast(L().pwCopied, 'success'));
+}
+
+function regenPassword(){
+  document.getElementById('genPw').textContent = generatePassword();
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('show');
+  document.getElementById('modalContent').classList.remove('wide');
+  modalCtx = null;
+}
+
+// =================================================================
+// CLASSES CRUD
+// =================================================================
+function renderClasses(){
+  const t = L();
+  const grid = document.getElementById('classesGrid');
+  if(CLASSES.length === 0){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="ic">📅</div><div class="t">${currentLang==='ar'?'لا توجد كلاسات':'No classes yet'}</div><div class="s">${currentLang==='ar'?'اضغط "إضافة كلاس" لبدء جدولة الكلاسات':'Click "Add Class" to start'}</div></div>`;
+    return;
+  }
+  grid.innerHTML = CLASSES.map(c=>{
+    const cap = (c.booked_count||0) + '/' + (c.capacity||0);
+    const pct = c.capacity ? Math.round(((c.booked_count||0)/c.capacity)*100) : 0;
+    const name = currentLang==='ar' ? (c.name_ar||c.name||'—') : (c.name||c.name_ar||'—');
+    return `
+    <div class="class-mgmt-card">
+      <div class="class-mgmt-head">
+        <div>
+          <div class="class-mgmt-name">${name}</div>
+          <div class="class-mgmt-time">${c.start_time||'—'} • ${c.duration||0} min</div>
+        </div>
+        <div class="action-icons">
+          <button class="action-icon" onclick="openClassModal('${c.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="action-icon danger" onclick="deleteClass('${c.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+        </div>
+      </div>
+      <div class="class-mgmt-body">
+        <div class="class-info-row"><span class="k">${t.classCoach}</span><span class="v">${c.coach||'—'}</span></div>
+        <div class="class-info-row"><span class="k">${t.classCategory}</span><span class="v">${c.category||'—'}</span></div>
+        <div class="class-info-row"><span class="k">${t.classLevel}</span><span class="v">${c.level||'—'}</span></div>
+        <div class="class-info-row"><span class="k">${currentLang==='ar'?'المحجوز':'Booked'}</span><span class="v gold">${cap}</span></div>
+        <div class="capacity-bar"><div class="capacity-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openClassModal(id){
+  const t = L();
+  const c = id ? CLASSES.find(x=>x.id===id) : null;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-title">${c ? t.editClass : t.addNewClass}</div>
+    <div class="field-row">
+      <div class="field"><label>${t.classNameAr} *</label><input id="cfNameAr" value="${c?.name_ar||''}"></div>
+      <div class="field"><label>${t.classNameEn}</label><input id="cfNameEn" value="${c?.name||''}"></div>
+    </div>
+    <div class="field"><label>${t.classCoach}</label><input id="cfCoach" value="${c?.coach||''}"></div>
+    <div class="field-row cols-3">
+      <div class="field"><label>${t.classTime}</label><input id="cfTime" type="time" value="${c?.start_time||''}"></div>
+      <div class="field"><label>${t.classDuration}</label><input id="cfDur" type="number" value="${c?.duration||60}"></div>
+      <div class="field"><label>${t.classCapacity}</label><input id="cfCap" type="number" value="${c?.capacity||10}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>${t.classCategory}</label>
+        <select id="cfCat">
+          <option value="cardio" ${c?.category==='cardio'?'selected':''}>${t.cardio}</option>
+          <option value="strength" ${c?.category==='strength'?'selected':''}>${t.strength}</option>
+          <option value="crossfit" ${c?.category==='crossfit'?'selected':''}>${t.crossfit}</option>
+          <option value="boxing" ${c?.category==='boxing'?'selected':''}>${t.boxing}</option>
+          <option value="yoga" ${c?.category==='yoga'?'selected':''}>${t.yoga}</option>
+        </select>
+      </div>
+      <div class="field"><label>${t.classLevel}</label>
+        <select id="cfLvl">
+          <option value="beginner" ${c?.level==='beginner'?'selected':''}>${t.beginner}</option>
+          <option value="medium" ${c?.level==='medium'?'selected':''}>${t.medium}</option>
+          <option value="advanced" ${c?.level==='advanced'?'selected':''}>${t.advanced}</option>
+          <option value="all" ${c?.level==='all'?'selected':''}>${t.allLevels}</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>${t.classDesc}</label><textarea id="cfDesc" rows="2">${c?.description||''}</textarea></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">${t.cancel}</button>
+      <button class="btn primary" onclick="saveClass('${id||''}')">${t.save}</button>
+    </div>`;
+  document.getElementById('modal').classList.add('show');
+}
+
+async function saveClass(id){
+  const t = L();
+  const nameAr = document.getElementById('cfNameAr').value.trim();
+  if(!nameAr){ showToast(t.fillRequired, 'error'); return; }
+  const payload = {
+    name_ar: nameAr,
+    name: document.getElementById('cfNameEn').value.trim() || null,
+    coach: document.getElementById('cfCoach').value.trim() || null,
+    start_time: document.getElementById('cfTime').value || null,
+    duration: parseInt(document.getElementById('cfDur').value) || 60,
+    capacity: parseInt(document.getElementById('cfCap').value) || 10,
+    category: document.getElementById('cfCat').value,
+    level: document.getElementById('cfLvl').value,
+    description: document.getElementById('cfDesc').value.trim() || null
+  };
+  showLoader(true);
+  try {
+    if(id){
+      const { error } = await sb.from('classes').update(payload).eq('id', id);
+      if(error) throw error;
+    } else {
+      const { error } = await sb.from('classes').insert(payload);
+      if(error) throw error;
+    }
+    await loadClasses();
+    closeModal();
+    renderClasses();
+    showToast(t.saveSuccess, 'success');
+  } catch(e){
+    showToast(e.message, 'error');
+  } finally { showLoader(false); }
+}
+
+async function deleteClass(id){
+  if(!confirm(L().deleteConfirm)) return;
+  showLoader(true);
+  try {
+    const { error } = await sb.from('classes').delete().eq('id', id);
+    if(error) throw error;
+    await loadClasses();
+    renderClasses();
+    showToast(L().deleteSuccess, 'success');
+  } catch(e){ showToast(e.message, 'error'); }
+  finally { showLoader(false); }
+}
+
+// =================================================================
+// TRAINERS CRUD
+// =================================================================
+function renderTrainers(){
+  const t = L();
+  setText('trPageSub', `${TRAINERS.length} ${currentLang==='ar'?'مدرب إجمالي':'total trainers'}`);
+  const list = document.getElementById('trainersList');
+  if(TRAINERS.length === 0){
+    list.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="ic">🏋️</div><div class="t">${currentLang==='ar'?'لا يوجد مدربين':'No trainers yet'}</div></div>`;
+    return;
+  }
+  list.innerHTML = TRAINERS.map(tr=>{
+    const name = currentLang==='ar' ? (tr.name_ar||tr.name||'—') : (tr.name||tr.name_ar||'—');
+    return `
+    <div class="trainer-mgmt-card">
+      <div class="trainer-status ${tr.is_online?'online':'offline'}">${tr.is_online?t.online:t.offline}</div>
+      <div class="trainer-mgmt-avatar">${getInitials(tr.name_ar||tr.name)}</div>
+      <div class="trainer-mgmt-name">${name}</div>
+      <div class="trainer-mgmt-spec">${tr.specialty||'—'}</div>
+      <div class="trainer-stats-mini">
+        <div class="tsm"><div class="v">${tr.experience_years||0}</div><div class="l">${currentLang==='ar'?'سنة':'YRS'}</div></div>
+        <div class="tsm"><div class="v">${tr.total_clients||0}</div><div class="l">${currentLang==='ar'?'متدرب':'CLIENTS'}</div></div>
+        <div class="tsm"><div class="v">${tr.rating||'—'}</div><div class="l">${currentLang==='ar'?'تقييم':'RATING'}</div></div>
+      </div>
+      <div class="trainer-actions">
+        <button class="btn" onclick="openTrainerModal('${tr.id}')">${t.edit}</button>
+        <button class="btn danger" onclick="deleteTrainer('${tr.id}')">${t.delete}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openTrainerModal(id){
+  const t = L();
+  const tr = id ? TRAINERS.find(x=>x.id===id) : null;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-title">${tr ? t.editTrainer : t.addNewTrainer}</div>
+    <div class="field-row">
+      <div class="field"><label>${t.trainerNameAr} *</label><input id="tfNameAr" value="${tr?.name_ar||''}"></div>
+      <div class="field"><label>${t.trainerNameEn}</label><input id="tfNameEn" value="${tr?.name||''}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>${t.specialty}</label><input id="tfSpec" value="${tr?.specialty||''}" placeholder="${currentLang==='ar'?'كروسفت • قوة':'CrossFit • Strength'}"></div>
+      <div class="field"><label>${t.phone}</label><input id="tfPhone" value="${tr?.phone||''}"></div>
+    </div>
+    <div class="field-row cols-3">
+      <div class="field"><label>${t.experience}</label><input id="tfExp" type="number" value="${tr?.experience_years||0}"></div>
+      <div class="field"><label>${t.salary}</label><input id="tfSalary" type="number" value="${tr?.salary||0}"></div>
+      <div class="field"><label>${t.equipStatus}</label>
+        <select id="tfOnline">
+          <option value="true" ${tr?.is_online?'selected':''}>${t.online}</option>
+          <option value="false" ${!tr?.is_online?'selected':''}>${t.offline}</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>${t.bio}</label><textarea id="tfBio" rows="3">${tr?.bio||''}</textarea></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">${t.cancel}</button>
+      <button class="btn primary" onclick="saveTrainer('${id||''}')">${t.save}</button>
+    </div>`;
+  document.getElementById('modal').classList.add('show');
+}
+
+async function saveTrainer(id){
+  const t = L();
+  const nameAr = document.getElementById('tfNameAr').value.trim();
+  if(!nameAr){ showToast(t.fillRequired, 'error'); return; }
+  const payload = {
+    name_ar: nameAr,
+    name: document.getElementById('tfNameEn').value.trim() || null,
+    specialty: document.getElementById('tfSpec').value.trim() || null,
+    phone: document.getElementById('tfPhone').value.trim() || null,
+    experience_years: parseInt(document.getElementById('tfExp').value) || 0,
+    salary: parseFloat(document.getElementById('tfSalary').value) || 0,
+    is_online: document.getElementById('tfOnline').value === 'true',
+    bio: document.getElementById('tfBio').value.trim() || null
+  };
+  showLoader(true);
+  try {
+    if(id){
+      const { error } = await sb.from('trainers').update(payload).eq('id', id);
+      if(error) throw error;
+    } else {
+      const { error } = await sb.from('trainers').insert(payload);
+      if(error) throw error;
+    }
+    await loadTrainers();
+    closeModal();
+    renderTrainers();
+    showToast(t.saveSuccess, 'success');
+  } catch(e){ showToast(e.message, 'error'); }
+  finally { showLoader(false); }
+}
+
+async function deleteTrainer(id){
+  if(!confirm(L().deleteConfirm)) return;
+  showLoader(true);
+  try {
+    const { error } = await sb.from('trainers').delete().eq('id', id);
+    if(error) throw error;
+    await loadTrainers();
+    renderTrainers();
+    showToast(L().deleteSuccess, 'success');
+  } catch(e){ showToast(e.message, 'error'); }
+  finally { showLoader(false); }
+}
+
+// =================================================================
+// PLANS CRUD
+// =================================================================
+function renderPlans(){
+  const t = L();
+  const grid = document.getElementById('plansGrid');
+  if(PLANS.length === 0){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="ic">💎</div><div class="t">${currentLang==='ar'?'لا توجد باقات':'No plans yet'}</div></div>`;
+    return;
+  }
+  grid.innerHTML = PLANS.map(p=>{
+    const name = currentLang==='ar' ? (p.name_ar||p.name||'—') : (p.name||p.name_ar||'—');
+    const memberCount = MEMBERS.filter(m=>m.plan===p.code).length;
+    const features = (p.features || '').split(',').filter(f=>f.trim());
+    return `
+    <div class="plan-card ${p.is_featured?'featured':''}">
+      ${p.is_featured?`<div class="plan-badge">${currentLang==='ar'?'الأكثر شعبية':'POPULAR'}</div>`:''}
+      <div class="plan-name">${name}</div>
+      <div class="plan-price">
+        <span class="amount">${Number(p.price||0).toLocaleString()}</span>
+        <span class="currency">${currentLang==='ar'?'ج.م':'EGP'}</span>
+        <span class="period">/ ${p.duration_days||30} ${currentLang==='ar'?'يوم':'days'}</span>
+      </div>
+      <div class="plan-features">
+        ${features.slice(0,5).map(f=>`<div class="plan-feature">${f.trim()}</div>`).join('')}
+      </div>
+      <div class="plan-stats">
+        <div class="plan-stat"><div class="v">${memberCount}</div><div class="l">${currentLang==='ar'?'عضو':'MEMBERS'}</div></div>
+        <div class="action-icons">
+          <button class="action-icon" onclick="openPlanModal('${p.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="action-icon danger" onclick="deletePlan('${p.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openPlanModal(id){
+  const t = L();
+  const p = id ? PLANS.find(x=>x.id===id) : null;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-title">${p ? t.editPlan : t.addNewPlan}</div>
+    <div class="field-row">
+      <div class="field"><label>${t.planNameAr} *</label><input id="pfNameAr" value="${p?.name_ar||''}"></div>
+      <div class="field"><label>${t.planNameEn}</label><input id="pfNameEn" value="${p?.name||''}"></div>
+    </div>
+    <div class="field-row cols-3">
+      <div class="field"><label>${currentLang==='ar'?'الكود':'Code'}</label>
+        <select id="pfCode">
+          <option value="bronze" ${p?.code==='bronze'?'selected':''}>BRONZE</option>
+          <option value="silver" ${p?.code==='silver'?'selected':''}>SILVER</option>
+          <option value="gold" ${p?.code==='gold'?'selected':''}>GOLD</option>
+          <option value="vip" ${p?.code==='vip'?'selected':''}>VIP</option>
+        </select>
+      </div>
+      <div class="field"><label>${t.price}</label><input id="pfPrice" type="number" value="${p?.price||0}"></div>
+      <div class="field"><label>${t.durationDays}</label><input id="pfDur" type="number" value="${p?.duration_days||30}"></div>
+    </div>
+    <div class="field"><label>${t.features}</label><textarea id="pfFeat" rows="3" placeholder="${currentLang==='ar'?'دخول غير محدود, كلاسات مجانية, مدرب شخصي':'Unlimited access, Free classes, Personal trainer'}">${p?.features||''}</textarea></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">${t.cancel}</button>
+      <button class="btn primary" onclick="savePlan('${id||''}')">${t.save}</button>
+    </div>`;
+  document.getElementById('modal').classList.add('show');
+}
+
+async function savePlan(id){
+  const t = L();
+  const nameAr = document.getElementById('pfNameAr').value.trim();
+  if(!nameAr){ showToast(t.fillRequired, 'error'); return; }
+  const payload = {
+    name_ar: nameAr,
+    name: document.getElementById('pfNameEn').value.trim() || null,
+    code: document.getElementById('pfCode').value,
+    price: parseFloat(document.getElementById('pfPrice').value) || 0,
+    duration_days: parseInt(document.getElementById('pfDur').value) || 30,
+    features: document.getElementById('pfFeat').value.trim() || null
+  };
+  showLoader(true);
+  try {
+    if(id){
+      const { error } = await sb.from('plans').update(payload).eq('id', id);
+      if(error) throw error;
+    } else {
+      const { error } = await sb.from('plans').insert(payload);
+      if(error) throw error;
+    }
+    await loadPlans();
+    closeModal();
+    renderPlans();
+    showToast(t.saveSuccess, 'success');
+  } catch(e){ showToast(e.message, 'error'); }
+  finally { showLoader(false); }
+}
+
+async function deletePlan(id){
+  if(!confirm(L().deleteConfirm)) return;
+  showLoader(true);
+  try {
+    const { error } = await sb.from('plans').delete().eq('id', id);
+    if(error) throw error;
+    await loadPlans();
+    renderPlans();
+    showToast(L().deleteSuccess, 'success');
+  } catch(e){ showToast(e.message, 'error'); }
+  finally { showLoader(false); }
+}
+
+// =================================================================
+// PAYMENTS
+// =================================================================
+function renderPayments(){
+  const t = L();
+  const monthRev = PAYMENTS.filter(p=>{
+    const d = new Date(p.created_at); const now = new Date();
+    return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear() && p.status==='paid';
+  }).reduce((s,p)=>s+Number(p.amount||0),0);
+  const monthCount = PAYMENTS.filter(p=>{
+    const d = new Date(p.created_at); const now = new Date();
+    return d.getMonth()===now.getMonth();
+  }).length;
+  const avgTx = monthCount ? Math.round(monthRev/monthCount) : 0;
+  const pending = PAYMENTS.filter(p=>p.status==='pending').reduce((s,p)=>s+Number(p.amount||0),0);
+
+  document.getElementById('paymentsKpis').innerHTML = `
+    <div class="kpi-card primary"><div class="kpi-value">${monthRev.toLocaleString()}</div><div class="kpi-label">${t.monthRev}</div></div>
+    <div class="kpi-card"><div class="kpi-value">${monthCount}</div><div class="kpi-label">${t.monthTx}</div></div>
+    <div class="kpi-card"><div class="kpi-value">${avgTx.toLocaleString()}</div><div class="kpi-label">${t.avgTx}</div></div>
+    <div class="kpi-card"><div class="kpi-value" style="color:var(--warning);">${pending.toLocaleString()}</div><div class="kpi-label">${t.pendingAmt}</div></div>
+  `;
+
+  document.getElementById('paymentsHead').innerHTML = `<tr>
+    <th>${t.thInv}</th><th>${t.thCust}</th><th>${t.thDesc}</th>
+    <th>${t.thAmt}</th><th>${t.thMethod}</th><th>${t.thDate}</th><th>${t.thStatus}</th>
+    <th>${t.thActions}</th>
+  </tr>`;
+
+  if(PAYMENTS.length === 0){
+    document.getElementById('paymentsBody').innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="ic">💳</div><div class="t">${currentLang==='ar'?'لا توجد معاملات':'No payments'}</div></div></td></tr>`;
+    return;
+  }
+
+  document.getElementById('paymentsBody').innerHTML = PAYMENTS.map(p=>{
+    const m = p.members || {};
+    const name = currentLang==='ar' ? (m.full_name_ar||m.full_name||'—') : (m.full_name||m.full_name_ar||'—');
+    return `
+    <tr>
+      <td class="mono">${p.invoice_number||p.id.substring(0,8)}</td>
+      <td>
+        <div class="user-cell">
+          <div class="user-cell-avatar">${getInitials(m.full_name_ar||m.full_name)}</div>
+          <div class="user-cell-info">
+            <span class="user-cell-name">${name}</span>
+            <span class="user-cell-id">${m.member_code||'—'}</span>
+          </div>
+        </div>
+      </td>
+      <td>${p.description||'—'}</td>
+      <td class="mono" style="color:var(--gold);font-weight:700;">${Number(p.amount||0).toLocaleString()} ${currentLang==='ar'?'ج.م':'EGP'}</td>
+      <td>${t[p.method]||p.method||'—'}</td>
+      <td class="mono">${formatDate(p.created_at)}</td>
+      <td><span class="status-pill ${p.status==='paid'?'active':'pending'}">${p.status==='paid'?t.paidStatus:t.pendingStatus}</span></td>
+      <td>
+        <div class="action-icons">
+          <button class="action-icon danger" onclick="deletePayment('${p.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openPaymentModal(){
+  const t = L();
+  const memberOptions = MEMBERS.map(m=>{
+    const name = currentLang==='ar' ? (m.full_name_ar||m.full_name) : (m.full_name||m.full_name_ar);
+    return `<option value="${m.id}">${name} (${m.member_code})</option>`;
+  }).join('');
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-title">${t.addPayment}</div>
+    <div class="field"><label>${t.selectMember} *</label>
+      <select id="payMember"><option value="">—</option>${memberOptions}</select>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>${t.amount} *</label><input id="payAmount" type="number" step="0.01"></div>
+      <div class="field"><label>${t.paymentMethod}</label>
+        <select id="payMethod">
+          <option value="cash">${t.cash}</option>
+          <option value="card">${t.card}</option>
+          <option value="transfer">${t.transfer}</option>
+          <option value="wallet">${t.wallet}</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>${t.description}</label><input id="payDesc" placeholder="${currentLang==='ar'?'تجديد اشتراك VIP':'VIP renewal'}"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">${t.cancel}</button>
+      <button class="btn primary" onclick="savePayment()">${t.save}</button>
+    </div>`;
+  document.getElementById('modal').classList.add('show');
+}
+
+async function savePayment(){
+  const t = L();
+  const memberId = document.getElementById('payMember').value;
+  const amount = parseFloat(document.getElementById('payAmount').value);
+  if(!memberId || !amount){ showToast(t.fillRequired, 'error'); return; }
+  const inv = 'INV-' + Date.now().toString(36).toUpperCase();
+  const payload = {
+    member_id: memberId,
+    amount,
+    method: document.getElementById('payMethod').value,
+    description: document.getElementById('payDesc').value.trim() || null,
+    invoice_number: inv,
+    status: 'paid'
+  };
+  showLoader(true);
+  try {
+    const { error } = await sb.from('payments').insert(payload);
+    if(error) throw error;
+    await loadPayments();
+    closeModal();
+    renderPayments();
+    renderDashboard();
+    showToast(t.saveSuccess, 'success');
+  } catch(e){ showToast(e.message, 'error'); }
+  finally { showLoader(false); }
+}
+
+async function deletePayment(id){
+  if(!confirm(L().deleteConfirm)) return;
+  showLoader(true);
+  try {
+    const { error } = await sb.from('payments').delete().eq('id', id);
+    if(error) throw error;
+    await loadPayments();
+    renderPayments();
+    showToast(L().deleteSuccess, 'success');
+  } catch(e){ showToast(e.message, 'error'); }
+  finally { showLoader(false); }
+}
+
+// =================================================================
+// EQUIPMENT
+// =================================================================
+function renderEquipment(){
+  const t = L();
+  const grid = document.getElementById('equipmentGrid');
+  if(EQUIPMENT.length === 0){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="ic">🏋️</div><div class="t">${currentLang==='ar'?'لا توجد معدات':'No equipment'}</div></div>`;
+    return;
+  }
+  const icons = { cardio:'🏃', strength:'🏋️', freeweight:'💪', functional:'⚡' };
+  grid.innerHTML = EQUIPMENT.map(e=>`
+    <div class="eq-card">
+      <div class="eq-head">
+        <div class="eq-icon">${icons[e.category]||'🔧'}</div>
+        <div class="action-icons">
+          <button class="action-icon" onclick="openEquipModal('${e.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="action-icon danger" onclick="deleteEquipment('${e.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/></svg></button>
+        </div>
+      </div>
+      <div class="eq-name">${e.name||'—'}</div>
+      <div class="eq-cat">${t['cat_'+e.category]||e.category||'—'}</div>
+      <div class="eq-stats" style="margin-top:12px;">
+        <div class="eq-stat"><div class="k">${currentLang==='ar'?'الحالة':'Status'}</div><div class="v"><span class="status-pill ${e.status==='operational'?'active':e.status==='maintenance'?'pending':'expired'}">${t[e.status]||e.status}</span></div></div>
+        <div class="eq-stat"><div class="k">${t.lastMaintenance}</div><div class="v mono">${formatDate(e.last_maintenance)}</div></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openEquipModal(id){
+  const t = L();
+  const e = id ? EQUIPMENT.find(x=>x.id===id) : null;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-title">${e ? t.equipName : t.addNewEquip}</div>
+    <div class="field"><label>${t.equipName} *</label><input id="eqName" value="${e?.name||''}"></div>
+    <div class="field-row">
+      <div class="field"><label>${t.equipCategory}</label>
+        <select id="eqCat">
+          <option value="cardio" ${e?.category==='cardio'?'selected':''}>${t.cat_cardio}</option>
+          <option value="strength" ${e?.category==='strength'?'selected':''}>${t.cat_strength}</option>
+          <option value="freeweight" ${e?.category==='freeweight'?'selected':''}>${t.cat_freeweight}</option>
+          <option value="functional" ${e?.category==='functional'?'selected':''}>${t.cat_functional}</option>
+        </select>
+      </div>
+      <div class="field"><label>${t.equipStatus}</label>
+        <select id="eqStatus">
+          <option value="operational" ${e?.status==='operational'?'selected':''}>${t.operational}</option>
+          <option value="maintenance" ${e?.status==='maintenance'?'selected':''}>${t.maintenance}</option>
+          <option value="broken" ${e?.status==='broken'?'selected':''}>${t.broken}</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>${t.equipPurchase}</label><input id="eqPur" type="date" value="${e?.purchase_date||''}"></div>
+      <div class="field"><label>${t.lastMaintenance}</label><input id="eqMaint" type="date" value="${e?.last_maintenance||''}"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">${t.cancel}</button>
+      <button class="btn primary" onclick="saveEquipment('${id||''}')">${t.save}</button>
+    </div>`;
+  document.getElementById('modal').classList.add('show');
+}
+
+async function saveEquipment(id){
+  const t = L();
+  const name = document.getElementById('eqName').value.trim();
+  if(!name){ showToast(t.fillRequired, 'error'); return; }
+  const payload = {
+    name,
+    category: document.getElementById('eqCat').value,
+    status: document.getElementById('eqStatus').value,
+    purchase_date: document.getElementById('eqPur').value || null,
+    last_maintenance: document.getElementById('eqMaint').value || null
+  };
+  showLoader(true);
+  try {
+    if(id){
+      const { error } = await sb.from('equipment').update(payload).eq('id', id);
+      if(error) throw error;
+    } else {
+      const { error } = await sb.from('equipment').insert(payload);
+      if(error) throw error;
+    }
+    await loadEquipment();
+    closeModal();
+    renderEquipment();
+    showToast(t.saveSuccess, 'success');
+  } catch(e){ showToast(e.message, 'error'); }
+  finally { showLoader(false); }
+}
+
+async function deleteEquipment(id){
+  if(!confirm(L().deleteConfirm)) return;
+  showLoader(true);
+  try {
+    const { error } = await sb.from('equipment').delete().eq('id', id);
+    if(error) throw error;
+    await loadEquipment();
+    renderEquipment();
+    showToast(L().deleteSuccess, 'success');
+  } catch(e){ showToast(e.message, 'error'); }
+  finally { showLoader(false); }
+}
+
+// =================================================================
+// ATTENDANCE
+// =================================================================
+function renderAttendance(){
+  const t = L();
+  const today = ATTENDANCE.filter(a=>{
+    const d = new Date(a.created_at);
+    return d.toDateString() === new Date().toDateString();
+  });
+  const inside = today.filter(a=>!a.left_at).length;
+
+  document.getElementById('attendanceKpis').innerHTML = `
+    <div class="kpi-card primary"><div class="kpi-value">${today.length}</div><div class="kpi-label">${t.todayCheckin}</div></div>
+    <div class="kpi-card"><div class="kpi-value">${inside}</div><div class="kpi-label">${t.currInside}</div></div>
+    <div class="kpi-card"><div class="kpi-value">2.4h</div><div class="kpi-label">${t.avgStay}</div></div>
+    <div class="kpi-card"><div class="kpi-value">7-9 PM</div><div class="kpi-label">${t.peak}</div></div>
+  `;
+
+  document.getElementById('attendanceHead').innerHTML = `<tr>
+    <th>${t.thMember}</th><th>${t.thIn}</th><th>${t.thOut}</th>
+    <th>${t.thDur}</th><th>${t.thStatus}</th>
+  </tr>`;
+
+  if(ATTENDANCE.length === 0){
+    document.getElementById('attendanceBody').innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="ic">🚪</div><div class="t">${currentLang==='ar'?'لا يوجد سجلات حضور':'No attendance records'}</div></div></td></tr>`;
+    return;
+  }
+
+  document.getElementById('attendanceBody').innerHTML = ATTENDANCE.map(a=>{
+    const m = a.members || {};
+    const name = currentLang==='ar' ? (m.full_name_ar||m.full_name||'—') : (m.full_name||m.full_name_ar||'—');
+    const dur = a.left_at ? Math.round((new Date(a.left_at)-new Date(a.created_at))/60000) + ' min' : '—';
+    return `
+    <tr>
+      <td>
+        <div class="user-cell">
+          <div class="user-cell-avatar">${getInitials(m.full_name_ar||m.full_name)}</div>
+          <div class="user-cell-info">
+            <span class="user-cell-name">${name}</span>
+            <span class="user-cell-id">${m.member_code||'—'}</span>
+          </div>
+        </div>
+      </td>
+      <td class="mono">${formatTime(a.created_at)}</td>
+      <td class="mono">${a.left_at?formatTime(a.left_at):'—'}</td>
+      <td class="mono">${dur}</td>
+      <td><span class="status-pill ${a.left_at?'expired':'active'}">${a.left_at?t.leftAt:t.inside}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// =================================================================
+// REPORTS
+// =================================================================
+function renderReports(){
+  const t = L();
+  const planRev = {};
+  PAYMENTS.filter(p=>p.status==='paid').forEach(p=>{
+    const m = MEMBERS.find(x=>x.id===p.member_id);
+    if(m){
+      planRev[m.plan] = (planRev[m.plan]||0) + Number(p.amount||0);
+    }
+  });
+  const total = Object.values(planRev).reduce((s,v)=>s+v, 0) || 1;
+
+  document.getElementById('revBreakBody').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      ${['vip','gold','silver','bronze'].map(p=>{
+        const v = planRev[p] || 0;
+        const pct = Math.round((v/total)*100);
+        return `
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+              <span style="color:var(--gold);font-weight:700;">${p.toUpperCase()}</span>
+              <span class="mono">${v.toLocaleString()} ج.م (${pct}%)</span>
+            </div>
+            <div style="height:8px;background:var(--surface);border-radius:4px;overflow:hidden;">
+              <div style="width:${pct}%;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-2));"></div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>`;
+
+  // Top classes
+  document.getElementById('topClassesBody').innerHTML = CLASSES.length === 0
+    ? `<div class="empty-state"><div class="ic">📊</div><div class="t">${currentLang==='ar'?'لا توجد بيانات':'No data'}</div></div>`
+    : CLASSES.slice(0,5).map((c,i)=>{
+        const pct = c.capacity ? Math.round(((c.booked_count||0)/c.capacity)*100) : 0;
+        const name = currentLang==='ar' ? (c.name_ar||c.name) : (c.name||c.name_ar);
+        return `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="font-family:'Bebas Neue';font-size:24px;color:${i<3?'var(--gold)':'var(--text-dim)'};width:32px;">${String(i+1).padStart(2,'0')}</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:13px;">${name}</div>
+            <div style="font-size:11px;color:var(--text-dim);">${c.booked_count||0} ${currentLang==='ar'?'حجز':'bookings'}</div>
+          </div>
+          <div style="font-family:'Bebas Neue';color:${i<3?'var(--gold)':'var(--text-dim)'};font-size:18px;">${pct}%</div>
+        </div>`;
+      }).join('');
+}
+
+// =================================================================
+// SETTINGS
+// =================================================================
+function renderSettings(){
+  const t = L();
+  const tabs = ['general','business','notifications','payment','security'];
+  const tabLbls = [t.setGen, t.setBus, t.setNotif, t.setPay, t.setSec];
+  document.getElementById('settingsTabs').innerHTML = tabs.map((tab,i)=>`
+    <button class="settings-tab ${activeSettingsTab===tab?'active':''}" onclick="setSettingsTab('${tab}')">${tabLbls[i]}</button>
+  `).join('');
+
+  document.getElementById('settingsPanel').innerHTML = `
+    <div class="setting-item">
+      <div class="setting-info"><div class="t">${t.setting1}</div><div class="s">${t.setting1s}</div></div>
+      <button class="toggle on" onclick="this.classList.toggle('on');showToast(this.classList.contains('on')?'تم التفعيل':'تم الإيقاف')"></button>
+    </div>
+    <div class="setting-item">
+      <div class="setting-info"><div class="t">${t.setting2}</div><div class="s">${t.setting2s}</div></div>
+      <button class="toggle on" onclick="this.classList.toggle('on');showToast(this.classList.contains('on')?'تم التفعيل':'تم الإيقاف')"></button>
+    </div>
+    <div class="setting-item">
+      <div class="setting-info"><div class="t">${t.setting3}</div><div class="s">${t.setting3s}</div></div>
+      <button class="toggle" onclick="this.classList.toggle('on');showToast(this.classList.contains('on')?'تم التفعيل':'تم الإيقاف')"></button>
+    </div>
+    <div class="setting-item">
+      <div class="setting-info"><div class="t">${t.setting4}</div><div class="s">${t.setting4s}</div></div>
+      <button class="toggle on" onclick="this.classList.toggle('on');showToast(this.classList.contains('on')?'تم التفعيل':'تم الإيقاف')"></button>
+    </div>
+    <div class="setting-item">
+      <div class="setting-info"><div class="t">${t.setting5}</div><div class="s">${t.setting5s}</div></div>
+      <button class="toggle" onclick="this.classList.toggle('on');showToast(this.classList.contains('on')?'تم التفعيل':'تم الإيقاف')"></button>
+    </div>
+    <div class="setting-item">
+      <div class="setting-info"><div class="t">${t.setting6}</div><div class="s">${t.setting6s}</div></div>
+      <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+    </div>
+  `;
+}
+
+function setSettingsTab(tab){
+  activeSettingsTab = tab;
+  renderSettings();
+}
+
+// =================================================================
+// EXPORT
+// =================================================================
+function exportData(type='all'){
+  let csv = '';
+  let filename = 'iron-forge-export-' + new Date().toISOString().split('T')[0] + '.csv';
+
+  if(type === 'payments'){
+    csv = 'Invoice,Member,Amount,Method,Date,Status\n';
+    PAYMENTS.forEach(p=>{
+      const m = p.members || {};
+      const name = (m.full_name_ar || m.full_name || '').replace(/,/g,' ');
+      csv += `${p.invoice_number||''},${name},${p.amount||0},${p.method||''},${p.created_at||''},${p.status||''}\n`;
+    });
+    filename = 'iron-forge-payments-' + new Date().toISOString().split('T')[0] + '.csv';
+  } else {
+    csv = 'Code,Name,Phone,Plan,Joined,Expires,Status,Password\n';
+    MEMBERS.forEach(m=>{
+      const name = (m.full_name_ar || m.full_name || '').replace(/,/g,' ');
+      csv += `${m.member_code||''},${name},${m.phone||''},${m.plan||''},${m.joined_at||''},${m.expires_at||''},${m.status||''},${m.password||''}\n`;
+    });
+  }
+
+  const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(currentLang==='ar' ? 'تم التصدير بنجاح' : 'Exported successfully', 'success');
+}
+
+</script>
+</body>
+</html>
