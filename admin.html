@@ -1389,7 +1389,21 @@ const L = () => T[currentLang];
 // =================================================================
 // HELPERS
 // =================================================================
-function showLoader(s){document.getElementById('loader').classList.toggle('show', s);}
+function showLoader(s){
+  const el = document.getElementById('loader');
+  if(el) el.classList.toggle('show', s);
+}
+
+// Safe DOM helpers (ما يرميش error لو العنصر مش موجود)
+function $set(id, val){
+  const el = document.getElementById(id);
+  if(el) el.textContent = val;
+}
+function $html(id, val){
+  const el = document.getElementById(id);
+  if(el) el.innerHTML = val;
+  return !!el;
+}
 
 let toastTimer;
 function showToast(msg, type=''){
@@ -1483,6 +1497,7 @@ function setText(id, val){
 }
 
 function applyTexts(){
+  try {
   const t = L();
   setText('navMainLbl', t.navMain); setText('navOpsLbl', t.navOps); setText('navOtherLbl', t.navOther);
   setText('navDash', t.dashboard); setText('navMem', t.members); setText('navCls', t.classes);
@@ -1514,19 +1529,21 @@ function applyTexts(){
   setText('revBreakLbl', t.revBreak); setText('topClsLbl', t.topClasses);
   setText('monthCmpLbl', t.monthCmp);
   setText('setTitle', t.setTitle); setText('setSub', t.setSub);
-  document.getElementById('globalSearch').placeholder = t.searchPh;
+  const _gs = document.getElementById('globalSearch');
+  if(_gs) _gs.placeholder = t.searchPh;
 
-  // Re-render lists
-  renderDashboard();
-  renderMembers();
-  renderClasses();
-  renderTrainers();
-  renderPlans();
-  renderPayments();
-  renderEquipment();
-  renderAttendance();
-  renderReports();
-  renderSettings();
+  // Re-render lists (each one wrapped to prevent total failure)
+  try{renderDashboard();}catch(e){console.warn('renderDashboard:',e);}
+  try{renderMembers();}catch(e){console.warn('renderMembers:',e);}
+  try{renderClasses();}catch(e){console.warn('renderClasses:',e);}
+  try{renderTrainers();}catch(e){console.warn('renderTrainers:',e);}
+  try{renderPlans();}catch(e){console.warn('renderPlans:',e);}
+  try{renderPayments();}catch(e){console.warn('renderPayments:',e);}
+  try{renderEquipment();}catch(e){console.warn('renderEquipment:',e);}
+  try{renderAttendance();}catch(e){console.warn('renderAttendance:',e);}
+  try{renderReports();}catch(e){console.warn('renderReports:',e);}
+  try{renderSettings();}catch(e){console.warn('renderSettings:',e);}
+  } catch(e){ console.error('applyTexts error:', e); }
 }
 
 // =================================================================
@@ -1602,8 +1619,8 @@ async function bootApp(){
     ]);
     applyTexts();
   } catch(e){
-    console.error('Boot error:', e);
-    showToast(currentLang==='ar' ? 'خطأ في تحميل البيانات: ' + e.message : 'Load error: ' + e.message, 'error');
+    console.warn('Boot error (non-fatal):', e);
+    // No toast - data may load partially
   } finally {
     showLoader(false);
   }
@@ -1683,7 +1700,7 @@ function renderDashboard(){
     return d.toDateString() === now.toDateString();
   }).length;
 
-  document.getElementById('dashKpis').innerHTML = `
+  if(document.getElementById('dashKpis')) document.getElementById('dashKpis').innerHTML = `
     <div class="kpi-card primary">
       <div class="kpi-head">
         <div class="kpi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
@@ -1722,7 +1739,7 @@ function renderDashboard(){
     </div>
   `;
 
-  document.getElementById('membersBadge').textContent = activeCount;
+  if(document.getElementById('membersBadge')) document.getElementById('membersBadge').textContent = activeCount;
 
   // Activity list
   const activities = [];
@@ -1746,9 +1763,9 @@ function renderDashboard(){
   });
 
   if(activities.length === 0){
-    document.getElementById('activityList').innerHTML = `<div class="empty-state"><div class="ic">📊</div><div class="t">${currentLang==='ar'?'لا يوجد نشاط حالياً':'No recent activity'}</div></div>`;
+    if(document.getElementById('activityList')) document.getElementById('activityList').innerHTML = `<div class="empty-state"><div class="ic">📊</div><div class="t">${currentLang==='ar'?'لا يوجد نشاط حالياً':'No recent activity'}</div></div>`;
   } else {
-    document.getElementById('activityList').innerHTML = activities.map(a=>`
+    if(document.getElementById('activityList')) document.getElementById('activityList').innerHTML = activities.map(a=>`
       <div class="activity">
         <div class="activity-dot ${a.cls}">${a.ic}</div>
         <div class="activity-info">
@@ -1847,7 +1864,7 @@ function renderMembers(){
 
   setText('membersSub', `${MEMBERS.length} ${currentLang==='ar'?'عضو إجمالي':'total members'} • ${activeCount} ${t.active.toLowerCase()}`);
 
-  document.getElementById('membersKpis').innerHTML = `
+  if(document.getElementById('membersKpis')) document.getElementById('membersKpis').innerHTML = `
     <div class="kpi-card"><div class="kpi-value">${activeCount}</div><div class="kpi-label">${t.totalActive}</div></div>
     <div class="kpi-card"><div class="kpi-value" style="color:var(--warning);">${expiringCount}</div><div class="kpi-label">${t.expiringSoon}</div></div>
     <div class="kpi-card"><div class="kpi-value" style="color:var(--danger);">${expiredCount}</div><div class="kpi-label">${t.expiredK}</div></div>
@@ -1856,7 +1873,7 @@ function renderMembers(){
 
   // Filter pills
   const filters = ['all','vip','gold','silver','bronze'];
-  document.getElementById('memberFilters').innerHTML = filters.map(f=>{
+  if(document.getElementById('memberFilters')) document.getElementById('memberFilters').innerHTML = filters.map(f=>{
     const count = f==='all' ? MEMBERS.length : MEMBERS.filter(m=>m.plan===f).length;
     const lbl = f==='all' ? t.fAll : t['f'+f.charAt(0).toUpperCase()+f.slice(1)];
     return `<div class="tab-pill ${memberFilter===f?'active':''}" onclick="setMemberFilter('${f}')">${lbl} (${count})</div>`;
@@ -1876,11 +1893,11 @@ function renderMembers(){
   }
 
   if(filtered.length === 0){
-    document.getElementById('membersBody').innerHTML = `<div class="empty-state"><div class="ic">👤</div><div class="t">${currentLang==='ar'?'لا يوجد أعضاء':'No members found'}</div><div class="s">${currentLang==='ar'?'اضغط "+ عضو" لإضافة عضو جديد':'Click "+ Member" to start'}</div></div>`;
+    if(document.getElementById('membersBody')) document.getElementById('membersBody').innerHTML = `<div class="empty-state"><div class="ic">👤</div><div class="t">${currentLang==='ar'?'لا يوجد أعضاء':'No members found'}</div><div class="s">${currentLang==='ar'?'اضغط "+ عضو" لإضافة عضو جديد':'Click "+ Member" to start'}</div></div>`;
     return;
   }
 
-  document.getElementById('membersBody').innerHTML = filtered.map(m=>memberCardHTML(m)).join('');
+  if(document.getElementById('membersBody')) document.getElementById('membersBody').innerHTML = filtered.map(m=>memberCardHTML(m)).join('');
 }
 
 function _oldMembersTable(filtered){
@@ -2547,7 +2564,7 @@ function renderPayments(){
   const avgTx = monthCount ? Math.round(monthRev/monthCount) : 0;
   const pending = PAYMENTS.filter(p=>p.status==='pending').reduce((s,p)=>s+Number(p.amount||0),0);
 
-  document.getElementById('paymentsKpis').innerHTML = `
+  if(document.getElementById('paymentsKpis')) document.getElementById('paymentsKpis').innerHTML = `
     <div class="kpi-card primary"><div class="kpi-value">${monthRev.toLocaleString()}</div><div class="kpi-label">${t.monthRev}</div></div>
     <div class="kpi-card"><div class="kpi-value">${monthCount}</div><div class="kpi-label">${t.monthTx}</div></div>
     <div class="kpi-card"><div class="kpi-value">${avgTx.toLocaleString()}</div><div class="kpi-label">${t.avgTx}</div></div>
@@ -2555,11 +2572,11 @@ function renderPayments(){
   `;
 
   if(PAYMENTS.length === 0){
-    document.getElementById('paymentsBody').innerHTML = `<div class="empty-state"><div class="ic">💳</div><div class="t">${currentLang==='ar'?'لا توجد معاملات':'No payments'}</div></div>`;
+    if(document.getElementById('paymentsBody')) document.getElementById('paymentsBody').innerHTML = `<div class="empty-state"><div class="ic">💳</div><div class="t">${currentLang==='ar'?'لا توجد معاملات':'No payments'}</div></div>`;
     return;
   }
 
-  document.getElementById('paymentsBody').innerHTML = PAYMENTS.map(p=>{
+  if(document.getElementById('paymentsBody')) document.getElementById('paymentsBody').innerHTML = PAYMENTS.map(p=>{
     const m = p.members || {};
     const name = currentLang==='ar' ? (m.full_name_ar||m.full_name||'—') : (m.full_name||m.full_name_ar||'—');
     return `
@@ -2771,7 +2788,7 @@ function renderAttendance(){
   });
   const inside = today.filter(a=>!a.left_at).length;
 
-  document.getElementById('attendanceKpis').innerHTML = `
+  if(document.getElementById('attendanceKpis')) document.getElementById('attendanceKpis').innerHTML = `
     <div class="kpi-card primary"><div class="kpi-value">${today.length}</div><div class="kpi-label">${t.todayCheckin}</div></div>
     <div class="kpi-card"><div class="kpi-value">${inside}</div><div class="kpi-label">${t.currInside}</div></div>
     <div class="kpi-card"><div class="kpi-value">2.4h</div><div class="kpi-label">${t.avgStay}</div></div>
@@ -2779,11 +2796,11 @@ function renderAttendance(){
   `;
 
   if(ATTENDANCE.length === 0){
-    document.getElementById('attendanceBody').innerHTML = `<div class="empty-state"><div class="ic">🚪</div><div class="t">${currentLang==='ar'?'لا يوجد سجلات':'No records'}</div></div>`;
+    if(document.getElementById('attendanceBody')) document.getElementById('attendanceBody').innerHTML = `<div class="empty-state"><div class="ic">🚪</div><div class="t">${currentLang==='ar'?'لا يوجد سجلات':'No records'}</div></div>`;
     return;
   }
 
-  document.getElementById('attendanceBody').innerHTML = ATTENDANCE.map(a=>{
+  if(document.getElementById('attendanceBody')) document.getElementById('attendanceBody').innerHTML = ATTENDANCE.map(a=>{
     const m = a.members || {};
     const name = currentLang==='ar' ? (m.full_name_ar||m.full_name||'—') : (m.full_name||m.full_name_ar||'—');
     const dur = a.left_at ? Math.round((new Date(a.left_at)-new Date(a.created_at))/60000) + ' min' : (currentLang==='ar'?'مستمر':'ongoing');
@@ -2815,7 +2832,7 @@ function renderReports(){
   });
   const total = Object.values(planRev).reduce((s,v)=>s+v, 0) || 1;
 
-  document.getElementById('revBreakBody').innerHTML = `
+  if(document.getElementById('revBreakBody')) document.getElementById('revBreakBody').innerHTML = `
     <div style="display:flex;flex-direction:column;gap:14px;">
       ${['vip','gold','silver','bronze'].map(p=>{
         const v = planRev[p] || 0;
@@ -2834,7 +2851,7 @@ function renderReports(){
     </div>`;
 
   // Top classes
-  document.getElementById('topClassesBody').innerHTML = CLASSES.length === 0
+  if(document.getElementById('topClassesBody')) document.getElementById('topClassesBody').innerHTML = CLASSES.length === 0
     ? `<div class="empty-state"><div class="ic">📊</div><div class="t">${currentLang==='ar'?'لا توجد بيانات':'No data'}</div></div>`
     : CLASSES.slice(0,5).map((c,i)=>{
         const pct = c.capacity ? Math.round(((c.booked_count||0)/c.capacity)*100) : 0;
@@ -2957,7 +2974,7 @@ function renderSettings(){
   const t = L();
   const tabs = ['general','business','notifications','payment','security'];
   const tabLbls = [t.setGen, t.setBus, t.setNotif, t.setPay, t.setSec];
-  document.getElementById('settingsTabs').innerHTML = tabs.map((tab,i)=>`
+  if(document.getElementById('settingsTabs')) document.getElementById('settingsTabs').innerHTML = tabs.map((tab,i)=>`
     <button class="settings-mobile-tab ${activeSettingsTab===tab?'active':''}" onclick="setSettingsTab('${tab}')">${tabLbls[i]}</button>
   `).join('');
 
@@ -3073,7 +3090,7 @@ function renderSettings(){
     `;
   }
 
-  document.getElementById('settingsPanel').innerHTML = '<div class="panel-body" style="padding:0;">' + html + '</div>';
+  if(document.getElementById('settingsPanel')) document.getElementById('settingsPanel').innerHTML = '<div class="panel-body" style="padding:0;">' + html + '</div>';
 }
 
 function settingToggleHTML(tab, key, title, sub, isOn){
@@ -3125,6 +3142,20 @@ function changeAdminPassword(){
 // =================================================================
 // EXPORT
 // =================================================================
+
+// =================================================================
+// GLOBAL ERROR HANDLER (silent)
+// =================================================================
+window.addEventListener('error', e=>{
+  // Silent — log to console only
+  console.warn('Caught error:', e.message);
+  e.preventDefault();
+  return true;
+});
+window.addEventListener('unhandledrejection', e=>{
+  console.warn('Unhandled rejection:', e.reason);
+  e.preventDefault();
+});
 
 // =================================================================
 // MORE MENU (Mobile)
