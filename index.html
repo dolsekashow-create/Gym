@@ -7,7 +7,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0a0a">
-<title>IRON FORGE — Premium Gym</title>
+<title>Zero Nine — Premium Gym</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="logo-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -24,15 +28,18 @@
   --nav-h:72px; --header-h:64px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;overflow:hidden;}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-overflow-scrolling:touch;position:fixed;width:100%;top:0;left:0;}
 body{
   font-family:'Tajawal','Inter',sans-serif;
   background:var(--bg); color:var(--text);
   font-size:15px; line-height:1.5;
   -webkit-font-smoothing:antialiased;
-  overscroll-behavior:none;
+  overscroll-behavior:contain;
+  overscroll-behavior-y:none;
+  touch-action:pan-y;
   user-select:none; -webkit-user-select:none;
 }
+.screen{overscroll-behavior:contain;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch;}
 [data-lang="en"] body{font-family:'Inter','Tajawal',sans-serif;}
 .display{font-family:'Bebas Neue',sans-serif;letter-spacing:0.02em;}
 [data-lang="ar"] .display{font-family:'Cairo',sans-serif;font-weight:900;letter-spacing:-0.01em;}
@@ -629,16 +636,32 @@ input,button,textarea,select{font-family:inherit;}
 .workout-screen{padding:8px 20px;}
 .muscle-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
 .muscle-tab{
-  padding:14px 8px;
+  padding:16px 8px 12px;
   background:var(--surface);
   border:1px solid var(--line);
-  border-radius:12px;
+  border-radius:14px;
   text-align:center;
   cursor:pointer;
-  transition:all 0.2s;
+  transition:all 0.25s;
+  position:relative;
+  overflow:hidden;
 }
+.muscle-tab::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at top,rgba(212,175,55,0.15),transparent 70%);
+  opacity:0;transition:opacity 0.25s;
+}
+.muscle-tab.active::before{opacity:1;}
+.muscle-tab:active{transform:scale(0.96);}
 .muscle-tab.active{background:linear-gradient(135deg,rgba(212,175,55,0.2),rgba(212,175,55,0.05));border-color:var(--gold);}
-.muscle-icon{font-size:24px;margin-bottom:4px;}
+.muscle-icon{
+  width:40px;height:40px;margin:0 auto 6px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);
+  transition:all 0.25s;
+}
+.muscle-tab.active .muscle-icon{transform:scale(1.1);filter:drop-shadow(0 0 8px rgba(212,175,55,0.4));}
+.muscle-tab:not(.active) .muscle-icon{color:var(--text-dim);opacity:0.7;}
 .muscle-tab .lbl{font-size:10px;color:var(--text-dim);letter-spacing:0.05em;}
 .muscle-tab.active .lbl{color:var(--gold);}
 
@@ -912,13 +935,14 @@ input,button,textarea,select{font-family:inherit;}
 
     <div class="login-brand">
       <div class="login-mark">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+        <img src="logo.png" alt="Zero Nine" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" style="width:50px;height:50px;object-fit:contain;position:relative;z-index:2;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="display:none;">
           <path d="M3 12h2M19 12h2M7 8v8M17 8v8M7 12h10" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="login-title">
-        <span class="ar-only">آيرون فورج</span>
-        <span class="en-only">IRON FORGE</span>
+        <span class="ar-only">زيرو ناين</span>
+        <span class="en-only">ZERO NINE</span>
       </div>
       <div class="login-tag">
         <span class="ar-only">جيم بريميوم</span>
@@ -972,8 +996,8 @@ input,button,textarea,select{font-family:inherit;}
 
     <div class="login-foot">
       <div>
-        <span class="ar-only">هذا التطبيق مخصص لأعضاء <strong>IRON FORGE</strong> فقط</span>
-        <span class="en-only">This app is exclusive to <strong>IRON FORGE</strong> members</span>
+        <span class="ar-only">هذا التطبيق مخصص لأعضاء <strong>ZERO NINE</strong> فقط</span>
+        <span class="en-only">This app is exclusive to <strong>ZERO NINE</strong> members</span>
       </div>
       <div style="margin-top:8px;">
         <span class="ar-only">للحصول على بياناتك تواصل مع الإدارة</span>
@@ -986,13 +1010,14 @@ input,button,textarea,select{font-family:inherit;}
   <header class="app-header">
     <div class="brand">
       <div class="brand-mark">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <img src="logo.png" alt="Zero Nine" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" style="width:24px;height:24px;object-fit:contain;position:relative;z-index:2;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display:none;">
           <path d="M3 12h2M19 12h2M7 8v8M17 8v8M7 12h10" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="brand-text">
-        <span class="name ar-only">آيرون فورج</span>
-        <span class="name en-only">IRON FORGE</span>
+        <span class="name ar-only">زيرو ناين</span>
+        <span class="name en-only">ZERO NINE</span>
         <span class="tag ar-only">جيم بريميوم</span>
         <span class="tag en-only">PREMIUM GYM</span>
       </div>
@@ -1871,10 +1896,38 @@ function handleBookClick(id){
 function renderWorkoutScreen(){
   const tabs = document.getElementById('muscleTabs');
   const muscles = [
-    {id:'chest', icon:'💪'},
-    {id:'back', icon:'🏋️'},
-    {id:'legs', icon:'🦵'},
-    {id:'arms', icon:'💥'}
+    {id:'chest', icon:`<svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Chest / Pectoral muscle -->
+      <path d="M6 10c0-1 1-2 2-2h6c1 0 2 1 2 2v3c0 4-3 7-5 7s-5-1-5-5v-5z" fill="currentColor" fill-opacity="0.15"/>
+      <path d="M16 10c0-1 1-2 2-2h6c1 0 2 1 2 2v5c0 4-3 5-5 5s-5-3-5-7v-3z" fill="currentColor" fill-opacity="0.15"/>
+      <path d="M6 10c0-1 1-2 2-2h6c1 0 2 1 2 2v3c0 4-3 7-5 7s-5-1-5-5v-5z"/>
+      <path d="M16 10c0-1 1-2 2-2h6c1 0 2 1 2 2v5c0 4-3 5-5 5s-5-3-5-7v-3z"/>
+      <line x1="16" y1="8" x2="16" y2="20" stroke-dasharray="2 2"/>
+      <path d="M9 13c1 0 2 1 2 2M21 13c-1 0-2 1-2 2" stroke-width="1.5"/>
+    </svg>`},
+    {id:'back', icon:`<svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Back / Lat muscles V-shape -->
+      <path d="M16 4l-8 6-2 14h6l4-12 4 12h6l-2-14z" fill="currentColor" fill-opacity="0.15"/>
+      <path d="M16 4l-8 6-2 14h6l4-12 4 12h6l-2-14z"/>
+      <path d="M16 4v20" stroke-dasharray="2 2"/>
+      <path d="M10 12l4 2M22 12l-4 2" stroke-width="1.5"/>
+    </svg>`},
+    {id:'legs', icon:`<svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Legs / Quadriceps -->
+      <path d="M11 4c0-1 1-2 2-2h2c1 0 2 1 2 2v6l-1 4-1 6v8c0 1-1 2-2 2s-2-1-2-2v-8l-1-6 1-4z" fill="currentColor" fill-opacity="0.15"/>
+      <path d="M11 4c0-1 1-2 2-2h2c1 0 2 1 2 2v6l-1 4-1 6v8c0 1-1 2-2 2s-2-1-2-2v-8l-1-6 1-4z"/>
+      <path d="M19 4c0-1 1-2 2-2h2c1 0 2 1 2 2v6l-1 4-1 6v8c0 1-1 2-2 2s-2-1-2-2v-8l-1-6 1-4z" fill="currentColor" fill-opacity="0.15"/>
+      <path d="M19 4c0-1 1-2 2-2h2c1 0 2 1 2 2v6l-1 4-1 6v8c0 1-1 2-2 2s-2-1-2-2v-8l-1-6 1-4z"/>
+      <line x1="13" y1="11" x2="15" y2="11" stroke-width="1.5"/>
+      <line x1="21" y1="11" x2="23" y2="11" stroke-width="1.5"/>
+    </svg>`},
+    {id:'arms', icon:`<svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Bicep / Flexed arm muscle -->
+      <path d="M6 18c0-2 1-3 2-4l4-2c1-1 2-2 2-4V6c0-1 1-2 2-2s2 1 2 2v4l3 2c2 1 3 3 3 5v3c0 2-1 3-3 4h-3l-2 4c-1 1-2 2-3 2H8c-1 0-2-1-2-2v-10z" fill="currentColor" fill-opacity="0.15"/>
+      <path d="M6 18c0-2 1-3 2-4l4-2c1-1 2-2 2-4V6c0-1 1-2 2-2s2 1 2 2v4l3 2c2 1 3 3 3 5v3c0 2-1 3-3 4h-3l-2 4c-1 1-2 2-3 2H8c-1 0-2-1-2-2v-10z"/>
+      <path d="M14 14c2 0 4 2 4 4" stroke-width="1.5"/>
+      <circle cx="20" cy="11" r="0.5" fill="currentColor"/>
+    </svg>`}
   ];
   const t = L();
   tabs.innerHTML = muscles.map(m=>`
